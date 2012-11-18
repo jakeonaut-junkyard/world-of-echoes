@@ -3,6 +3,7 @@ package Entities
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
@@ -22,6 +23,9 @@ package Entities
 		public const JUMPING:int = 2;
 		public const FALLING:int = 3;
 		
+		public var _voice:VoiceManager;
+		public var color:ColorTransform;
+		
 		[Embed(source = "../resources/images/avatar.png")]
 		private var sprite_sheet:Class;
 		
@@ -36,6 +40,9 @@ package Entities
 			facing = Global.RIGHT;
 			move_state = STANDING;
 			prev_move_state = move_state;
+			
+			//my voice
+			_voice = new VoiceManager();
 			
 			//animation management creation
 			frameDelay = 5;
@@ -60,8 +67,8 @@ package Entities
 			}
 			matrix.translate(x, y);
 			matrix.scale(Global.zoom, Global.zoom);
-			
-			Game.Renderer.draw(image_sprite, matrix);
+						
+			Game.Renderer.draw(image_sprite, matrix, _voice.color);
 		}
 		
 		public function Update(solids:Array):void

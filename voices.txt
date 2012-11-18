@@ -49,3 +49,19 @@ valsound.lead::
 	
 midi::
 	-
+	
+====================================================================================================
+VOICES I DON'T LIKE::
+-[0][5] (white noise)
+-[0][11] (no sound)
+-[0][13] (percussion)
+-[3][6] (note holds on for too long and makes everything lag)
+-[6][7] (percussion/whitenoise)
+-[6][22] (percussion)
+-[8][2] (laggy)
+-[13][99] (lags a lot)
+-[14][47] (too high pitched and not note-soundy)
+-[16][8] (percussion]
+-[16][18] (percussion)
+-[16][23] (percussion and TOO SOFT)
+-[16][58] (percussion)

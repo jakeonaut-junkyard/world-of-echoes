@@ -6,7 +6,6 @@ package
 	public class MusicalInputManager 
 	{
 		private var _driver:SiONDriver;
-		private var _voice:VoiceManager;
 		private var asdfjklKeys:Array;
 		
 		private var pressing_jump:Boolean = false;
@@ -15,7 +14,6 @@ package
 		public function MusicalInputManager() 
 		{
 			_driver = new SiONDriver();
-			_voice = new VoiceManager();
 			_driver.play('c0'); //IMPORTANT!!!
 			
 			asdfjklKeys = [false, false, false, false, false, false, false, false];
@@ -31,9 +29,9 @@ package
 			{
 				if (asdfjklKeys[i])
 				{
-					_driver.noteOn(_voice.noteArray[i], _voice.voice, 4);
+					_driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
-					if (i <= 3) i = 4;
+					if (i <= 3) i = 3;
 					else break;
 				}
 			}
@@ -44,7 +42,7 @@ package
 			//DEBUG:: Create new instrument
 			if (Global.CheckKeyPressed(Global.ENTER))
 			{
-				_voice.CreateRandomInstrument();
+				avatar._voice.CreateRandomInstrument();
 			}
 		}
 		

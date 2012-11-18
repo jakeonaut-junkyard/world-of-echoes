@@ -10,12 +10,13 @@ package Entities
 	
 	public class Burst extends GameSprite
 	{
+		public var color:ColorTransform;
 		private var myAlpha:Number;
 		
 		[Embed(source = "../resources/images/blue_burst.png")]
 		private var sprite_sheet:Class;
 		
-		public function Burst(x:int, y:int) 
+		public function Burst(x:int, y:int, color:ColorTransform) 
 		{
 			super(x, y, 0, 0, 64, 64);
 			
@@ -25,6 +26,11 @@ package Entities
 			maxFrame = 15;
 			frameWidth = 64;
 			frameHeight = 64;
+			
+			this.color = new ColorTransform();
+			this.color.redMultiplier = 4 - color.redMultiplier;
+			this.color.blueMultiplier = 4 - color.blueMultiplier;
+			this.color.greenMultiplier = 4 - color.greenMultiplier;
 		}
 		
 		override public function Render():void
@@ -35,17 +41,16 @@ package Entities
 			super.DrawSpriteFromSheet(temp_image, temp_sheet);
 			
 			//RENDER IT //CREATE ALPHA
-			var alpha:ColorTransform = new ColorTransform();
-			alpha.alphaMultiplier = myAlpha;
+			color.alphaMultiplier = myAlpha;
 			
 			var matrix:Matrix = new Matrix();
 			matrix.translate(x, y);
 			matrix.scale(Global.zoom, Global.zoom); 
-			Game.Renderer.draw(image_sprite, matrix, alpha);
+			Game.Renderer.draw(image_sprite, matrix, color);
 		}
 		
 		public function Update():void
-		{	
+		{				
 			if (++frameCount >= frameDelay)
 			{
 				myAlpha -= 0.067;

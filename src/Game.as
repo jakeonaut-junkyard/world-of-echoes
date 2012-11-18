@@ -48,7 +48,7 @@ package
 			musicInputManager = new MusicalInputManager();
 			
 			//TODO::!!!
-			bursts.push(new Burst(avatar.x-20, avatar.y-20));
+			bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
 		}		
 		
 		public function Render():void
@@ -77,7 +77,7 @@ package
 			//update player input
 			musicInputManager.MusicalInput(avatar);
 			if (musicInputManager.PlayedANote())
-				bursts.push(new Burst(avatar.x-20, avatar.y-20));
+				bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
 			
 			//UPDATE THE ENTITIES
 			avatar.Update(solids);

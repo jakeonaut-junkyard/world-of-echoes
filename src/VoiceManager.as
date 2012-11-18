@@ -4,14 +4,16 @@ package
 	import org.si.sion.SiONVoice;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	
 	public class VoiceManager extends Sprite 
     {
         private var _presets:SiONPresetVoice;
-		private var categoryIndex:int;
-		private var voiceIndex:int;
+		public var categoryIndex:int;
+		public var voiceIndex:int;
 		public var voice:SiONVoice;
 		public var noteArray:Array;
+		public var color:ColorTransform;
          
         public function VoiceManager() 
         {
@@ -23,15 +25,20 @@ package
 		{
 			SetRandomVoice();
 			SetRandomNoteArray();
+			SetRandomColor();
 		}
 		
 		public function SetRandomVoice():void
 		{
+			trace(_presets.categolies.length + "categolilength");
 			var categoryIndex:int = Math.floor(Math.random()*_presets.categolies.length);
+			trace(categoryIndex);
 			var voiceList:Array = _presets.categolies[categoryIndex];
+			trace(voiceList.length + "voiceListLength");
 			var voiceIndex:int = Math.floor(Math.random()*voiceList.length);
+			trace(voiceIndex);
 			
-			voice = _presets["valsound.piano1"];
+			voice = voiceList[voiceIndex];
 		}
 		
 		public function SetRandomNoteArray():void
@@ -43,10 +50,18 @@ package
 			noteArray.push(noteIndex);
 			for (var i:int = 0; i < 7; i++)
 			{
-				x = Math.floor(Math.random()*6)+1;
+				x = Math.floor(Math.random()*4)+1;
 				noteIndex += x;
 				noteArray.push(noteIndex);
 			}
+		}
+		
+		public function SetRandomColor():void
+		{
+			color = new ColorTransform();
+			color.redMultiplier = Math.random()*4;
+			color.blueMultiplier = Math.random()*4;
+			color.greenMultiplier = Math.random()*4;
 		}
 	}
 }
