@@ -7,9 +7,13 @@ package
 	{
 		private var _driver:SiONDriver;
 		private var asdfjklKeys:Array;
+		private var asdfjklKeyCounters:Array;
 		
 		private var pressing_jump:Boolean = false;
 		private var stopRunCounter:int;
+		private var runDir:int;
+		private const LEFT:int = 0;
+		private const RIGHT:int = 1;
 		
 		public function MusicalInputManager() 
 		{
@@ -17,6 +21,7 @@ package
 			_driver.play('c0'); //IMPORTANT!!!
 			
 			asdfjklKeys = [false, false, false, false, false, false, false, false];
+			asdfjklKeyCounters = [0, 0, 0, 0, 0, 0, 0, 0];
 			stopRunCounter = 0;
 		}
 		
@@ -27,7 +32,7 @@ package
 			//play the notes
 			for (var i:int = 0; i < asdfjklKeys.length; i++)
 			{
-				if (asdfjklKeys[i])
+				if (asdfjklKeyCounters[i] == 3)
 				{
 					_driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
@@ -36,8 +41,8 @@ package
 				}
 			}
 			
-			PlayerRun(avatar);
 			PlayerJump(avatar);
+			PlayerRun(avatar);
 			
 			//DEBUG:: Create new instrument
 			if (Global.CheckKeyPressed(Global.ENTER))
@@ -58,12 +63,16 @@ package
 				}
 			}
 			if (move){
-				avatar.vel.x = -avatar.top_xspeed;
-				avatar.facing = Global.LEFT;
-				stopRunCounter = 10;
-				
-				if (avatar.on_ground)
-					avatar.move_state = avatar.RUNNING;
+				if (runDir == LEFT || stopRunCounter < 3)
+				{
+					avatar.vel.x = -avatar.top_xspeed;
+					avatar.facing = Global.LEFT;
+					stopRunCounter = 10;
+					runDir = LEFT;
+					
+					if (avatar.on_ground)
+						avatar.move_state = avatar.RUNNING;
+				}
 			}
 			
 			//move the player //RIGHT
@@ -75,12 +84,16 @@ package
 				}
 			}
 			if (move){
-				avatar.vel.x = avatar.top_xspeed;
-				avatar.facing = Global.RIGHT;
-				stopRunCounter = 10;
-				
-				if (avatar.on_ground)
-					avatar.move_state = avatar.RUNNING;
+				if (runDir == RIGHT || stopRunCounter < 3)
+				{
+					avatar.vel.x = avatar.top_xspeed;
+					avatar.facing = Global.RIGHT;
+					stopRunCounter = 10;
+					runDir = RIGHT;
+					
+					if (avatar.on_ground)
+						avatar.move_state = avatar.RUNNING;
+				}
 			}
 			
 			//STOP MOVEMENT
@@ -97,12 +110,28 @@ package
 		private function PlayerJump(avatar:Avatar):void
 		{
 			//JUMPING
-			if (Global.CheckKeyPressed(Global.UP) && avatar.on_ground)
+			var playerJump:Boolean = false;
+			var lcounter:int = 0;
+			var rcounter:int = 0;
+			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
+			{
+				if (asdfjklKeyCounters[i] != 0)
+				{
+					if (i <= 3)
+						lcounter++;
+					else	
+						rcounter++;
+				}
+			}
+			if (lcounter >= 3 || rcounter >= 3) playerJump = true;
+			
+			if (playerJump && avatar.on_ground)
 			{
 				pressing_jump = true;
 				avatar.on_ground = false;
 				avatar.vel.y -= avatar.jump_vel;
 			}
+			
 			if (stopRunCounter > 0 && !avatar.on_ground)
 			{
 				avatar.y-=2;
@@ -113,46 +142,63 @@ package
 		
 		public function PlayedANote():Boolean
 		{
-			for (var i:int = 0; i < asdfjklKeys.length; i++)
+			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
 			{
-				if (asdfjklKeys[i]) return true;
+				if (asdfjklKeyCounters[i] == 3) return true;
 			}
 			return false;
 		}
 		
 		private function UpdateKeyArray():void
 		{
-			if (Global.CheckKeyPressed(Global.A_KEY))
+			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
+			{
+				asdfjklKeyCounters[i]--;
+				if (asdfjklKeyCounters[i] <= 0)
+				{
+					asdfjklKeyCounters[i] = 0;
+				}
+			}
+			
+			if (Global.CheckKeyPressed(Global.A_KEY)){
 				asdfjklKeys[0] = true;
-			else asdfjklKeys[0] = false;
-				
-			if (Global.CheckKeyPressed(Global.S_KEY))
+				asdfjklKeyCounters[0] = 3;
+			}else asdfjklKeys[0] = false;
+			
+			if (Global.CheckKeyPressed(Global.S_KEY)){
 				asdfjklKeys[1] = true;
-			else asdfjklKeys[1] = false;
+				asdfjklKeyCounters[1] = 3;
+			}else asdfjklKeys[1] = false;
 			
-			if (Global.CheckKeyPressed(Global.D_KEY))
+			if (Global.CheckKeyPressed(Global.D_KEY)){
 				asdfjklKeys[2] = true;
-			else asdfjklKeys[2] = false;
+				asdfjklKeyCounters[2] = 3;
+			}else asdfjklKeys[2] = false;
 			
-			if (Global.CheckKeyPressed(Global.F_KEY))
+			if (Global.CheckKeyPressed(Global.F_KEY)){
 				asdfjklKeys[3] = true;
-			else asdfjklKeys[3] = false;
+				asdfjklKeyCounters[3] = 3;
+			}else asdfjklKeys[3] = false;
 			
-			if (Global.CheckKeyPressed(Global.J_KEY))
+			if (Global.CheckKeyPressed(Global.J_KEY)){
 				asdfjklKeys[4] = true;
-			else asdfjklKeys[4] = false;
+				asdfjklKeyCounters[4] = 3;
+			}else asdfjklKeys[4] = false;
 			
-			if (Global.CheckKeyPressed(Global.K_KEY))
+			if (Global.CheckKeyPressed(Global.K_KEY)){
 				asdfjklKeys[5] = true;
-			else asdfjklKeys[5] = false;
+				asdfjklKeyCounters[5] = 3;
+			}else asdfjklKeys[5] = false;
 			
-			if (Global.CheckKeyPressed(Global.L_KEY))
+			if (Global.CheckKeyPressed(Global.L_KEY)){
 				asdfjklKeys[6] = true;
-			else asdfjklKeys[6] = false;
+				asdfjklKeyCounters[6] = 3;
+			}else asdfjklKeys[6] = false;
 			
-			if (Global.CheckKeyPressed(Global.SEMICOLON))
+			if (Global.CheckKeyPressed(Global.SEMICOLON)){
 				asdfjklKeys[7] = true;
-			else asdfjklKeys[7] = false;
+				asdfjklKeyCounters[7] = 3;
+			}else asdfjklKeys[7] = false;
 		}
 	}
 }
