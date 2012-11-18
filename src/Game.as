@@ -9,31 +9,23 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import org.si.sion.SiONData;
-	import org.si.sion.SiONDriver;
 	
 	public class Game 
 	{
 		public var bitmap:Bitmap;
 		public static var Renderer:BitmapData;
 		
-		private var _driver:SiONDriver;
-		private var _voice:VoiceManager;
-		
 		//entities
 		public var solids:Array;
 		public var avatar:Avatar;
 		public var bursts:Array;
 		
-		//player input stuff
-		public var pressing_jump:Boolean = false;
+		//managers
+		public var musicInputManager:MusicalInputManager;
 		
 		public function Game()
 		{
 			trace("Game created!");
-			_driver = new SiONDriver();
-			_voice = new VoiceManager();
-			_driver.play('c0'); //IMPORTANT!!!
 			
 			Renderer = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
 			bitmap = new Bitmap(Renderer);
@@ -51,6 +43,12 @@ package
 			];
 			avatar = new Avatar(Global.stageWidth/2-12, Global.stageHeight/2-12);
 			bursts = [];
+			
+			//create managers
+			musicInputManager = new MusicalInputManager();
+			
+			//TODO::!!!
+			bursts.push(new Burst(avatar.x-20, avatar.y-20));
 		}		
 		
 		public function Render():void
@@ -77,7 +75,9 @@ package
 		public function Update():void
 		{
 			//update player input
-			PlayerInput();
+			musicInputManager.MusicalInput(avatar);
+			if (musicInputManager.PlayedANote())
+				bursts.push(new Burst(avatar.x-20, avatar.y-20));
 			
 			//UPDATE THE ENTITIES
 			avatar.Update(solids);
@@ -94,76 +94,8 @@ package
 		}
 		
 		/*************************************************************************************/
-		//HANDLE AND DETECT PLAYER INPUT
+		//HANDLE AND DETECT INPUT
 		/*************************************************************************************/
-		public function PlayerInput():void
-		{
-			//JUMPING
-			if (Global.CheckKeyPressed(Global.UP) && avatar.on_ground)
-			{
-				pressing_jump = true;
-				avatar.on_ground = false;
-				avatar.vel.y -= avatar.jump_vel;
-			}
-			if (Global.CheckKeyDown(Global.UP) && !avatar.on_ground)
-			{
-				avatar.y-=2;
-				if (avatar.vel.y > 0)
-					avatar.y-=1;
-			}
-			
-			//RUNNING
-			if (Global.CheckKeyDown(Global.RIGHT) || Global.CheckKeyDown(Global.LEFT))
-			{
-				if (Global.CheckKeyDown(Global.RIGHT))
-				{
-					avatar.vel.x = avatar.top_xspeed;
-					avatar.facing = Global.RIGHT;
-				}
-				else if (Global.CheckKeyDown(Global.LEFT))
-				{
-					avatar.vel.x = -avatar.top_xspeed;
-					avatar.facing = Global.LEFT;
-				}
-				
-				if (avatar.on_ground)
-					avatar.move_state = avatar.RUNNING;
-			}
-			else
-			{
-				avatar.vel.x = 0;
-				if (avatar.on_ground)
-					avatar.move_state = avatar.STANDING;
-			}
-			
-			//MUSIC PLAYING (AND ADDING BURSTS)
-			if (Global.CheckKeyPressed(Global.A_KEY))
-			{
-				_driver.noteOn(_voice.noteArray[0], _voice.voice, 4);
-				bursts.push(new Burst(avatar.x-20, avatar.y-20));
-			}
-			else if (Global.CheckKeyPressed(Global.S_KEY))
-			{
-				_driver.noteOn(_voice.noteArray[1], _voice.voice, 4);
-				bursts.push(new Burst(avatar.x-20, avatar.y-20));
-			}
-			else if (Global.CheckKeyPressed(Global.D_KEY))
-			{
-				_driver.noteOn(_voice.noteArray[2], _voice.voice, 4);
-				bursts.push(new Burst(avatar.x-20, avatar.y-20));
-			}
-			else if (Global.CheckKeyPressed(Global.F_KEY))
-			{
-				_driver.noteOn(_voice.noteArray[3], _voice.voice, 4);
-				bursts.push(new Burst(avatar.x-20, avatar.y-20));
-			}
-			
-			//DEBUG:: Create new instrument
-			if (Global.CheckKeyPressed(Global.SPACE))
-			{
-				_voice.CreateRandomInstrument();
-			}
-		}
 		
 		public function KeyUp(e:KeyboardEvent):void
 		{

@@ -27,6 +27,10 @@ package
 		public static const S_KEY:int = 83;
 		public static const D_KEY:int = 68;
 		public static const F_KEY:int = 70;
+		public static const J_KEY:int = 74;
+		public static const K_KEY:int = 75;
+		public static const L_KEY:int = 76;
+		public static const SEMICOLON:int = 186;
 		public static const SPACE:int = 32;
 		public static const ENTER:int = 13;
 		public static const ESC:int = 27;

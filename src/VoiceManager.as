@@ -36,14 +36,14 @@ package
 		
 		public function SetRandomNoteArray():void
 		{
-			var noteIndex:int = Math.floor(Math.random()*25)+48;
+			var noteIndex:int = Math.floor(Math.random()*25)+40;
 			var x:int
 			
 			noteArray = [];
 			noteArray.push(noteIndex);
-			for (var i:int = 0; i < 3; i++)
+			for (var i:int = 0; i < 7; i++)
 			{
-				x = Math.floor(Math.random()*8)+1;
+				x = Math.floor(Math.random()*6)+1;
 				noteIndex += x;
 				noteArray.push(noteIndex);
 			}
