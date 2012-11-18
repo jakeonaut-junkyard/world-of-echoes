@@ -1,0 +1,51 @@
+default::
+	-Saw wave
+	-Square wave
+	-93bit noise
+	-Wave table sample
+	-Dual saw
+	-Dual square
+
+valsound.bass::
+	-Chopper bass 1
+	-Chopper bass 3
+	-Effect Bass 1
+	-Magical bass
+	-Groove Bass 1
+	-metal bass
+	-rezonance type bass #1
+	-slap bass #3
+	-slap bass mute
+	-synth bass 2 myon
+	-synth bass #3 cho!
+	
+valsound.bell::
+	-China Bell Double
+	-Church Bell (??)
+	-Glocken 1
+	-Marimba
+	-Pretty Bell
+	-Synth Bell #1 o5
+	-Viberaphon AMS-modu
+	-twin marinba 2 g&amp,
+	
+valsound.brass::
+	-Attack Brass (q2)
+	-SAX
+	-Trumpet 2
+
+valsound.guitar::
+	-Guitar VeloLow
+	-Cutting E.Guitar
+	-Dis. Synth (old)
+	-METAL
+	-Soft Dis.Guitar
+	
+valsound.lead::
+	-Bosco-lead
+	-Cosmo Lead
+	-MONO Lead
+	-
+	
+midi::
+	-
