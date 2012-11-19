@@ -9,7 +9,8 @@ package
 		private var asdfjklKeys:Array;
 		private var asdfjklKeyCounters:Array;
 		
-		private var pressing_jump:Boolean = false;
+		private var justJumped:int = 0;
+		private var doubleJumped:Boolean = false;
 		private var stopRunCounter:int;
 		private var runDir:int;
 		private const LEFT:int = 0;
@@ -34,6 +35,7 @@ package
 			{
 				if (asdfjklKeyCounters[i] == 3)
 				{
+					_driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
 					_driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
 					if (i <= 3) i = 3;
@@ -62,7 +64,7 @@ package
 					break;
 				}
 			}
-			if (move){
+			if (move && !Global.CheckKeyDown(Global.SPACE)){
 				if (runDir == LEFT || stopRunCounter < 3)
 				{
 					avatar.vel.x = -avatar.top_xspeed;
@@ -83,7 +85,7 @@ package
 					break;
 				}
 			}
-			if (move){
+			if (move && !Global.CheckKeyDown(Global.SPACE)){
 				if (runDir == RIGHT || stopRunCounter < 3)
 				{
 					avatar.vel.x = avatar.top_xspeed;
@@ -123,14 +125,19 @@ package
 						rcounter++;
 				}
 			}
-			if (lcounter >= 3 || rcounter >= 3) playerJump = true;
+			if (lcounter >= 3 || rcounter >= 3) 
+				playerJump = true;
 			
-			if (playerJump && avatar.on_ground)
+			if (playerJump && justJumped <= 0 && (avatar.on_ground || !doubleJumped) && !Global.CheckKeyDown(Global.SPACE))
 			{
-				pressing_jump = true;
+				justJumped = 3;
+				if (!avatar.on_ground) doubleJumped = true;
 				avatar.on_ground = false;
-				avatar.vel.y -= avatar.jump_vel;
+				avatar.vel.y = -avatar.jump_vel;
+				playerJump = false;
 			}
+			else if (avatar.on_ground && doubleJumped) doubleJumped = false;
+			if (justJumped > 0) justJumped--;
 			
 			if (stopRunCounter > 0 && !avatar.on_ground)
 			{

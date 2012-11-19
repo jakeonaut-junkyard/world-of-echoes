@@ -30,13 +30,10 @@ package
 		
 		public function SetRandomVoice():void
 		{
-			trace(_presets.categolies.length + "categolilength");
 			var categoryIndex:int = Math.floor(Math.random()*_presets.categolies.length);
-			trace(categoryIndex);
 			var voiceList:Array = _presets.categolies[categoryIndex];
-			trace(voiceList.length + "voiceListLength");
 			var voiceIndex:int = Math.floor(Math.random()*voiceList.length);
-			trace(voiceIndex);
+			trace("Voice: ["+categoryIndex+"]["+voiceIndex+"]");
 			
 			voice = voiceList[voiceIndex];
 		}
