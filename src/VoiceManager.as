@@ -9,8 +9,6 @@ package
 	public class VoiceManager extends Sprite 
     {
         private var _presets:SiONPresetVoice;
-		public var categoryIndex:int;
-		public var voiceIndex:int;
 		public var voice:SiONVoice;
 		public var noteArray:Array;
 		public var color:ColorTransform;

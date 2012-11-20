@@ -2,6 +2,7 @@ package
 {
 	import Entities.Avatar;
 	import Entities.Burst;
+	import Entities.VoiceOrb;
 	import Entities.GameObject;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -19,6 +20,7 @@ package
 		public var solids:Array;
 		public var avatar:Avatar;
 		public var bursts:Array;
+		public var voiceOrbs:Array;
 		
 		//managers
 		public var musicInputManager:MusicalInputManager;
@@ -43,6 +45,7 @@ package
 			];
 			avatar = new Avatar(Global.stageWidth/2-12, Global.stageHeight/2-12);
 			bursts = [];
+			voiceOrbs = [new VoiceOrb(Global.stageWidth/4, Global.stageHeight/4, avatar._voice)];
 			
 			//create managers
 			musicInputManager = new MusicalInputManager();
@@ -57,9 +60,14 @@ package
 			Renderer.fillRect(new Rectangle(0, 0, Renderer.width, Renderer.height), 0x000000);
 			
 			//draw bursts
-			for (var i:int = 0; i < bursts.length; i++)
+			var i:int;
+			for (i = 0; i < bursts.length; i++)
 			{
 				bursts[i].Render();
+			}
+			for (i = 0; i < voiceOrbs.length; i++)
+			{
+				voiceOrbs[i].Render();
 			}
 			
 			//draw land
@@ -81,11 +89,28 @@ package
 			
 			//UPDATE THE ENTITIES
 			avatar.Update(solids);
-			for (var i:int = bursts.length-1; i >= 0; i--)
+			var i:int;
+			for (i = bursts.length-1; i >= 0; i--)
 			{
 				bursts[i].Update();
 				if (!bursts[i].visible)
 					bursts.splice(i, 1);
+			}
+			for (i = voiceOrbs.length-1; i >= 0; i--)
+			{
+				voiceOrbs[i].Update();
+				
+				var v:VoiceOrb = voiceOrbs[i];
+				if (v.CheckRectIntersect(avatar, v.x+v.lb, v.y+v.tb, v.x+v.rb, v.y+v.bb))
+				{
+					var tempVoice:VoiceManager = avatar._voice;
+					avatar._voice = voiceOrbs[i].voice;
+					voiceOrbs.splice(i, 1);
+					//add new 
+					var x:int = (Math.random()*(Global.stageWidth-128))+64;
+					var y:int = (Math.random()*(Global.stageHeight-128))+64;
+					voiceOrbs.push(new VoiceOrb(x, y, tempVoice));
+				}
 			}
 			
 			//clear out the "keys_up" array for next update
