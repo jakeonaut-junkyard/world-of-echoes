@@ -64,8 +64,8 @@ package
 					break;
 				}
 			}
-			if (move && !Global.CheckKeyDown(Global.SPACE)){
-				if (runDir == LEFT || stopRunCounter < 3)
+			if (move || Global.CheckKeyDown(Global.LEFT)){
+				if (runDir == LEFT || stopRunCounter < 3 || Global.CheckKeyDown(Global.LEFT))
 				{
 					avatar.vel.x = -avatar.top_xspeed;
 					avatar.facing = Global.LEFT;
@@ -85,8 +85,8 @@ package
 					break;
 				}
 			}
-			if (move && !Global.CheckKeyDown(Global.SPACE)){
-				if (runDir == RIGHT || stopRunCounter < 3)
+			if (move || Global.CheckKeyDown(Global.RIGHT)){
+				if (runDir == RIGHT || stopRunCounter < 3 || Global.CheckKeyDown(Global.RIGHT))
 				{
 					avatar.vel.x = avatar.top_xspeed;
 					avatar.facing = Global.RIGHT;
@@ -99,13 +99,19 @@ package
 			}
 			
 			//STOP MOVEMENT
-			stopRunCounter--;
+			if (Global.CheckKeyUp(Global.LEFT) || Global.CheckKeyUp(Global.RIGHT))
+				stopRunCounter = 0;
+			else
+				stopRunCounter--;
 			if (stopRunCounter <= 0){
 				stopRunCounter = 0;
-				avatar.vel.x = 0;
 				
-				if (avatar.on_ground)
-					avatar.move_state = avatar.STANDING;
+				if (!Global.CheckKeyDown(Global.LEFT) && !Global.CheckKeyDown(Global.RIGHT))
+				{
+					avatar.vel.x = 0;
+					if (avatar.on_ground)
+						avatar.move_state = avatar.STANDING;
+				}
 			}
 		}
 		
@@ -125,10 +131,10 @@ package
 						rcounter++;
 				}
 			}
-			if (lcounter >= 3 || rcounter >= 3) 
+			if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.SPACE) || Global.CheckKeyPressed(Global.UP)) 
 				playerJump = true;
 			
-			if (playerJump && justJumped <= 0 && (avatar.on_ground || !doubleJumped) && !Global.CheckKeyDown(Global.SPACE))
+			if (playerJump && justJumped <= 0 && (avatar.on_ground || !doubleJumped))
 			{
 				justJumped = 3;
 				if (!avatar.on_ground) doubleJumped = true;
@@ -139,7 +145,7 @@ package
 			else if (avatar.on_ground && doubleJumped) doubleJumped = false;
 			if (justJumped > 0) justJumped--;
 			
-			if (stopRunCounter > 0 && !avatar.on_ground)
+			if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.SPACE) || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
 			{
 				avatar.y-=2;
 				if (avatar.vel.y > 0)
@@ -187,22 +193,22 @@ package
 				asdfjklKeyCounters[3] = 3;
 			}else asdfjklKeys[3] = false;
 			
-			if (Global.CheckKeyPressed(Global.J_KEY)){
+			if (Global.CheckKeyPressed(Global.J_KEY) || Global.CheckKeyPressed(Global.Q_KEY)){
 				asdfjklKeys[4] = true;
 				asdfjklKeyCounters[4] = 3;
 			}else asdfjklKeys[4] = false;
 			
-			if (Global.CheckKeyPressed(Global.K_KEY)){
+			if (Global.CheckKeyPressed(Global.K_KEY) || Global.CheckKeyPressed(Global.W_KEY)){
 				asdfjklKeys[5] = true;
 				asdfjklKeyCounters[5] = 3;
 			}else asdfjklKeys[5] = false;
 			
-			if (Global.CheckKeyPressed(Global.L_KEY)){
+			if (Global.CheckKeyPressed(Global.L_KEY) || Global.CheckKeyPressed(Global.E_KEY)){
 				asdfjklKeys[6] = true;
 				asdfjklKeyCounters[6] = 3;
 			}else asdfjklKeys[6] = false;
 			
-			if (Global.CheckKeyPressed(Global.SEMICOLON)){
+			if (Global.CheckKeyPressed(Global.SEMICOLON) || Global.CheckKeyPressed(Global.R_KEY)){
 				asdfjklKeys[7] = true;
 				asdfjklKeyCounters[7] = 3;
 			}else asdfjklKeys[7] = false;
