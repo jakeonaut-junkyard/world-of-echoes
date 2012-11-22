@@ -4,14 +4,16 @@ package
 	import Entities.Burst;
 	import Entities.VoiceOrb;
 	import Entities.GameObject;
+	import Entities.SoundObjects.Arpeggio;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import org.si.sion.SiONDriver;
 	
-	public class Game 
+	public class Game
 	{
 		public var bitmap:Bitmap;
 		public static var Renderer:BitmapData;
@@ -21,15 +23,17 @@ package
 		public var avatar:Avatar;
 		public var bursts:Array;
 		public var voiceOrbs:Array;
+		public var soundObjects:Array;
 		
 		//managers
 		public var musicInputManager:MusicalInputManager;
+		private var _driver:SiONDriver;
 		
 		public function Game()
 		{
 			trace("Game created!");
 			
-			Renderer = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
+			Renderer = new BitmapData(Global.stageWidth*2*Global.zoom, Global.stageHeight*2*Global.zoom, false, 0x000000);
 			bitmap = new Bitmap(Renderer);
 			
 			Global.keys_pressed = new Array();
@@ -39,16 +43,20 @@ package
 			
 			//create entities
 			solids = [
-				new GameObject(0, Global.stageHeight-32, 0, 0, Global.stageWidth, 32), //floor
-				new GameObject(-16, 0, 0, 0, 16, Global.stageHeight), //Left wall
-				new GameObject(Global.stageWidth, 0, 0, 0, 16, Global.stageHeight) //Right wall
+				new GameObject(0, Global.stageHeight-32, 0, 0, (bitmap.width/Global.zoom)/2, 32), //floor1
+				new GameObject(0, bitmap.height/Global.zoom-32, 0, 0, (bitmap.width/Global.zoom), 32), //floor 2
+				new GameObject(-16, 0, 0, 0, 16, bitmap.height/Global.zoom), //Left wall
+				new GameObject(bitmap.width/Global.zoom, 0, 0, 0, 16, bitmap.height/Global.zoom) //Right wall
 			];
 			avatar = new Avatar(Global.stageWidth/2-12, Global.stageHeight/2-12);
 			bursts = [];
 			voiceOrbs = [new VoiceOrb(Global.stageWidth/4, Global.stageHeight/4, avatar._voice)];
+			soundObjects = [];
 			
 			//create managers
 			musicInputManager = new MusicalInputManager();
+			_driver = new SiONDriver();
+			_driver.play('c0'); //IMPORTANT!!!
 			
 			//TODO::!!!
 			bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
@@ -71,8 +79,12 @@ package
 			}
 			
 			//draw land
-			Renderer.fillRect(new Rectangle(0, (Global.stageHeight-32)*Global.zoom, 
-				Global.stageWidth*Global.zoom, 32*Global.zoom), 0xFFFFFF);
+			for (i = 0; i < solids.length; i++)
+			{
+				var s:GameObject = solids[i];
+				Renderer.fillRect(new Rectangle(s.x*Global.zoom, s.y*Global.zoom, 
+					s.x*Global.zoom+s.rb*Global.zoom, s.y), 0xFFFFFF);
+			}
 
 			//draw player
 			avatar.Render();
@@ -81,9 +93,9 @@ package
 		}
 		
 		public function Update():void
-		{
+		{			
 			//update player input
-			musicInputManager.MusicalInput(avatar);
+			musicInputManager.MusicalInput(avatar, _driver);
 			if (musicInputManager.PlayedANote())
 				bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
 			
@@ -103,19 +115,71 @@ package
 				var v:VoiceOrb = voiceOrbs[i];
 				if (v.CheckRectIntersect(avatar, v.x+v.lb, v.y+v.tb, v.x+v.rb, v.y+v.bb))
 				{
+					//create audiovisual flair
+					bursts.push(new Burst(v.x-16, v.y-16, v.voice.color))
+					for (var j:int = soundObjects.length-1; j >= 0; j--)
+					{
+						if (soundObjects[j] is Arpeggio)
+							soundObjects.splice(i, 1);
+					}
+					soundObjects.push(new Arpeggio(voiceOrbs[i].voice));
+					
+					//remove orb and update voice
 					var tempVoice:VoiceManager = avatar._voice;
 					avatar._voice = voiceOrbs[i].voice;
 					voiceOrbs.splice(i, 1);
+					
 					//add new 
 					var x:int = (Math.random()*(Global.stageWidth-128))+64;
 					var y:int = (Math.random()*(Global.stageHeight-128))+64;
 					voiceOrbs.push(new VoiceOrb(x, y, tempVoice));
 				}
 			}
+			for (i = soundObjects.length-1; i >= 0; i--)
+			{
+				soundObjects[i].Update(_driver);
+				if (soundObjects[i].dead)
+					soundObjects.splice(i, 1);
+			}
+			
+			//MOVE THE VIEW SCREEN
+			UpdateView();
 			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();
+		}
+		
+		public function UpdateView():void
+		{
+			var avirb:Number = avatar.x+avatar.rb+64;
+			var avilb:Number = avatar.x+avatar.lb-64;
+			var avitb:Number = avatar.y+avatar.tb-32;
+			var avibb:Number = avatar.y+avatar.bb+64;
+			var right:Number = Global.stageWidth-(bitmap.x/Global.zoom);
+			var left:Number = 0-(bitmap.x/Global.zoom);
+			var top:Number = 0-(bitmap.y/Global.zoom);
+			var bottom:Number = Global.stageHeight-(bitmap.y/Global.zoom);
+			
+			//move view right and left
+			if (avirb > right)
+				bitmap.x-= (avirb - right);
+			else if (avilb < left)
+				bitmap.x+= (left - avilb);
+			//move view up and down
+			if (avitb < top)
+				bitmap.y += (top - avitb);
+			else if (avibb > bottom)
+				bitmap.y-= (avibb - bottom);
+				
+			//prevent viewing off the edge
+			if (bitmap.x < (-1)*(Global.stageWidth+bitmap.width/Global.zoom))
+				bitmap.x = (-1)*(Global.stageWidth+bitmap.width/Global.zoom);
+			if (bitmap.x > 0) bitmap.x = 0;
+			
+			if (bitmap.y < (bitmap.height-(Global.stageHeight*Global.zoom))*(-1))
+				bitmap.y = (bitmap.height-(Global.stageHeight*Global.zoom))*(-1);
+			if (bitmap.y > 0) bitmap.y = 0;
 		}
 		
 		/*************************************************************************************/

@@ -5,7 +5,6 @@ package
 	
 	public class MusicalInputManager 
 	{
-		private var _driver:SiONDriver;
 		private var asdfjklKeys:Array;
 		private var asdfjklKeyCounters:Array;
 		
@@ -17,16 +16,13 @@ package
 		private const RIGHT:int = 1;
 		
 		public function MusicalInputManager() 
-		{
-			_driver = new SiONDriver();
-			_driver.play('c0'); //IMPORTANT!!!
-			
+		{			
 			asdfjklKeys = [false, false, false, false, false, false, false, false];
 			asdfjklKeyCounters = [0, 0, 0, 0, 0, 0, 0, 0];
 			stopRunCounter = 0;
 		}
 		
-		public function MusicalInput(avatar:Avatar):void
+		public function MusicalInput(avatar:Avatar, driver:SiONDriver):void
 		{
 			UpdateKeyArray();
 			
@@ -35,8 +31,8 @@ package
 			{
 				if (asdfjklKeyCounters[i] == 3)
 				{
-					_driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
-					_driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
+					driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
+					driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
 					if (i <= 3) i = 3;
 					else break;

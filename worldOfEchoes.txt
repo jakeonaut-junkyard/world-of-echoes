@@ -1,14 +1,15 @@
 TODO::
-1. VOICE ORB STUFF::
-	A. Make catching a voice orb feel more audiovisually satisfying
-		-Also, when you catch a new voice orb, shouldn't yours pop off to the side or above you and blinky for a second???
+0. FIX ALL THE GAME.BITMAP AND VIEW MOVING THINGS (take away all the extraneous *Global.zoom)
+1. Start building rudimentary levels/areas. Perhaps work on making a built i\n level editor for ease.
+	A. Group different areas audiovisually thematically and work on creating scales for each of the areas which affect the "noteArray" of your voice.
+	B. Tempo areas? Silent (muted) cave areas? Chaos Practice Halls
+	C. The division of public and private space (performances and practices)
+2. VOICE ORB STUFF::
+	A. Also, when you catch a new voice orb, shouldn't yours pop off to the side or above you and blinky for a second???
 	B. Make voice orb movement more centered around a point.
 	C. When building levels/areas, make voice orbs randomly created every now and then and then fade out if not capture after enough time.
 	D. Go through and either distinguish which voices produce too much lag, or make any voice that last for more than a second (or half a second) fade out/stop
 	E. Make voices match up with colors??? (categorically)
-2. Start building rudimentary levels/areas. Perhaps work on making a built in level editor for ease.
-	A. Group different areas audiovisually thematically and work on creating scales for each of the areas which affect the "noteArray" of your voice.
-	B. Tempo areas? Silent (muted) cave areas? Chaos Practice Halls
 3. Add Options on Pause to change controls:: qwerasdf && arrow keys
 	
 

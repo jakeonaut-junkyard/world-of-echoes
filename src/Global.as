@@ -47,7 +47,7 @@ package
 		{
 			
 		}	
-		
+
 		public static function CreateLetterDictionary():void
 		{
 			LetterKeys = new Dictionary();
