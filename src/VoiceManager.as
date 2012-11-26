@@ -13,16 +13,16 @@ package
 		public var noteArray:Array;
 		public var color:ColorTransform;
          
-        public function VoiceManager() 
+        public function VoiceManager(scale:Array)
         {
             _presets = new SiONPresetVoice();
-			CreateRandomInstrument();
+			CreateRandomInstrument(scale);
         }
 		
-		public function CreateRandomInstrument():void
+		public function CreateRandomInstrument(scale:Array):void
 		{
 			SetRandomVoice();
-			SetRandomNoteArray();
+			SetRandomNoteArray(scale);
 			SetRandomColor();
 		}
 		
@@ -36,18 +36,22 @@ package
 			voice = voiceList[voiceIndex];
 		}
 		
-		public function SetRandomNoteArray():void
+		public function SetRandomNoteArray(scale:Array):void
 		{
-			var noteIndex:int = Math.floor(Math.random()*25)+40;
-			var x:int
+			var index:int = Math.floor(Math.random()*Math.floor(scale.length/2));
+			var x:int;
+			var maxIndex:int = scale.length;
+			var randomRange:int = 4;
+			while (randomRange*8+index >= maxIndex)
+				randomRange--;
 			
 			noteArray = [];
-			noteArray.push(noteIndex);
+			noteArray.push(scale[index]);
 			for (var i:int = 0; i < 7; i++)
 			{
-				x = Math.floor(Math.random()*4)+1;
-				noteIndex += x;
-				noteArray.push(noteIndex);
+				x = Math.floor(Math.random()*randomRange)+1;
+				index += x;
+				noteArray.push(scale[index]);
 			}
 		}
 		

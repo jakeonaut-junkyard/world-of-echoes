@@ -29,7 +29,7 @@ package Entities
 		[Embed(source = "../resources/images/avatar.png")]
 		private var sprite_sheet:Class;
 		
-		public function Avatar(x:int, y:int) 
+		public function Avatar(x:int, y:int, scale:Array) 
 		{
 			super(x, y, 9, 9, 15, 24);
 			top_xspeed = 3.5;
@@ -42,7 +42,7 @@ package Entities
 			prev_move_state = move_state;
 			
 			//my voice
-			_voice = new VoiceManager();
+			_voice = new VoiceManager(scale);
 			
 			//animation management creation
 			frameDelay = 5;
@@ -51,7 +51,7 @@ package Entities
 			frameHeight = 24;
 		}	
 		
-		override public function Render():void
+		override public function Render(levelRenderer:BitmapData):void
 		{
 			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
 			var temp_sheet:Bitmap = new sprite_sheet();
@@ -66,9 +66,7 @@ package Entities
 				matrix.translate(frameWidth, 0);
 			}
 			matrix.translate(x, y);
-			matrix.scale(Global.zoom, Global.zoom);
-						
-			Game.Renderer.draw(image_sprite, matrix, _voice.color);
+			levelRenderer.draw(image_sprite, matrix, _voice.color);
 		}
 		
 		public function Update(solids:Array):void

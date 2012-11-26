@@ -45,15 +45,14 @@ package Entities
 			image_sprite = new Sprite();
 		}
 		
-		public function Render():void
+		public function Render(levelRenderer:BitmapData):void
 		{
 			if (!visible)
 				return;
 				
 			var matrix:Matrix = new Matrix();
 			matrix.translate(x, y);
-			matrix.scale(Global.zoom, Global.zoom); 
-			Game.Renderer.draw(image_sprite, matrix);
+			levelRenderer.draw(image_sprite, matrix);
 		}
 		
 		public function DrawSpriteFromSheet(temp_image:Bitmap, temp_sheet:Bitmap):void
@@ -80,17 +79,6 @@ package Entities
 					currFrame = 0;
 				frameCount = 0;
 			}
-		}
-		
-		public function CheckRectIntersect(obj2:GameObject, lb:int, 
-			tb:int, rb:int, bb:int):Boolean
-		{			
-			if (lb <= (obj2.x + obj2.rb) && rb >= (obj2.x + obj2.lb) &&
-				tb <= (obj2.y + obj2.bb) && bb >= (obj2.y + obj2.tb))
-			{
-				return true;
-			}
-			return false;
 		}
 	}
 }

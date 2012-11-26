@@ -11,7 +11,7 @@ package Entities.SoundObjects
 		
 		public function SoundObject(voice:VoiceManager) 
 		{
-			this.voice = new VoiceManager();
+			this.voice = new VoiceManager([]);
 			this.voice.voice = voice.voice;
 			this.voice.noteArray = voice.noteArray;
 			
@@ -19,7 +19,7 @@ package Entities.SoundObjects
 			noteDelay = 10;
 		}		
 		
-		public function Update(driver:SiONDriver):void
+		public function Update():void
 		{
 		}
 	}

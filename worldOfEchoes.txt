@@ -1,16 +1,15 @@
 TODO::
-0. FIX ALL THE GAME.BITMAP AND VIEW MOVING THINGS (take away all the extraneous *Global.zoom)
-1. Start building rudimentary levels/areas. Perhaps work on making a built i\n level editor for ease.
-	A. Group different areas audiovisually thematically and work on creating scales for each of the areas which affect the "noteArray" of your voice.
-	B. Tempo areas? Silent (muted) cave areas? Chaos Practice Halls
-	C. The division of public and private space (performances and practices)
-2. VOICE ORB STUFF::
-	A. Also, when you catch a new voice orb, shouldn't yours pop off to the side or above you and blinky for a second???
-	B. Make voice orb movement more centered around a point.
-	C. When building levels/areas, make voice orbs randomly created every now and then and then fade out if not capture after enough time.
-	D. Go through and either distinguish which voices produce too much lag, or make any voice that last for more than a second (or half a second) fade out/stop
-	E. Make voices match up with colors??? (categorically)
-3. Add Options on Pause to change controls:: qwerasdf && arrow keys
+1. VOICE ORB STUFF::
+	A. When building levels/areas, make voice orbs randomly created every now and then and then fade out if not capture after enough time.
+	B. Also, when you catch a new voice orb, shouldn't yours pop off to the side or above you and blinky for a second???
+	C. Go through and either distinguish which voices produce too much lag, or make any voice that last for more than a second (or half a second) fade out/stop
+	D. Make voices match up with colors??? (categorically)
+2. Force note fading/cutoff
+3. Make a bassline/rhythm section for different map areas (except the silent cave tunnel area/practice rooms?).
+	-How can we implement the ability for avatars to affect this bassline somehow?
+4. How should avatars semipermanently affect the visual space (besides just burst visualizations)
+	A. Avatars can change the fundamental note of the scale of the world (but the world keeps the same scale pattern (e.g. major/minor)
+5. Add Options on Pause to change controls:: qwerasdf && arrow keys
 	
 
 ====================================================================================================
@@ -18,31 +17,45 @@ Systemic Mechanics::
 
 Possibilities for individualized musical note expression::
 1. Each world that you occupy has a unique musical scale that it operates on (http://en.wikipedia.org/wiki/Scale_(music)).
-	-Scattered/generated randomly (or so) across the world are musical orbs/unique instruments that have a set of unique 4 pitches/tunes at varying highness/lowness level. Allow them to be found (normal/hidden ones) trialed over/sought (special ones???)
-		-When you collect an instrument your current one pops out/off/whatever
-		-It's possible to find "dischordant" instruments
+	-It's possible to find "dischordant" instruments
 	
 	-There are "stages" around the world grouped together, if you stand on a "stage" you can use your full keyboard (similar to madtracker and the like) to play a wider range of notes...
 	-A special "virus" instrument keeps randomly changing your voice 
-	
-	-WHEN YOU SMASH A BUNCH OF NOTES AT ONCE... ERROR???
-	-If you play notes too fast stuff gets laggy
-		-Make notes fade out shortly soon
+		
+	NOTES:: (Range from 24 (pushing it) to 76)
+		Ab: if ((x+4)%12==0)
+		A:  if ((x+3)%12==0)
+		Bb: if ((x+2)%12==0)
+		B:  if ((x+1)%12==0)
+		C:  if (x%12==0)
+		Db: if ((x-1)%12==0)
+		D:  if ((x-2)%12==0)
+		Eb: if ((x-3)%12==0)
+		E:  if ((x-4)%12==0)
+		F:  if ((x-5)%12==0)
+		Gb: if ((x-6)%12==0)
+		G:  if ((x-7)%12==0)
 		
 ====================================================================================================
-Artistic sounding ideas that I like the sound of but don't know exactly how to implement
+WORLD AREAS::
+
+1. Pentatonic Major Scale Starting Area fluffy forest field
+2. Cave of Silence/footsteps and Leaky Drops (light in the dark)
+3. Full Chromatic Chaotic Practice Area Wastelands
+4. Diatonic Minor Scale
+
+====================================================================================================
+Artistic sounding ideas that I like the sound of but don't know exactly how to implement::
 -2. The bass reverberating with the ground.
 -1. Create a few various avatar species sprite things with various starting color palettes
-0. Cave of silence wind blowing leak dripping footsteps
 1. World of Echoes: mmo platformer freeform explorer chatcat. 
 2. Sensation, fellowship, discovery. 
 	-I like seiklus style mystery stuff:: (the piano that unlocks a new area:: do this with teamwork)
-3. Small little worlds you can traverse. Cave (light in the dark), field, forest, spring, etc. 
-		i. Chaos Hall (Remember Moody Music Practice Hall)
-		ii. Auditorium Stage
+3. Small little worlds you can traverse.
 	A. You generate different noises depending on where you are/etc. 
 	B. As you travel across landscape you hear different noises generated by you and others. 
 	C. A couple of hidden areas. 
+	D. The division of public and private space (performances and practices)
 4. Spawn as one of three or so sound classes (alto, mezzo, bass). 
 5. Little creatures make unique npc noises and are unique to environments. 
 6. Randomly generated noise sink bosses can only be defeated by accumulating people to work together

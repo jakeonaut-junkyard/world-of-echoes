@@ -25,7 +25,7 @@ package
 			game = new Game();
 			
 			//add the game bitmap to the screen/Main.as Sprite to make it visible
-			addChild(game.bitmap);
+			addChild(game.screenBitmap);
 			
 			//create the main game loop
 			addEventListener(Event.ENTER_FRAME, Run);

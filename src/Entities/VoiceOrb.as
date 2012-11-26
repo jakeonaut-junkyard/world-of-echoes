@@ -15,6 +15,8 @@ package Entities
 		public var color:ColorTransform;
 		private var myAlpha:Number;
 		private var orbFades:Array;
+		private var startX:int;
+		private var startY:int;
 		
 		[Embed(source = "../resources/images/glow_orb.png")]
 		private var sprite_sheet:Class;
@@ -22,6 +24,8 @@ package Entities
 		public function VoiceOrb(x:int, y:int, voice:VoiceManager) 
 		{
 			super(x, y, 12, 12, 20, 20);
+			startX = x;
+			startY = y;
 			
 			//animation management creation
 			myAlpha = 0.9;
@@ -30,7 +34,7 @@ package Entities
 			frameWidth = 32;
 			frameHeight = 32;
 			
-			this.voice = new VoiceManager();
+			this.voice = new VoiceManager([]);
 			this.voice.voice = voice.voice;
 			this.voice.noteArray = voice.noteArray;
 			this.voice.color = voice.color;
@@ -43,7 +47,7 @@ package Entities
 			orbFades = [];
 		}
 		
-		override public function Render():void
+		override public function Render(levelRenderer:BitmapData):void
 		{
 			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
 			var temp_sheet:Bitmap = new sprite_sheet();
@@ -52,15 +56,14 @@ package Entities
 		
 			for (var i:int = 0; i < orbFades.length; i++)
 			{
-				orbFades[i].Render();
+				orbFades[i].Render(levelRenderer);
 			}
 			
 			//RENDER IT //CREATE ALPHA
 			color.alphaMultiplier = myAlpha;
 			var matrix:Matrix = new Matrix();
 			matrix.translate(x, y);
-			matrix.scale(Global.zoom, Global.zoom); 
-			Game.Renderer.draw(image_sprite, matrix, color);
+			levelRenderer.draw(image_sprite, matrix, color);
 		}
 		
 		public function Update():void
@@ -71,8 +74,12 @@ package Entities
 			if (++frameCount >= frameDelay)
 			{
 				//move
-				vel.x = (Math.random()-0.5)*2;
-				vel.y = (Math.random()-0.5)*2;
+				var dir:int = 1;
+				if (startX < x) dir = -1;
+				vel.x = (Math.random()*dir)*2;
+				dir = 1;
+				if (startY < y) dir = -1;
+				vel.y = (Math.random()*dir)*2;
 			
 				//make
 				currFrame = 0;

@@ -22,7 +22,7 @@ package
 			stopRunCounter = 0;
 		}
 		
-		public function MusicalInput(avatar:Avatar, driver:SiONDriver):void
+		public function MusicalInput(avatar:Avatar, scale:Array):void
 		{
 			UpdateKeyArray();
 			
@@ -31,8 +31,8 @@ package
 			{
 				if (asdfjklKeyCounters[i] == 3)
 				{
-					driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
-					driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
+					Game._driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
+					Game._driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
 					if (i <= 3) i = 3;
 					else break;
@@ -45,7 +45,7 @@ package
 			//DEBUG:: Create new instrument
 			if (Global.CheckKeyPressed(Global.ENTER))
 			{
-				avatar._voice.CreateRandomInstrument();
+				avatar._voice.CreateRandomInstrument(scale);
 			}
 		}
 		
@@ -54,10 +54,13 @@ package
 			//move the player //LEFT
 			var i:int;
 			var move:Boolean = false;
-			for (i = 0; i < 4; i++){
-				if (asdfjklKeys[i]){
-					move = true;
-					break;
+			if (!Global.CheckKeyDown(Global.DOWN))
+			{
+				for (i = 0; i < 4; i++){
+					if (asdfjklKeys[i]){
+						move = true;
+						break;
+					}
 				}
 			}
 			if (move || Global.CheckKeyDown(Global.LEFT)){
@@ -75,10 +78,13 @@ package
 			
 			//move the player //RIGHT
 			move = false;
-			for (i = 4; i < 8; i++){
-				if (asdfjklKeys[i]){
-					move = true;
-					break;
+			if (!Global.CheckKeyDown(Global.DOWN))
+			{
+				for (i = 4; i < 8; i++){
+					if (asdfjklKeys[i]){
+						move = true;
+						break;
+					}
 				}
 			}
 			if (move || Global.CheckKeyDown(Global.RIGHT)){
@@ -95,7 +101,7 @@ package
 			}
 			
 			//STOP MOVEMENT
-			if (Global.CheckKeyUp(Global.LEFT) || Global.CheckKeyUp(Global.RIGHT))
+			if (Global.CheckKeyDown(Global.LEFT) || Global.CheckKeyDown(Global.RIGHT))
 				stopRunCounter = 0;
 			else
 				stopRunCounter--;
@@ -114,39 +120,44 @@ package
 		private function PlayerJump(avatar:Avatar):void
 		{
 			//JUMPING
-			var playerJump:Boolean = false;
-			var lcounter:int = 0;
-			var rcounter:int = 0;
-			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
+			if (justJumped <= 0 && !doubleJumped)
 			{
-				if (asdfjklKeyCounters[i] != 0)
+				var lcounter:int = 0;
+				var rcounter:int = 0;
+				var i:int;
+				for (i = 0; i < asdfjklKeyCounters.length; i++)
 				{
-					if (i <= 3)
-						lcounter++;
-					else	
-						rcounter++;
+					if (asdfjklKeyCounters[i] != 0)
+					{
+						if (i <= 3)
+							lcounter++;
+						else	
+							rcounter++;
+					}
+				}
+				if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.SPACE) || Global.CheckKeyPressed(Global.UP)) 
+				{
+					justJumped = 5;
+					if (!avatar.on_ground) doubleJumped = true;
+					avatar.on_ground = false;
+					avatar.vel.y = -avatar.jump_vel;
 				}
 			}
-			if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.SPACE) || Global.CheckKeyPressed(Global.UP)) 
-				playerJump = true;
+			else justJumped--;
 			
-			if (playerJump && justJumped <= 0 && (avatar.on_ground || !doubleJumped))
+			if (avatar.hit_head == 0)
 			{
-				justJumped = 3;
-				if (!avatar.on_ground) doubleJumped = true;
-				avatar.on_ground = false;
-				avatar.vel.y = -avatar.jump_vel;
-				playerJump = false;
+				if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.SPACE) || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
+				{
+					avatar.y-=2;
+					if (avatar.vel.y > 0)
+						avatar.y-=1;
+				}
+				
 			}
-			else if (avatar.on_ground && doubleJumped) doubleJumped = false;
-			if (justJumped > 0) justJumped--;
+			else if (avatar.hit_head >= 2) avatar.y+=2;
 			
-			if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.SPACE) || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
-			{
-				avatar.y-=2;
-				if (avatar.vel.y > 0)
-					avatar.y-=1;
-			}
+			if (avatar.on_ground && doubleJumped) doubleJumped = false;
 		}
 		
 		public function PlayedANote():Boolean

@@ -29,5 +29,16 @@ package Entities
 			//assume the object is solid at first (this will be the class used by room borders
 			solid = true;
 		}
+		
+		public function CheckRectIntersect(obj2:GameObject, lb:int, 
+			tb:int, rb:int, bb:int):Boolean
+		{			
+			if (lb <= (obj2.x + obj2.rb) && rb >= (obj2.x + obj2.lb) &&
+				tb <= (obj2.y + obj2.bb) && bb >= (obj2.y + obj2.tb))
+			{
+				return true;
+			}
+			return false;
+		}
 	}
 }

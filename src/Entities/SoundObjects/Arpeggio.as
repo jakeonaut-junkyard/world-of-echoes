@@ -15,7 +15,7 @@ package Entities.SoundObjects
 			noteDelay = 2;
 		}
 		
-		override public function Update(driver:SiONDriver):void
+		override public function Update():void
 		{
 			if (dead) return;
 			
@@ -23,8 +23,8 @@ package Entities.SoundObjects
 			{
 				noteCount = 0;
 				
-				driver.noteOff(voice.noteArray[index], 0, 0, 0, true);
-				driver.noteOn(voice.noteArray[index], voice.voice, 4);
+				Game._driver.noteOff(voice.noteArray[index], 0, 0, 0, true);
+				Game._driver.noteOn(voice.noteArray[index], voice.voice, 4);
 				
 				index+=2;
 				if (index >= voice.noteArray.length)

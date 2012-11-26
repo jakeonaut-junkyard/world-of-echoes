@@ -5,6 +5,7 @@ package Entities
 		public var grav_acc:Number;
 		public var terminal_vel:Number;
 		public var on_ground:Boolean;
+		public var hit_head:int;
 		
 		public var antigrav:Boolean = false;
 		
@@ -15,6 +16,7 @@ package Entities
 			grav_acc = 1;
 			terminal_vel = 6;
 			on_ground = false;
+			hit_head = 0;
 		}
 		
 		public function Gravity():void
@@ -51,27 +53,30 @@ package Entities
 				}
 			}
 			x += vel.x;
-				
+			
+			on_ground = false;
 			for (i = 0; i < solids.length; i++)
 			{
 				//vertical solid collisions (TOP)
 				if (CheckRectIntersect(solids[i], x+lb, y+tb+vel.y, x+rb, y+tb))
 				{
 					vel.y = 0;
+					hit_head = 3;
 					while (!CheckRectIntersect(solids[i], x+lb, y+tb-1, x+rb, y+tb))
 						y--;
 				}
 				//vertical solid collisions (BOTTOM)
-				if (CheckRectIntersect(solids[i], x+lb, y+bb, x+rb, y+bb+vel.y))
+				if (CheckRectIntersect(solids[i], x+lb, y+bb, x+rb, y+bb+vel.y+1))
 				{
 					vel.y = 0;
 					on_ground = true;
-					
 					while (!CheckRectIntersect(solids[i], x+lb, y+bb, x+rb, y+bb+1))
 						y++;
 				}
 			}
 			y += vel.y;
+			
+			if (hit_head > 0) hit_head--;
 		}
 	}
 }

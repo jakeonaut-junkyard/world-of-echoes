@@ -27,8 +27,6 @@ package Entities
 				x += vel.x;
 				y += vel.y;
 			}
-			
-			SolidsPushBack(solids);
 		}
 		
 		public function CollideWithSolids(solids:Array):void
@@ -71,16 +69,6 @@ package Entities
 				}
 			}
 			y += vel.y;
-		}
-		
-		public function SolidsPushBack(solids:Array):void
-		{
-			/*var i:int;
-			
-			for (i = 0; i < solids.length; i++)
-			{
-				if (CheckRectIntersect(solids[i], 
-			}*/
 		}
 	}
 }

@@ -33,7 +33,7 @@ package Entities
 			this.color.greenMultiplier = color.greenMultiplier;
 		}
 		
-		override public function Render():void
+		override public function Render(levelRenderer:BitmapData):void
 		{
 			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
 			var temp_sheet:Bitmap = new sprite_sheet();
@@ -45,8 +45,7 @@ package Entities
 			
 			var matrix:Matrix = new Matrix();
 			matrix.translate(x, y);
-			matrix.scale(Global.zoom, Global.zoom); 
-			Game.Renderer.draw(image_sprite, matrix, color);
+			levelRenderer.draw(image_sprite, matrix, color);
 		}
 		
 		public function Update():void
