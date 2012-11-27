@@ -13,7 +13,7 @@ package Entities
 		public var color:ColorTransform;
 		private var myAlpha:Number;
 		
-		[Embed(source = "../resources/images/blue_burst.png")]
+		[Embed(source = "../resources/images/white_burst.png")]
 		private var sprite_sheet:Class;
 		
 		public function Burst(x:int, y:int, color:ColorTransform) 

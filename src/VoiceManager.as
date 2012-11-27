@@ -38,7 +38,6 @@ package
 		
 		public function SetRandomNoteArray(scale:Array, baseNote:int = -1):void
 		{
-			trace("Seed: "+baseNote);
 			var index:int = Math.floor(Math.random()*Math.floor(scale.length/2));
 			if (baseNote > -1)
 				index = baseNote;
@@ -56,7 +55,6 @@ package
 				index += x;
 				noteArray.push(scale[index]);
 			}
-			trace("noteArray[0]: "+noteArray[0]);
 		}
 		
 		public function TranslateNoteArray(scale:Array):void
@@ -72,16 +70,66 @@ package
 					newIndex = j;
 				}
 			}
-			trace("base note: "+newIndex);
 			SetRandomNoteArray(scale, newIndex);
 		}
 		
 		public function SetRandomColor():void
 		{
 			color = new ColorTransform();
-			color.redMultiplier = Math.random()*4;
-			color.blueMultiplier = Math.random()*4;
-			color.greenMultiplier = Math.random()*4;
+			var red:Number;
+			var blue:Number;
+			var green:Number;
+			
+			var rgb:int = Math.floor(Math.random()*3);
+			switch(rgb)
+			{
+				case 0:			
+					red = Math.random()*4;
+					var bg:int = Math.floor(Math.random()*2);
+					if (bg == 0)
+					{
+						blue = Math.random()*(4-(4-red))+(4-red);
+						green = Math.random()*(4-(4-blue))+(4-blue);
+					}
+					else
+					{
+						green = Math.random()*(4-(4-red))+(4-red);
+						blue = Math.random()*(4-(4-green))+(4-green);
+					}
+					break;
+				case 1:
+					blue = Math.random()*4;
+					var rg:int = Math.floor(Math.random()*2);
+					if (rg == 0)
+					{
+						red = Math.random()*(4-(4-blue))+(4-blue);
+						green = Math.random()*(4-(4-red))+(4-red);
+					}
+					else
+					{
+						green = Math.random()*(4-(4-blue))+(4-blue);
+						red = Math.random()*(4-(4-green))+(4-green);
+					}
+					break;
+				case 2:
+					green = Math.random()*4;
+					var rb:int = Math.floor(Math.random()*2);
+					if (rb == 0)
+					{
+						red = Math.random()*(4-(4-green))+(4-green);
+						blue = Math.random()*(4-(4-red))+(4-red);
+					}
+					else
+					{
+						blue = Math.random()*(4-(4-green))+(4-green);
+						red = Math.random()*(4-(4-blue))+(4-blue);
+					}
+					break;
+			}
+			
+			color.redMultiplier = red;
+			color.blueMultiplier = blue;
+			color.greenMultiplier = green;
 		}
 	}
 }
