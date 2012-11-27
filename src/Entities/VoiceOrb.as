@@ -14,9 +14,11 @@ package Entities
 		public var voice:VoiceManager;
 		public var color:ColorTransform;
 		private var myAlpha:Number;
-		private var orbFades:Array;
+		public var orbFades:Array;
 		private var startX:int;
 		private var startY:int;
+		public var maxLife:int;
+		public var lifeSpan:int;
 		
 		[Embed(source = "../resources/images/glow_orb.png")]
 		private var sprite_sheet:Class;
@@ -26,6 +28,8 @@ package Entities
 			super(x, y, 12, 12, 20, 20);
 			startX = x;
 			startY = y;
+			maxLife = 600;
+			lifeSpan = maxLife;
 			
 			//animation management creation
 			myAlpha = 0.9;
@@ -48,11 +52,18 @@ package Entities
 		}
 		
 		override public function Render(levelRenderer:BitmapData):void
-		{
+		{	
 			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
 			var temp_sheet:Bitmap = new sprite_sheet();
 			
-			super.DrawSpriteFromSheet(temp_image, temp_sheet);
+			if (visible)
+				super.DrawSpriteFromSheet(temp_image, temp_sheet);
+			else
+			{
+				for (var j:int = 0; j < image_sprite.numChildren;j++){
+					image_sprite.removeChildAt(j);
+				}
+			}
 		
 			for (var i:int = 0; i < orbFades.length; i++)
 			{
@@ -70,6 +81,14 @@ package Entities
 		{				
 			x += vel.x;
 			y += vel.y;
+			lifeSpan--; 
+			if (lifeSpan <= 0) 
+				visible = false;
+			else if (lifeSpan > maxLife-33)
+			{
+				startY++;
+			}
+			else visible = true;
 			
 			if (++frameCount >= frameDelay)
 			{
@@ -83,7 +102,8 @@ package Entities
 			
 				//make
 				currFrame = 0;
-				orbFades.push(new VoiceOrbFade(x, y, color));
+				if (visible)
+					orbFades.push(new VoiceOrbFade(x, y, color));
 				frameCount = 0;
 			}
 			

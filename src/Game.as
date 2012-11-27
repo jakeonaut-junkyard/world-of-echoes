@@ -39,7 +39,6 @@ package
 			Global.keys_up = new Array();
 			Global.CreateLetterDictionary();
 			
-			avatar = new Avatar(0, 0, []);
 			musicInputManager = new MusicalInputManager();
 			
 			areaIndex = 0;
@@ -47,7 +46,9 @@ package
 				new PentatonicMajor(Global.stageWidth/2-12, Global.stageHeight/2-12, Global.PENTATONIC_MAJOR_AREA),
 				new DiatonicMinor(Global.stageWidth/2-12, Global.stageHeight/2-12, Global.DIATONIC_MINOR_AREA)
 			];
-			areas[areaIndex].EnterRoom(avatar, Global.stageWidth/2, Global.stageHeight/2);
+			
+			avatar = new Avatar(0, 0, areas[areaIndex].scaleArray);
+			areas[areaIndex].EnterRoom(avatar, Global.stageWidth/2, Global.stageHeight/2, null);
 		}		
 		
 		public function Render():void

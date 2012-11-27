@@ -49,11 +49,14 @@ package Areas
 			doors = [];
 		}		
 		
-		public function EnterRoom(avatar:Avatar, avix:int, aviy:int):void
+		public function EnterRoom(avatar:Avatar, avix:int, aviy:int, oldScale:Array = null):void
 		{
-			avatar._voice.SetRandomNoteArray(scaleArray);
+			avatar._voice.TranslateNoteArray(scaleArray);
 			avatar.x = avix;
 			avatar.y = aviy;
+			
+			bursts = [];
+			soundObjects = [];
 			
 			UpdateView(avatar);
 		}
@@ -79,7 +82,7 @@ package Areas
 				var s:GameObject = solids[i];
 				LevelRenderer.fillRect(new Rectangle(s.x, s.y, s.rb, s.bb), groundColor);
 			}
-			//debug (DRAW DOORS)
+			//debug (DRAW DOORS) //DEBUG TODO::
 			for (i = 0; i < doors.length; i++)
 			{
 				var d:GameObject = doors[i];
@@ -118,7 +121,7 @@ package Areas
 				voiceOrbs[i].Update();
 				
 				var v:VoiceOrb = voiceOrbs[i];
-				if (v.CheckRectIntersect(avatar, v.x+v.lb, v.y+v.tb, v.x+v.rb, v.y+v.bb))
+				if (v.CheckRectIntersect(avatar, v.x+v.lb, v.y+v.tb, v.x+v.rb, v.y+v.bb) && v.lifeSpan <= v.maxLife-33)
 				{
 					//create audiovisual flair
 					bursts.push(new Burst(v.x-16, v.y-16, v.voice.color))
@@ -133,7 +136,10 @@ package Areas
 					var tempVoice:VoiceManager = avatar._voice;
 					avatar._voice = voiceOrbs[i].voice;
 					voiceOrbs.splice(i, 1);
+					voiceOrbs.push(new VoiceOrb(avatar.x, avatar.y-32, tempVoice));
 				}
+				else if (v.orbFades.length == 0 && v.lifeSpan <= 0)
+					voiceOrbs.splice(i, 1);
 			}
 			for (i = soundObjects.length-1; i >= 0; i--)
 			{
@@ -143,7 +149,7 @@ package Areas
 			}
 			for (i = 0; i < doors.length; i++)
 			{
-				doors[i].Update(avatar);
+				doors[i].Update(avatar, scaleArray);
 			}
 			
 			//MOVE THE VIEW SCREEN
@@ -152,10 +158,11 @@ package Areas
 		
 		public function UpdateView(avatar:Avatar):void
 		{
-			var avirb:Number = avatar.x+avatar.rb+64;
-			var avilb:Number = avatar.x+avatar.lb-64;
+			var avirb:Number = avatar.x+avatar.rb+96;
+			var avilb:Number = avatar.x+avatar.lb-96;
 			var avitb:Number = avatar.y+avatar.tb-32;
-			var avibb:Number = avatar.y+avatar.bb+64;
+			var avibb:Number = avatar.y+avatar.bb+48;
+			if (!avatar.on_ground) avibb+=16;
 			var right:Number = Global.stageWidth-L_bitmap.x;
 			var left:Number = 0-(L_bitmap.x);
 			var top:Number = 0-(L_bitmap.y);
@@ -163,14 +170,23 @@ package Areas
 			
 			//move view right and left
 			if (avirb > right)
+			{
 				L_bitmap.x-= (avirb - right);
+			}
 			else if (avilb < left)
+			{
 				L_bitmap.x+= (left - avilb);
+			}
 			//move view up and down
 			if (avitb < top)
+			{
 				L_bitmap.y += (top - avitb);
+			}
 			else if (avibb > bottom)
 				L_bitmap.y-= (avibb - bottom);
+				
+			if (avatar.on_ground && avitb-48 < top)
+					L_bitmap.y += 6;
 				
 			//prevent viewing off the edge
 			if (L_bitmap.x < (-1)*(L_bitmap.width-Global.stageWidth))
@@ -180,6 +196,10 @@ package Areas
 			if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
 				L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
 			if (L_bitmap.y > 0) L_bitmap.y = 0;
+			
+			//rectify
+			L_bitmap.x = Math.floor(L_bitmap.x);
+			L_bitmap.y = Math.floor(L_bitmap.y);
 		}
 		
 		public function CreateScaleArray():void

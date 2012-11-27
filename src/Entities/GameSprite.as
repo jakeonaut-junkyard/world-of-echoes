@@ -58,7 +58,7 @@ package Entities
 		public function DrawSpriteFromSheet(temp_image:Bitmap, temp_sheet:Bitmap):void
 		{
 			for (var i:int = 0; i < image_sprite.numChildren;i++){
-				image_sprite.removeChildAt(0);
+				image_sprite.removeChildAt(i);
 			}
 			
 			var sprite_x:int = currFrame*frameWidth+currAniX*frameWidth;

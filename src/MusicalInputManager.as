@@ -8,6 +8,9 @@ package
 		private var asdfjklKeys:Array;
 		private var asdfjklKeyCounters:Array;
 		
+		private var noteKiller:Array;
+		private var noteKillerCounter:Array;
+		
 		private var justJumped:int = 0;
 		private var doubleJumped:Boolean = false;
 		private var stopRunCounter:int;
@@ -20,12 +23,15 @@ package
 			asdfjklKeys = [false, false, false, false, false, false, false, false];
 			asdfjklKeyCounters = [0, 0, 0, 0, 0, 0, 0, 0];
 			stopRunCounter = 0;
+			
+			noteKiller = [];
+			noteKillerCounter = [];
 		}
 		
 		public function MusicalInput(avatar:Avatar, scale:Array):void
 		{
 			UpdateKeyArray();
-			
+			var noteLength:int = 15;
 			//play the notes
 			for (var i:int = 0; i < asdfjklKeys.length; i++)
 			{
@@ -34,8 +40,34 @@ package
 					Game._driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
 					Game._driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
 					
+					var killNote:Boolean = true;
+					for (var j:int = 0; j < noteKiller.length; j++)
+					{
+						if (noteKiller[j] == avatar._voice.noteArray[i]) 
+						{
+							noteKillerCounter[j] = noteLength;
+							killNote = false;
+							break;
+						}
+					}
+					if (killNote) 
+					{
+						noteKiller.push(avatar._voice.noteArray[i]);
+						noteKillerCounter.push(noteLength);
+					}
+					
 					if (i <= 3) i = 3;
 					else break;
+				}
+			}
+			for (var k:int = noteKillerCounter.length-1; k >= 0; k--)
+			{
+				noteKillerCounter[k]--;
+				if (noteKillerCounter[k] <= 0)
+				{
+					Game._driver.noteOff(noteKiller[k], 0, 0, 0, true);
+					noteKiller.splice(k,1);
+					noteKillerCounter.splice(k,1);
 				}
 			}
 			
@@ -127,7 +159,7 @@ package
 				var i:int;
 				for (i = 0; i < asdfjklKeyCounters.length; i++)
 				{
-					if (asdfjklKeyCounters[i] != 0)
+					if (asdfjklKeyCounters[i] > 0)
 					{
 						if (i <= 3)
 							lcounter++;
@@ -174,10 +206,6 @@ package
 			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
 			{
 				asdfjklKeyCounters[i]--;
-				if (asdfjklKeyCounters[i] <= 0)
-				{
-					asdfjklKeyCounters[i] = 0;
-				}
 			}
 			
 			if (Global.CheckKeyPressed(Global.A_KEY)){

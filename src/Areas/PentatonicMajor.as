@@ -30,6 +30,7 @@ package Areas
 				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, L_bitmap.height) //Right wall
 			];
 			doors = [new Door(292, 167, Global.DIATONIC_MINOR_AREA, 0-16, Global.stageHeight-16, 0, 0, 24, 48)];
+			voiceOrbs = [new VoiceOrb(Global.stageWidth/1.2, Global.stageHeight/3.5, new VoiceManager(scaleArray))];
 			
 			//etc
 			groundColor = 0xFFFFFF;

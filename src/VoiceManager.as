@@ -36,9 +36,12 @@ package
 			voice = voiceList[voiceIndex];
 		}
 		
-		public function SetRandomNoteArray(scale:Array):void
+		public function SetRandomNoteArray(scale:Array, baseNote:int = -1):void
 		{
+			trace("Seed: "+baseNote);
 			var index:int = Math.floor(Math.random()*Math.floor(scale.length/2));
+			if (baseNote > -1)
+				index = baseNote;
 			var x:int;
 			var maxIndex:int = scale.length;
 			var randomRange:int = 4;
@@ -53,6 +56,24 @@ package
 				index += x;
 				noteArray.push(scale[index]);
 			}
+			trace("noteArray[0]: "+noteArray[0]);
+		}
+		
+		public function TranslateNoteArray(scale:Array):void
+		{
+			var diff:int = 100;
+			var newIndex:int = 0;
+			for (var j:int = 0; j < scale.length; j++)
+			{
+				var newdiff:int = Math.abs(noteArray[0]-scale[j]);
+				if (newdiff < diff)
+				{
+					diff = newdiff;
+					newIndex = j;
+				}
+			}
+			trace("base note: "+newIndex);
+			SetRandomNoteArray(scale, newIndex);
 		}
 		
 		public function SetRandomColor():void

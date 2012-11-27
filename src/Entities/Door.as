@@ -14,7 +14,7 @@ package Entities
 			to_roomIndex = roomIndex;
 		}		
 		
-		public function Update(avatar:Avatar):void
+		public function Update(avatar:Avatar, scale:Array):void
 		{
 			if (CheckRectIntersect(avatar, x+lb, y+tb, x+rb, y+bb))
 			{
