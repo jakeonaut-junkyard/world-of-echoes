@@ -2,10 +2,8 @@ package Areas
 {
 	import Entities.Avatar;
 	import Entities.Burst;
-	import Entities.VoiceOrb;
 	import Entities.GameObject;
 	import Entities.Door;
-	import Entities.SoundObjects.Arpeggio;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -15,6 +13,9 @@ package Areas
 	
 	public class PentatonicMajor extends Area
 	{
+		//environment sounds
+		[Embed(source = '../resources/sounds/cricketNight.mp3')]
+		private var Cricket_ambient:Class;
 		
 		public function PentatonicMajor(avix:int, aviy:int, id:int)
 		{
@@ -27,10 +28,16 @@ package Areas
 				new GameObject(0, Global.stageHeight-48, 0, 0, (L_bitmap.width)/2, 32), //floor1
 				new GameObject(0, L_bitmap.height-32, 0, 0, (L_bitmap.width), 32), //floor 2
 				new GameObject(0-16, 0, 0, 0, 32, Global.stageHeight-32), //Left wall
-				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, L_bitmap.height) //Right wall
+				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, Global.stageHeight-16) //Right wall
 			];
-			doors = [new Door(292, 167, Global.DIATONIC_MINOR_AREA, 0-16, Global.stageHeight-16, 0, 0, 24, 48)];
-			voiceOrbs = [new VoiceOrb(Global.stageWidth/1.2, Global.stageHeight/3.5, new VoiceManager(scaleArray))];
+			doors = [
+				new Door(292, 167, Global.DIATONIC_MINOR_AREA, 0-16, Global.stageHeight-16, 0, 0, 24, 48), //left door
+				new Door(4, 167, Global.DIATONIC_MINOR_AREA, L_bitmap.width-8, Global.stageHeight-16, 0, 0, 24, 48) //right door
+			];
+			
+			//environmental
+			SoundManager.getInstance().addMusic(new Cricket_ambient(), "CricketAmbient");
+			SoundManager.getInstance().playMusic("CricketAmbient", -5, int.MAX_VALUE);
 			
 			//etc
 			groundColor = 0xFFFFFF;

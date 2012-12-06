@@ -3,9 +3,7 @@ package Areas
 
 	import Entities.Avatar;
 	import Entities.Burst;
-	import Entities.VoiceOrb;
 	import Entities.GameObject;
-	import Entities.SoundObjects.Arpeggio;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -44,8 +42,6 @@ package Areas
 				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, L_bitmap.height) //Right wall
 			];
 			bursts = [];
-			voiceOrbs = [];
-			soundObjects = [];
 			doors = [];
 		}		
 		
@@ -54,9 +50,7 @@ package Areas
 			avatar._voice.TranslateNoteArray(scaleArray);
 			avatar.x = avix;
 			avatar.y = aviy;
-			
 			bursts = [];
-			soundObjects = [];
 			
 			UpdateView(avatar);
 		}
@@ -71,10 +65,6 @@ package Areas
 			for (i = 0; i < bursts.length; i++)
 			{
 				bursts[i].Render(LevelRenderer);
-			}
-			for (i = 0; i < voiceOrbs.length; i++)
-			{
-				voiceOrbs[i].Render(LevelRenderer);
 			}
 			//draw land
 			for (i = 0; i < solids.length; i++)
@@ -115,37 +105,6 @@ package Areas
 				bursts[i].Update();
 				if (!bursts[i].visible)
 					bursts.splice(i, 1);
-			}
-			for (i = voiceOrbs.length-1; i >= 0; i--)
-			{
-				voiceOrbs[i].Update();
-				
-				var v:VoiceOrb = voiceOrbs[i];
-				if (v.CheckRectIntersect(avatar, v.x+v.lb, v.y+v.tb, v.x+v.rb, v.y+v.bb) && v.lifeSpan <= v.maxLife-33)
-				{
-					//create audiovisual flair
-					bursts.push(new Burst(v.x-16, v.y-16, v.voice.color))
-					for (var j:int = soundObjects.length-1; j >= 0; j--)
-					{
-						if (soundObjects[j] is Arpeggio)
-							soundObjects.splice(i, 1);
-					}
-					soundObjects.push(new Arpeggio(voiceOrbs[i].voice));
-					
-					//remove orb and update voice
-					var tempVoice:VoiceManager = avatar._voice;
-					avatar._voice = voiceOrbs[i].voice;
-					voiceOrbs.splice(i, 1);
-					voiceOrbs.push(new VoiceOrb(avatar.x, avatar.y-32, tempVoice));
-				}
-				else if (v.orbFades.length == 0 && v.lifeSpan <= 0)
-					voiceOrbs.splice(i, 1);
-			}
-			for (i = soundObjects.length-1; i >= 0; i--)
-			{
-				soundObjects[i].Update();
-				if (soundObjects[i].dead)
-					soundObjects.splice(i, 1);
 			}
 			for (i = 0; i < doors.length; i++)
 			{

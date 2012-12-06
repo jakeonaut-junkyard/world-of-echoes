@@ -1,19 +1,21 @@
 TODO::
-1. Avatars can change the fundamental note of the scale of the world (but the world keeps the same scale pattern (e.g. major/minor) -- CHORD CHANGES
-2. Learn how to make multiplayer online
+0. Reconfigure scale note playing into "pulse" playing with space bar
+1. Make "RAIN DRIZZLE" ambience in the harmonic minor room and change the scale to be gloomier
+1. Refine "Note killer" in musical input manager. In fact, make something that keeps track of all notes played by the driver and forces them to shut off after 15 cycles (includes sound objects and fauna)
+	-Also, you're going to have to start implementing "TRACK ID" for to distinguish notes between avatar, bird, etc. 
+2. Avatars can change the fundamental note of the scale of the world (but the world keeps the same scale pattern (e.g. major/minor) -- CHORD CHANGES
+3. Learn how to make multiplayer online
 	Things to add to the 'server computer' calculation duties and take off the local
 		i. Voice Orb Lifespan/Creation
 		ii. All the notes/bursts/etc. created by players (translate relevant objects to local)
 		iii. Player positions (translate relevant avatar locations/voice/color to local)
-3. Create More Areas (a couple more) and expand the ones you have physically
-	A. Create uniqueish color palettes/theme for each one around the scale
-	B. Create little musical lifeforms and other interactive things in each area (thematically consistent)
-4. VOICE ORB STUFF::
+		iv. Only allow a few avatars to spawn in a room/server dependent on range (???)
+4. Create More Areas (a couple more) and expand the ones you have physically
+5. VOICE ORB STUFF::
 	A. When building levels/areas, make voice orbs randomly created every now and then.
-	B. Make voices match up with colors??? (categorically)
-		
---TODO::---NOT-AS-IMPORTANT-------------------------------------------------------------------------
-1. Add Options on Pause to change controls:: qwerasdf && arrow keys
+	B. Make voice orbs "shinier" and "juicier" and overall more appealing to collect/catch.
+	C. Make voices match up with colors??? (categorically)
+6. Still need to go through and prevent voices that seem to circumvent the forced note ending.
 	
 ====================================================================================================
 Systemic Mechanics:: Sensation/Fellowship/Discovery
@@ -22,7 +24,6 @@ Possibilities for individualized musical note expression::
 1. Each world that you occupy has a unique musical scale that it operates on (http://en.wikipedia.org/wiki/Scale_(music)).
 	-It's possible to find "dischordant" instruments
 	
-	-There are "stages" around the world grouped together, if you stand on a "stage" you can use your full keyboard (similar to madtracker and the like) to play a wider range of notes...
 	-A special "virus" instrument keeps randomly changing your voice 
 		
 	NOTES:: (Range from 24 (pushing it) to 76)
@@ -51,12 +52,10 @@ WORLD AREAS::
 Artistic sounding ideas that I like the sound of but don't know exactly how to implement::
 
 1. Little creatures make unique npc noises and are unique to environments. 
-2. Make a bassline/rhythm section for different map areas (except the silent cave tunnel area/practice rooms?).
+2. Collectable abilities???
+3. Make a bassline/rhythm section for different map areas (except the silent cave tunnel area/practice rooms?).
 	A. How can we implement the ability for avatars to affect this bassline somehow?
 	B. The bass reverberating with the ground.
-3. How should avatars semipermanently affect the visual space (besides just burst visualizations)
-4. Create a few various avatar species sprite things with various starting color palettes
-5. I like seiklus style mystery stuff:: (the piano that unlocks a new area:: do this with teamwork)
-6. The division of public and private space (performances and practices)
-7. Spawn as one of three or so sound classes (alto, mezzo, bass). 
-9. Randomly generated noise sink bosses can only be defeated by accumulating people to work together
+4. How should avatars semipermanently affect the visual space (besides just burst visualizations)
+5. Create a few various avatar species sprite things with various starting color palettes
+6. I like seiklus style mystery stuff:: (the piano that unlocks a new area:: do this with teamwork)

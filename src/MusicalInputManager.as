@@ -167,7 +167,7 @@ package
 							rcounter++;
 					}
 				}
-				if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.SPACE) || Global.CheckKeyPressed(Global.UP)) 
+				if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.UP)) 
 				{
 					justJumped = 5;
 					if (!avatar.on_ground) doubleJumped = true;
@@ -179,7 +179,7 @@ package
 			
 			if (avatar.hit_head == 0)
 			{
-				if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.SPACE) || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
+				if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
 				{
 					avatar.y-=2;
 					if (avatar.vel.y > 0)
