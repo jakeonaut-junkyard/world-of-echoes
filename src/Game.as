@@ -48,7 +48,8 @@ package
 			];
 			
 			avatar = new Avatar(0, 0, areas[areaIndex].scaleArray);
-			areas[areaIndex].EnterRoom(avatar, Global.stageWidth/2, Global.stageHeight/2, null);
+			avatar._voice.CreateRandomInstrument(areas[areaIndex].scaleArray);
+			areas[areaIndex].EnterRoom(avatar, 48, Global.stageHeight/2, null);
 		}		
 		
 		public function Render():void
@@ -61,6 +62,7 @@ package
 		public function Update():void
 		{						
 			areas[areaIndex].Update(avatar, musicInputManager);
+			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();

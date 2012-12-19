@@ -42,7 +42,7 @@ package Entities
 			prev_move_state = move_state;
 			
 			//my voice
-			_voice = new VoiceManager(scale);
+			_voice = new VoiceManager();
 			
 			//animation management creation
 			frameDelay = 5;

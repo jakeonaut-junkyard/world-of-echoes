@@ -4,9 +4,12 @@ package Areas
 	import Entities.Burst;
 	import Entities.GameObject;
 	import Entities.Door;
+	import Entities.BassSquare;
+	import Entities.BassBurst;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
 	import org.si.sion.SiONDriver;
@@ -43,18 +46,36 @@ package Areas
 			groundColor = 0xFFFFFF;
 		}
 		
+		override public function EnterRoom(avatar:Avatar, avix:int, aviy:int, oldScale:Array = null):void
+		{
+			super.EnterRoom(avatar, avix, aviy, oldScale);
+			bassSquares = [
+				new BassSquare(32, Global.stageHeight, _voice),
+				new BassSquare(32+112, Global.stageHeight, _voice),
+				new BassSquare(32+224, Global.stageHeight, _voice),
+			];
+		}
+		
 		override public function CreateScaleArray():void
 		{
-			//Create Pentatonic Cmajor scale
+			//Create Diatonic Cmajor scale
+			bassScaleArray = [];
 			scaleArray = [];
 			for (var i:int = 24; i < 84; i++)
 			{
 				if (i%12==0 || 		//C
 					(i-2)%12==0 ||	//D
 					(i-4)%12==0 || 	//E
+					(i-5)%12==0 || 	//F
 					(i-7)%12==0 ||	//G
-					(i+3)%12==0)	//A
-				scaleArray.push(i);
+					(i+3)%12==0 ||	//A
+					(i+1)%12==0) 	//B
+				{
+					if (i >= 36)
+						scaleArray.push(i);
+					else if (i <= 48)
+						bassScaleArray.push(i);
+				}
 			}
 		}
 	}

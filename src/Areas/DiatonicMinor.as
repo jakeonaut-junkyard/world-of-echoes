@@ -37,10 +37,11 @@ package Areas
 		}
 		
 		override public function CreateScaleArray():void
-		{
+		{			
 			//Create Diatonic Cminor scale
 			scaleArray = [];
-			for (var i:int = 24; i < 84; i++)
+			bassScaleArray = [];
+			for (var i:int = 36; i < 84; i++)
 			{
 				if (i%12==0 || 		//C
 					(i-2)%12==0 ||	//D
@@ -49,7 +50,12 @@ package Areas
 					(i-7)%12==0 ||	//G
 					(i+4)%12==0 ||	//Ab
 					(i+2)%12==0)	//Bb
-				scaleArray.push(i);
+				{
+					if (i >= 36)
+						scaleArray.push(i);
+					else
+						bassScaleArray.push(i);
+				}
 			}
 		}
 	}

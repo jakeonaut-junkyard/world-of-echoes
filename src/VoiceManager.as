@@ -13,10 +13,12 @@ package
 		public var noteArray:Array;
 		public var color:ColorTransform;
          
-        public function VoiceManager(scale:Array)
+        public function VoiceManager()
         {
             _presets = new SiONPresetVoice();
-			CreateRandomInstrument(scale);
+			voice = (_presets.categolies[0])[0];
+			noteArray = [];
+			color = new ColorTransform();
         }
 		
 		public function CreateRandomInstrument(scale:Array):void
@@ -24,6 +26,12 @@ package
 			SetRandomVoice();
 			SetRandomNoteArray(scale);
 			SetRandomColor();
+		}
+		
+		public function SetVoice(categoryIndex:int, voiceIndex:int):void
+		{
+			var voiceList:Array = _presets.categolies[categoryIndex];
+			voice = voiceList[voiceIndex];
 		}
 		
 		public function SetRandomVoice():void

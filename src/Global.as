@@ -29,6 +29,7 @@ package
 		public static const J_KEY:int = 74;
 		public static const K_KEY:int = 75;
 		public static const L_KEY:int = 76;
+		public static const X_KEY:int = 88;
 		public static const SEMICOLON:int = 186;
 		public static const Q_KEY:int = 81;
 		public static const W_KEY:int = 87;
@@ -42,13 +43,16 @@ package
 		public static const UNDERSCORE:int = 189;
 		public static var LetterKeys:Dictionary;
 		
+		//track ids for SiON
+		public static const AVATAR_VOICE_ID:int = 0;
+		public static const BASS_SQUARE_TRACK_ID:int = 1;
+		
 		//etc
 		public static const PENTATONIC_MAJOR_AREA:int = 0;
 		public static const DIATONIC_MINOR_AREA:int = 1;
 		
 		public function Global() 
-		{
-			
+		{	
 		}	
 
 		public static function CreateLetterDictionary():void

@@ -11,9 +11,9 @@ package Entities
 	public class Burst extends GameSprite
 	{
 		public var color:ColorTransform;
-		private var myAlpha:Number;
+		protected var myAlpha:Number;
 		
-		[Embed(source = "../resources/images/white_burst.png")]
+		[Embed(source = "../resources/images/circle_burst.png")]
 		private var sprite_sheet:Class;
 		
 		public function Burst(x:int, y:int, color:ColorTransform) 
@@ -52,7 +52,7 @@ package Entities
 		{				
 			if (++frameCount >= frameDelay)
 			{
-				myAlpha -= 0.067;
+				myAlpha -= 1/maxFrame;
 				if (++currFrame >= maxFrame)
 				{
 					visible = false;

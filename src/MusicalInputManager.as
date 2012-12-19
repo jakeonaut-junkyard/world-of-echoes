@@ -2,14 +2,14 @@ package
 {
 	import Entities.Avatar;
 	import org.si.sion.SiONDriver;
+	import org.si.sion.sequencer.SiMMLTrack;
 	
 	public class MusicalInputManager 
 	{
 		private var asdfjklKeys:Array;
 		private var asdfjklKeyCounters:Array;
 		
-		private var noteKiller:Array;
-		private var noteKillerCounter:Array;
+		private var trackId:int = Global.AVATAR_VOICE_ID;
 		
 		private var justJumped:int = 0;
 		private var doubleJumped:Boolean = false;
@@ -23,12 +23,9 @@ package
 			asdfjklKeys = [false, false, false, false, false, false, false, false];
 			asdfjklKeyCounters = [0, 0, 0, 0, 0, 0, 0, 0];
 			stopRunCounter = 0;
-			
-			noteKiller = [];
-			noteKillerCounter = [];
 		}
 		
-		public function MusicalInput(avatar:Avatar, scale:Array):void
+		public function Update(avatar:Avatar, scale:Array):void
 		{
 			UpdateKeyArray();
 			var noteLength:int = 15;
@@ -37,37 +34,11 @@ package
 			{
 				if (asdfjklKeyCounters[i] == 3)
 				{
-					Game._driver.noteOff(avatar._voice.noteArray[i], 0, 0, 0, true);
-					Game._driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4);
-					
-					var killNote:Boolean = true;
-					for (var j:int = 0; j < noteKiller.length; j++)
-					{
-						if (noteKiller[j] == avatar._voice.noteArray[i]) 
-						{
-							noteKillerCounter[j] = noteLength;
-							killNote = false;
-							break;
-						}
-					}
-					if (killNote) 
-					{
-						noteKiller.push(avatar._voice.noteArray[i]);
-						noteKillerCounter.push(noteLength);
-					}
+					Game._driver.noteOff(avatar._voice.noteArray[i], trackId, 0, 0, true);
+					Game._driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4, 0, 0, trackId);
 					
 					if (i <= 3) i = 3;
 					else break;
-				}
-			}
-			for (var k:int = noteKillerCounter.length-1; k >= 0; k--)
-			{
-				noteKillerCounter[k]--;
-				if (noteKillerCounter[k] <= 0)
-				{
-					Game._driver.noteOff(noteKiller[k], 0, 0, 0, true);
-					noteKiller.splice(k,1);
-					noteKillerCounter.splice(k,1);
 				}
 			}
 			

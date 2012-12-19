@@ -2,6 +2,8 @@ package Areas
 {
 
 	import Entities.Avatar;
+	import Entities.BassSquare;
+	import Entities.BassBurst;
 	import Entities.Burst;
 	import Entities.GameObject;
 	import flash.display.Bitmap;
@@ -19,13 +21,14 @@ package Areas
 		//entities
 		public var solids:Array;
 		public var bursts:Array;
-		public var voiceOrbs:Array;
-		public var soundObjects:Array;
+		public var bassBursts:Array;
+		public var bassSquares:Array;
 		public var doors:Array;
 		
-		public var scaleArray:Array;
-		
 		//etc
+		public var _voice:VoiceManager;
+		public var scaleArray:Array;
+		public var bassScaleArray:Array;
 		public var groundColor:uint = 0xFFFFFF;
 		
 		public function Area(avix:int, aviy:int, width:int, height:int, id:int) 
@@ -33,6 +36,9 @@ package Areas
 			this.id = id;
 			LevelRenderer = new BitmapData(width, height, false, 0x000000);
 			L_bitmap = new Bitmap(LevelRenderer);
+			
+			_voice = new VoiceManager();
+			_voice.SetVoice(13, 76);
 			CreateScaleArray();
 			
 			//create entities
@@ -42,6 +48,8 @@ package Areas
 				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, L_bitmap.height) //Right wall
 			];
 			bursts = [];
+			bassBursts = [];
+			bassSquares = [];
 			doors = [];
 		}		
 		
@@ -50,7 +58,9 @@ package Areas
 			avatar._voice.TranslateNoteArray(scaleArray);
 			avatar.x = avix;
 			avatar.y = aviy;
+			bassBursts = [];
 			bursts = [];
+			bassSquares = [];
 			
 			UpdateView(avatar);
 		}
@@ -60,25 +70,28 @@ package Areas
 			LevelRenderer.lock();
 			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), 0x000000);
 			
-			//draw bursts
+			//draw audiovisual only objects
 			var i:int;
-			for (i = 0; i < bursts.length; i++)
-			{
+			for (i = 0; i < bursts.length; i++){
 				bursts[i].Render(LevelRenderer);
 			}
+			for (i = 0; i < bassBursts.length; i++){
+				bassBursts[i].Render(LevelRenderer);
+			}
 			//draw land
-			for (i = 0; i < solids.length; i++)
-			{
+			for (i = 0; i < solids.length; i++){
 				var s:GameObject = solids[i];
 				LevelRenderer.fillRect(new Rectangle(s.x, s.y, s.rb, s.bb), groundColor);
 			}
+			//draw interactive objects
+			for (i = 0; i < bassSquares.length; i++){
+				bassSquares[i].Render(LevelRenderer);
+			}
 			//debug (DRAW DOORS) //DEBUG TODO::
-			for (i = 0; i < doors.length; i++)
-			{
+			for (i = 0; i < doors.length; i++){
 				var d:GameObject = doors[i];
 				LevelRenderer.fillRect(new Rectangle(d.x, d.y, d.rb, d.bb), 0xFF00FF);
 			}
-
 			//draw player
 			avatar.Render(LevelRenderer);
 			
@@ -93,21 +106,36 @@ package Areas
 		public function Update(avatar:Avatar, musicInputManager:MusicalInputManager):void
 		{
 			//update player input
-			musicInputManager.MusicalInput(avatar, scaleArray);
+			musicInputManager.Update(avatar, scaleArray);
 			if (musicInputManager.PlayedANote())
+			{
 				bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
+			}
 				
 			//UPDATE THE ENTITIES
 			avatar.Update(solids);
 			var i:int;
-			for (i = bursts.length-1; i >= 0; i--)
-			{
+			for (i = bursts.length-1; i >= 0; i--){
 				bursts[i].Update();
 				if (!bursts[i].visible)
 					bursts.splice(i, 1);
 			}
-			for (i = 0; i < doors.length; i++)
-			{
+			for (i = bassBursts.length-1; i >= 0; i--){
+				bassBursts[i].Update();
+				if (!bassBursts[i].visible)
+				{
+					bassBursts.splice(i, 1);
+				}
+			}
+			for (i = bassSquares.length-1; i >= 0; i--){
+				bassSquares[i].Update(avatar, bassScaleArray);
+				var tempSquare:BassSquare = bassSquares[i];
+				if (!tempSquare.visible){
+					bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
+					bassSquares.splice(i, 1);
+				}
+			}
+			for (i = 0; i < doors.length; i++){
 				doors[i].Update(avatar, scaleArray);
 			}
 			
@@ -164,6 +192,7 @@ package Areas
 		public function CreateScaleArray():void
 		{
 			//Create Diatonic Cmajor scale
+			bassScaleArray = [];
 			scaleArray = [];
 			for (var i:int = 24; i < 84; i++)
 			{
@@ -174,7 +203,12 @@ package Areas
 					(i-7)%12==0 ||	//G
 					(i+3)%12==0 ||	//A
 					(i+1)%12==0) 	//B
-				scaleArray.push(i);
+				{
+					if (i >= 36)
+						scaleArray.push(i);
+					else
+						bassScaleArray.push(i);
+				}
 			}
 		}
 	}
