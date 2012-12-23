@@ -1,5 +1,6 @@
 package Entities 
 {
+	import Entities.Parents.GameSprite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;

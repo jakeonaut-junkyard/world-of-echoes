@@ -1,30 +1,13 @@
 TODO::
-1. Make bassSquare interaction change the "chord" of the area
-2. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
-	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
-3a. Create ability to walk up minor slopes (change animation???)
-3b. Create dynamically sloping (procedurally generated etc.) floor/environment that's "forgotten" as it goes off screen (can be generated in either direction like minecraft.
-4. Make hovering voice egg/orbs that change your color and voice (and play a mini arpeggio) when touched. Make them drop your old voice as a new egg/orb.
+0. Make hovering voice egg/orbs that change your color and voice (and play a mini arpeggio) when touched. Make them drop your old voice as a new egg/orb.
 	-A special "virus" instrument keeps randomly changing your voice 
-5. Work on making content/resources for areas and cycles.
-6. Make world gain a "beat" with successive smooth combo stuff (see Lumine Tetris/Mother 3)???
+1. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
+	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
+2a. Create ability to walk up minor slopes (change animation???)
+2b. Create dynamically sloping (procedurally generated etc.) floor/environment that's "forgotten" as it goes off screen (can be generated in either direction like minecraft.
+3. Work on making content/resources for areas and cycles.
+4. Make world gain a "beat" with successive smooth combo stuff (see Lumine Tetris/Mother 3)???
 	
-====================================================================================================
-Systemic Mechanics:: Sensation/Fellowship/Discovery		
-	NOTES:: (Range from 24 (pushing it) to 76)
-		Ab: if ((x+4)%12==0)
-		A:  if ((x+3)%12==0)
-		Bb: if ((x+2)%12==0)
-		B:  if ((x+1)%12==0)
-		C:  if (x%12==0)
-		Db: if ((x-1)%12==0)
-		D:  if ((x-2)%12==0)
-		Eb: if ((x-3)%12==0)
-		E:  if ((x-4)%12==0)
-		F:  if ((x-5)%12==0)
-		Gb: if ((x-6)%12==0)
-		G:  if ((x-7)%12==0)
-		
 ====================================================================================================
 WORLD AREAS::
 
@@ -34,14 +17,16 @@ WORLD AREAS::
 4. Diatonic Minor Scale
 
 a. Main theme of room:: (p.s. little cats hidden throughout)
-	i. GREEN:: Summer Buggy Treeland Forest (Cicadas, Wind blowing through leaves, Green Japanese Country Forest)
+	0. Marshy Wetland Estuaries (Hippos Catfish cranes bugs baby baboons)
+	i. GREEN:: Summer Buggy Treeland Forest (Cicadas, Wind blowing through leaves, Green Japanese Country Forest, Monkeys)
 	ii. YELLOW:: Great wheat plains (grasshoppers & swarms of locusts, wheat fields, bison, quails, pebbles frogs deer springhoppers (Days of Heaven) birds migrate overhead amber waves of grain)
 	iii. ORANGE:: Sandy Orange-Water Beach (Seagulls, waves on shore and crashing, fishies jumping, sand and wet crabbies running around snails) [Cumberland Island]
 	iv. PURPLE (+neon):: Asian Paper Lantern neon arcade vending machine(beeps boops neon electric, that one fez world alley) [Tokyo night] + GLITCH CITY??
 	v. RED:: Volcanic Desert Wasteland Mountains Graveyard Dead Trees salamanders Red sky clouds Grey Hills too (smoke and fire and magma on the ground)
 	vi. WHITE/BLUE:: Glacial artic hilly wasteland
+	vii. BLACK/BROWN:: Dark cave glowworm silk curtains. Carpet of cockroaches/cave crabs. Swarms of bats/caveswallows. Echolocation and blindness. Calcite stalagtites. Underwatercaves (snakes and glowfishies). White crystal gemstone slabs (Chandelier Ballroom)
 b. Weather condition
 	-Normal, no weather
 	-Rain (lesser % chance)
 	-Day/Night cycle??? (In the night, the bursts illuminate the ground around you and you)
-c. Big creature/secret?
+c. Big creatures/secrets (Giganticism)

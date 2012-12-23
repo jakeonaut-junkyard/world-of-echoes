@@ -1,5 +1,7 @@
 package Entities 
 {
+	import Entities.Parents.GameSprite;
+	import Managers.VoiceManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;

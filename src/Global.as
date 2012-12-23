@@ -1,7 +1,5 @@
 package  
 {
-	import flash.utils.Dictionary;
-	 
 	public class Global 
 	{	
 		public static var stageWidth:int = 213;
@@ -22,6 +20,11 @@ package
 		public static const UP:int = 38;
 		public static const RIGHT:int = 39;
 		public static const DOWN:int = 40;
+		public static const SPACE:int = 32;
+		public static const ENTER:int = 13;
+		public static const ESC:int = 27;
+		public static const BACKSPACE:int = 8;
+		public static const SHIFT:int = 16;
 		public static const A_KEY:int = 65;
 		public static const S_KEY:int = 83;
 		public static const D_KEY:int = 68;
@@ -35,48 +38,21 @@ package
 		public static const W_KEY:int = 87;
 		public static const E_KEY:int = 69;
 		public static const R_KEY:int = 82;
-		public static const SPACE:int = 32;
-		public static const ENTER:int = 13;
-		public static const ESC:int = 27;
-		public static const BACKSPACE:int = 8;
-		public static const SHIFT:int = 16;
-		public static const UNDERSCORE:int = 189;
-		public static var LetterKeys:Dictionary;
 		
 		//track ids for SiON
 		public static const AVATAR_VOICE_ID:int = 0;
 		public static const BASS_SQUARE_TRACK_ID:int = 1;
 		
-		//etc
-		public static const PENTATONIC_MAJOR_AREA:int = 0;
-		public static const DIATONIC_MINOR_AREA:int = 1;
+		//Musical Scale Modes
+		public static const IONIAN_MODE:Array = [0, 2, 4, 5, 7, 9, 11];
+		public static const DORIAN_MODE:Array = [0, 2, 3, 5, 7, 9, 10];
+		public static const PHRYGIAN_MODE:Array = [0, 1, 3, 5, 7, 8, 10];
+		public static const LYDIAN_MODE:Array = [0, 2, 4, 6, 7, 9, 11];
+		public static const MIXOLYDIAN_MODE:Array = [0, 2, 4, 5, 7, 9, 10];
+		public static const AEOLIAN_MODE:Array = [0, 2, 3, 5, 7, 8, 10];
+		public static const LOCRIAN_MODE:Array = [0, 1, 3, 5, 6, 8, 10];
 		
-		public function Global() 
-		{	
-		}	
-
-		public static function CreateLetterDictionary():void
-		{
-			LetterKeys = new Dictionary();
-			
-			//ADD NUMBERS
-			for (var i:int = 48; i < 58; i++)
-			{
-				LetterKeys[i] = "0123456789".charAt(i-48);
-			}
-			for (var i:int = 96; i < 106; i++)
-			{
-				LetterKeys[i] = "0123456789".charAt(i-96);
-			}
-			
-			//ADD LETTERS
-			for (var i:int = 65; i < 91; i++)
-			{
-				LetterKeys[i] = "abcdefghijklmnopqrstuvwxyz".charAt(i-65);
-			}
-			
-			trace("DICTIONARY CREATED!!");
-		}
+		public function Global(){}	
 		
 		public static function CheckKeyDown(keycode:int):Boolean
 		{
