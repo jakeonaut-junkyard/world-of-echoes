@@ -6,6 +6,8 @@ package
 		public static var stageHeight:int = 160;
 		public static var zoom:int = 3;
 		
+		public static const DELAY_AMOUNT:int = 5;
+		
 		//mouse input stuff
 		public static var mousePressed:Boolean;
 		public static var mouse_X:Number;

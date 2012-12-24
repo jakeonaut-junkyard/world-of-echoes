@@ -19,6 +19,9 @@ package
 		public var L_bitmap:Bitmap;
 		public var LevelRenderer:BitmapData;
 		
+		private var _update:int = 0;
+		private var _updateCounter:int = 0;
+		
 		//entities
 		public var solids:Array;
 		public var bursts:Array;
@@ -64,7 +67,6 @@ package
 			
 			UpdateView(avatar);
 			
-			//TODO:: REMOVE
 			bassSquares = [
 				new BassSquare(32, Global.stageHeight, _voice),
 				new BassSquare(32+112, Global.stageHeight, _voice),
@@ -107,41 +109,53 @@ package
 		}
 		
 		public function Update(avatar:Avatar, musicInputManager:MusicalInputManager):void
-		{
+		{			
 			//update player input
 			musicInputManager.Update(avatar, scaleArray);
 			if (musicInputManager.PlayedANote())
-			{
 				bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
-			}
-				
-			//UPDATE THE ENTITIES
-			avatar.Update(solids);
-			var i:int;
-			for (i = bursts.length-1; i >= 0; i--){
-				bursts[i].Update();
-				if (!bursts[i].visible)
-					bursts.splice(i, 1);
-			}
-			for (i = bassBursts.length-1; i >= 0; i--){
-				bassBursts[i].Update();
-				if (!bassBursts[i].visible)
-				{
-					bassBursts.splice(i, 1);
-				}
-			}
-			for (i = bassSquares.length-1; i >= 0; i--){
-				bassSquares[i].Update(avatar, bassScaleArray);
-				var tempSquare:BassSquare = bassSquares[i];
-				if (!tempSquare.visible){
-					bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
-					ChangeWorldScale(avatar);
-					bassSquares.splice(i, 1);
-				}
+			if (musicInputManager.updateWorldScale)
+			{
+				musicInputManager.updateWorldScale = false;
+				ChangeWorldScale(avatar, musicInputManager.rootNote);
 			}
 			
-			//MOVE THE VIEW SCREEN
-			UpdateView(avatar);
+			if (Global.CheckKeyDown(Global.SPACE))
+				_updateCounter = Global.DELAY_AMOUNT;
+			else _updateCounter = 0;
+			
+			if (_update >= _updateCounter)
+			{
+				_update = 0;
+				//UPDATE THE ENTITIES
+				avatar.Update(solids);
+				var i:int;
+				for (i = bursts.length-1; i >= 0; i--){
+					bursts[i].Update();
+					if (!bursts[i].visible)
+						bursts.splice(i, 1);
+				}
+				for (i = bassBursts.length-1; i >= 0; i--){
+					bassBursts[i].Update();
+					if (!bassBursts[i].visible)
+					{
+						bassBursts.splice(i, 1);
+					}
+				}
+				for (i = bassSquares.length-1; i >= 0; i--){
+					bassSquares[i].Update(avatar, bassScaleArray);
+					var tempSquare:BassSquare = bassSquares[i];
+					if (!tempSquare.visible){
+						bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
+						ChangeWorldScale(avatar, bassSquares[i].noteIndex);
+						bassSquares.splice(i, 1);
+					}
+				}
+				
+				//MOVE THE VIEW SCREEN
+				UpdateView(avatar);
+			}
+			_update++;
 		}
 		
 		public function UpdateView(avatar:Avatar):void
@@ -212,13 +226,15 @@ package
 			}
 		}
 		
-		public function ChangeWorldScale(avatar:Avatar):void
+		public function ChangeWorldScale(avatar:Avatar, bassNote:int):void
 		{
 			//CHOOSE NEXT SCALE RANDOMLY
 			var scales:Array = [Global.IONIAN_MODE, Global.DORIAN_MODE, Global.PHRYGIAN_MODE,
 				Global.LYDIAN_MODE, Global.MIXOLYDIAN_MODE, Global.AEOLIAN_MODE, Global.LOCRIAN_MODE];
+				
+			var rootNote:int = (bassNote%12)+12;
 			var randIndex:int = Math.floor(Math.random()*7);
-			CreateScaleArray(12, scales[randIndex]);
+			CreateScaleArray(rootNote, scales[randIndex]);
 			
 			//SET ENTITIES IN THE WORLD TO THE NEW SCALE
 			var i:int;

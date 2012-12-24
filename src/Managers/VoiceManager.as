@@ -11,6 +11,7 @@ package Managers
         private var _presets:SiONPresetVoice;
 		public var voice:SiONVoice;
 		public var noteArray:Array;
+		public var scaleArray:Array;
 		public var color:ColorTransform;
          
         public function VoiceManager()
@@ -18,6 +19,7 @@ package Managers
             _presets = new SiONPresetVoice();
 			voice = (_presets.categolies[0])[0];
 			noteArray = [];
+			scaleArray = [];
 			color = new ColorTransform();
         }
 		
@@ -44,11 +46,14 @@ package Managers
 			voice = voiceList[voiceIndex];
 		}
 		
-		public function SetRandomNoteArray(scale:Array, baseNote:int = -1):void
+		public function SetRandomNoteArray(scale:Array = null, baseNote:int = -1):void
 		{
+			if (scale == null) scale = scaleArray;
+			else scaleArray = scale;
+			
 			var index:int = Math.floor(Math.random()*Math.floor(scale.length/2));
-			if (baseNote > -1)
-				index = baseNote;
+			if (baseNote > -1) index = baseNote;
+			
 			var x:int;
 			var maxIndex:int = scale.length;
 			var randomRange:int = 4;

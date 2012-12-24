@@ -18,6 +18,9 @@ package Entities
 		public var jump_vel:Number;
 		public var facing:int;
 		
+		public var inputJump:Boolean = false;
+		public var float:Boolean = false;
+		
 		public var move_state:int;
 		public var prev_move_state:int;
 		public const STANDING:int = 0;
@@ -73,8 +76,19 @@ package Entities
 		
 		public function Update(solids:Array):void
 		{
+			if (inputJump){
+				inputJump = false;
+				on_ground = false;
+				vel.y = -jump_vel;
+			}
+			if (float){
+				y-=2;
+				if (vel.y > 0)
+					y-=1;
+			}
 			Gravity();
 			UpdateMovement(solids);
+			if (hit_head >= 2) y+=2;
 			
 			UpdateAnimation();
 		}

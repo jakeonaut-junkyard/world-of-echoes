@@ -1,3 +1,4 @@
+[13][115], [16][26]
 default::
 	-Saw wave
 	-Square wave
@@ -55,12 +56,20 @@ VOICES I DON'T LIKE::
 -[0][5] (white noise)
 -[0][11] (no sound)
 -[0][13] (percussion)
+-[2][3] (way too laggy)
 -[3][6] (note holds on for too long and makes everything lag)
+-[3][8] (can get very high pitched)
+-[3][14] (very high pitched)
 -[6][7] (percussion/whitenoise)
+-[6][9] (percussive white noise)
 -[6][22] (percussion)
--[8][2] (laggy)
+-[8][0] (more white noise??)
+-[8][1] (starts too slow)
+-[8][2] (laggy + starts too slow)
+-[10][5] (doesn't play unless held out)
+-[12][3] (laggy)
 -[13][99] (lags a lot)
--[3][6] (holds too long/lags a lot)
+-[14][28] (laggy laggy lag)
 -[14][47] (too high pitched and not note-soundy)
 -[16][8] (percussion]
 -[16][18] (percussion)

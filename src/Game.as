@@ -26,7 +26,7 @@ package
 		{
 			trace("Game created!");
 			_driver = new SiONDriver();
-			_driver.play('c0'); //TODO::
+			_driver.play(null, false);
 			
 			Screen = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
 			screenBitmap = new Bitmap(Screen);

@@ -6,42 +6,34 @@ package Managers
 	
 	public class MusicalInputManager 
 	{
-		private var asdfjklKeys:Array;
 		private var asdfjklKeyCounters:Array;
+		private var noteArray:Array;
+		private var tempNoteFadeArray:Array;
+		private var _decay:int = 5;
 		
 		private var trackId:int = Global.AVATAR_VOICE_ID;
+		public var updateWorldScale:Boolean = false;
+		public var rootNote:int = 12;
 		
 		private var justJumped:int = 0;
 		private var doubleJumped:Boolean = false;
-		private var stopRunCounter:int;
+		private var stopRunCounter:Number;
 		private var runDir:int;
 		private const LEFT:int = 0;
 		private const RIGHT:int = 1;
 		
 		public function MusicalInputManager() 
 		{			
-			asdfjklKeys = [false, false, false, false, false, false, false, false];
 			asdfjklKeyCounters = [0, 0, 0, 0, 0, 0, 0, 0];
+			noteArray = [];
+			tempNoteFadeArray = [];
 			stopRunCounter = 0;
 		}
 		
 		public function Update(avatar:Avatar, scale:Array):void
 		{
-			UpdateKeyArray();
-			var noteLength:int = 15;
-			//play the notes
-			for (var i:int = 0; i < asdfjklKeys.length; i++)
-			{
-				if (asdfjklKeyCounters[i] == 3)
-				{
-					Game._driver.noteOff(avatar._voice.noteArray[i], trackId, 0, 0, true);
-					Game._driver.noteOn(avatar._voice.noteArray[i], avatar._voice.voice, 4, 0, 0, trackId);
-					
-					if (i <= 3) i = 3;
-					else break;
-				}
-			}
-			
+			UpdateManagerArrays(avatar);
+			UpdatePlayNotes(avatar);			
 			PlayerJump(avatar);
 			PlayerRun(avatar);
 			
@@ -60,7 +52,7 @@ package Managers
 			if (!Global.CheckKeyDown(Global.DOWN))
 			{
 				for (i = 0; i < 4; i++){
-					if (asdfjklKeys[i]){
+					if (asdfjklKeyCounters[i] == 3){
 						move = true;
 						break;
 					}
@@ -84,7 +76,7 @@ package Managers
 			if (!Global.CheckKeyDown(Global.DOWN))
 			{
 				for (i = 4; i < 8; i++){
-					if (asdfjklKeys[i]){
+					if (asdfjklKeyCounters[i] == 3){
 						move = true;
 						break;
 					}
@@ -104,10 +96,12 @@ package Managers
 			}
 			
 			//STOP MOVEMENT
+			var decrement:Number = 1;
+			if (Global.CheckKeyDown(Global.SPACE)) decrement = decrement / Global.DELAY_AMOUNT;
 			if (Global.CheckKeyDown(Global.LEFT) || Global.CheckKeyDown(Global.RIGHT))
 				stopRunCounter = 0;
 			else
-				stopRunCounter--;
+				stopRunCounter-=decrement;
 			if (stopRunCounter <= 0){
 				stopRunCounter = 0;
 				
@@ -142,8 +136,13 @@ package Managers
 				{
 					justJumped = 5;
 					if (!avatar.on_ground) doubleJumped = true;
-					avatar.on_ground = false;
-					avatar.vel.y = -avatar.jump_vel;
+					avatar.inputJump = true;
+					
+					updateWorldScale = true;
+					if (lcounter >= 3)
+						rootNote = (noteArray[0]%12)+12;
+					else if (lcounter < 3)
+						rootNote = (noteArray[4]%12)+12;
 				}
 			}
 			else justJumped--;
@@ -152,15 +151,149 @@ package Managers
 			{
 				if ((stopRunCounter > 0 || Global.CheckKeyDown(Global.UP)) && !avatar.on_ground)
 				{
-					avatar.y-=2;
-					if (avatar.vel.y > 0)
-						avatar.y-=1;
+					avatar.float = true;
 				}
-				
+				else
+					avatar.float = false;
 			}
-			else if (avatar.hit_head >= 2) avatar.y+=2;
 			
 			if (avatar.on_ground && doubleJumped) doubleJumped = false;
+		}
+		
+		public function PlayNoteFromArray(avatar:Avatar, index:int):void
+		{
+			Game._driver.noteOff(noteArray[index]);
+			RemoveFromFadeArray(noteArray[index]);
+			
+			var track:SiMMLTrack = Game._driver.noteOn(noteArray[index], avatar._voice.voice, 0);
+		}
+		
+		public function StopNoteFromArray(index:int, delay:int = 0):void
+		{
+			if (delay == 0)
+			{
+				Game._driver.noteOff(noteArray[index]);
+				RemoveFromFadeArray(noteArray[index]);
+			}
+			else
+			{
+				if (tempNoteFadeArray.length >= 6)
+				{
+					Game._driver.noteOff(tempNoteFadeArray[0][0]);
+					tempNoteFadeArray.splice(0, 1);
+				}
+				tempNoteFadeArray.push([noteArray[index], delay]);
+			}
+		}
+		
+		public function StopAllNotes(delay:int = 0):void
+		{
+			var i:int;
+			for (i = 0; i < noteArray.length; i++)
+			{
+				StopNoteFromArray(i, delay);
+			}
+			for (i = tempNoteFadeArray.length-1; i >= 0; i--)
+			{
+				Game._driver.noteOff(tempNoteFadeArray[i][0]);
+				tempNoteFadeArray.splice(i, 1);
+			}
+		}
+		
+		public function RemoveFromFadeArray(index:int):void
+		{
+			for (var i:int = 0; i < tempNoteFadeArray.length; i++)
+			{
+				if (tempNoteFadeArray[i][0] == index)
+				{
+					tempNoteFadeArray.splice(i, 1);
+					break;
+				}
+			}
+		}
+		
+		private function UpdateManagerArrays(avatar:Avatar):void
+		{
+			if (noteArray != avatar._voice.noteArray)
+			{
+				noteArray = avatar._voice.noteArray;
+			}
+			
+			var i:int;
+			for (i = 0; i < asdfjklKeyCounters.length; i++)
+			{
+				if (asdfjklKeyCounters[i] > 0)
+					asdfjklKeyCounters[i]--;
+			}
+			for (i = tempNoteFadeArray.length-1; i >= 0; i--)
+			{
+				tempNoteFadeArray[i][1]--;
+				if (tempNoteFadeArray[i][1]<=0)
+				{
+					Game._driver.noteOff(tempNoteFadeArray[i][0]);
+					tempNoteFadeArray.splice(i, 1);
+				}	
+			}
+		}
+		
+		private function UpdatePlayNotes(avatar:Avatar):void
+		{	
+			if (Global.CheckKeyDown(Global.SPACE))
+				_decay = 100;
+			else if (Global.CheckKeyUp(Global.SPACE))
+			{
+				_decay = 5;
+				StopAllNotes();
+			}
+			
+			if (Global.CheckKeyPressed(Global.A_KEY)){
+				asdfjklKeyCounters[0] = 3;
+				PlayNoteFromArray(avatar, 0);
+				StopNoteFromArray(0, _decay);
+			}	
+			
+			if (Global.CheckKeyPressed(Global.S_KEY)){
+				asdfjklKeyCounters[1] = 3;
+				PlayNoteFromArray(avatar, 1);
+				StopNoteFromArray(1, _decay);
+			}
+			
+			if (Global.CheckKeyPressed(Global.D_KEY)){
+				asdfjklKeyCounters[2] = 3;
+				PlayNoteFromArray(avatar, 2);
+				StopNoteFromArray(2, _decay);
+			}
+			
+			if (Global.CheckKeyPressed(Global.F_KEY)){
+				asdfjklKeyCounters[3] = 3;
+				PlayNoteFromArray(avatar, 3);
+				StopNoteFromArray(3, _decay);
+			}
+			
+			
+			if (Global.CheckKeyPressed(Global.J_KEY)){
+				asdfjklKeyCounters[4] = 3;
+				PlayNoteFromArray(avatar, 4);
+				StopNoteFromArray(4, _decay);
+			}
+			
+			if (Global.CheckKeyPressed(Global.K_KEY)){
+				asdfjklKeyCounters[5] = 3;
+				PlayNoteFromArray(avatar, 5);
+				StopNoteFromArray(5, _decay);
+			}
+			
+			if (Global.CheckKeyPressed(Global.L_KEY)){
+				asdfjklKeyCounters[6] = 3;
+				PlayNoteFromArray(avatar, 6);
+				StopNoteFromArray(6, _decay);
+			}
+			
+			if (Global.CheckKeyPressed(Global.SEMICOLON)){
+				asdfjklKeyCounters[7] = 3;
+				PlayNoteFromArray(avatar, 7);
+				StopNoteFromArray(7, _decay);
+			}
 		}
 		
 		public function PlayedANote():Boolean
@@ -170,54 +303,6 @@ package Managers
 				if (asdfjklKeyCounters[i] == 3) return true;
 			}
 			return false;
-		}
-		
-		private function UpdateKeyArray():void
-		{
-			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
-			{
-				asdfjklKeyCounters[i]--;
-			}
-			
-			if (Global.CheckKeyPressed(Global.A_KEY)){
-				asdfjklKeys[0] = true;
-				asdfjklKeyCounters[0] = 3;
-			}else asdfjklKeys[0] = false;
-			
-			if (Global.CheckKeyPressed(Global.S_KEY)){
-				asdfjklKeys[1] = true;
-				asdfjklKeyCounters[1] = 3;
-			}else asdfjklKeys[1] = false;
-			
-			if (Global.CheckKeyPressed(Global.D_KEY)){
-				asdfjklKeys[2] = true;
-				asdfjklKeyCounters[2] = 3;
-			}else asdfjklKeys[2] = false;
-			
-			if (Global.CheckKeyPressed(Global.F_KEY)){
-				asdfjklKeys[3] = true;
-				asdfjklKeyCounters[3] = 3;
-			}else asdfjklKeys[3] = false;
-			
-			if (Global.CheckKeyPressed(Global.J_KEY) || Global.CheckKeyPressed(Global.Q_KEY)){
-				asdfjklKeys[4] = true;
-				asdfjklKeyCounters[4] = 3;
-			}else asdfjklKeys[4] = false;
-			
-			if (Global.CheckKeyPressed(Global.K_KEY) || Global.CheckKeyPressed(Global.W_KEY)){
-				asdfjklKeys[5] = true;
-				asdfjklKeyCounters[5] = 3;
-			}else asdfjklKeys[5] = false;
-			
-			if (Global.CheckKeyPressed(Global.L_KEY) || Global.CheckKeyPressed(Global.E_KEY)){
-				asdfjklKeys[6] = true;
-				asdfjklKeyCounters[6] = 3;
-			}else asdfjklKeys[6] = false;
-			
-			if (Global.CheckKeyPressed(Global.SEMICOLON) || Global.CheckKeyPressed(Global.R_KEY)){
-				asdfjklKeys[7] = true;
-				asdfjklKeyCounters[7] = 3;
-			}else asdfjklKeys[7] = false;
 		}
 	}
 }

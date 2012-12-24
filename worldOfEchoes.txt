@@ -1,12 +1,12 @@
 TODO::
-0. Make hovering voice egg/orbs that change your color and voice (and play a mini arpeggio) when touched. Make them drop your old voice as a new egg/orb.
-	-A special "virus" instrument keeps randomly changing your voice 
 1. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
-2a. Create ability to walk up minor slopes (change animation???)
-2b. Create dynamically sloping (procedurally generated etc.) floor/environment that's "forgotten" as it goes off screen (can be generated in either direction like minecraft.
-3. Work on making content/resources for areas and cycles.
-4. Make world gain a "beat" with successive smooth combo stuff (see Lumine Tetris/Mother 3)???
+2. Make hovering voice egg/orbs that change your color and voice (and play a mini arpeggio) when touched. Make them drop your old voice as a new egg/orb.
+	-A special "virus" instrument keeps randomly changing your voice 
+3a. Create ability to walk up minor slopes (change animation???)
+3b. Create dynamically sloping (procedurally generated etc.) floor/environment that's "forgotten" as it goes off screen (can be generated in either direction like minecraft.
+4. Work on making content/resources for areas and cycles.
+	-Color sky background fade to night to day.
 	
 ====================================================================================================
 WORLD AREAS::

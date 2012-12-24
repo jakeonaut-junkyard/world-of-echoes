@@ -16,6 +16,7 @@ package Entities
 		public var _voice:VoiceManager;
 		protected var myAlpha:Number;
 		protected var trackId:int = Global.BASS_SQUARE_TRACK_ID;
+		public var noteIndex:int;
 		
 		[Embed(source = "../resources/images/bass_square.png")]
 		private var sprite_sheet:Class;
@@ -62,8 +63,8 @@ package Entities
 			{
 				visible = false;
 				
-				var index:int = Math.round(Math.random()*bassScaleArray.length);
-				var noteIndex:int = bassScaleArray[index];
+				var index:int = Math.round(Math.random()*(bassScaleArray.length-1));
+				noteIndex = bassScaleArray[index];
 				var tempNote:SiMMLTrack = Game._driver.noteOn(noteIndex, _voice.voice, 8, 0, 0, trackId);
 				tempNote.masterVolume = 128;
 			}
