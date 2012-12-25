@@ -68,9 +68,12 @@ VOICES I DON'T LIKE::
 -[8][2] (laggy + starts too slow)
 -[10][5] (doesn't play unless held out)
 -[12][3] (laggy)
+-[13][79] (too quiet)
 -[13][99] (lags a lot)
 -[14][28] (laggy laggy lag)
 -[14][47] (too high pitched and not note-soundy)
+-[15][47] (no work)
+-[15][122] (no work)
 -[16][8] (percussion]
 -[16][18] (percussion)
 -[16][23] (percussion and TOO SOFT)

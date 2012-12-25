@@ -9,7 +9,7 @@ package Managers
 		private var asdfjklKeyCounters:Array;
 		private var noteArray:Array;
 		private var tempNoteFadeArray:Array;
-		private var _decay:int = 5;
+		private var _decay:Number = 10;
 		
 		private var trackId:int = Global.AVATAR_VOICE_ID;
 		public var updateWorldScale:Boolean = false;
@@ -28,6 +28,14 @@ package Managers
 			noteArray = [];
 			tempNoteFadeArray = [];
 			stopRunCounter = 0;
+		}
+		
+		public function PlayedANote():Boolean
+		{
+			for (var i:int = 0; i < asdfjklKeyCounters.length; i++){
+				if (asdfjklKeyCounters[i] == 3) return true;
+			}
+			return false;
 		}
 		
 		public function Update(avatar:Avatar, scale:Array):void
@@ -96,8 +104,7 @@ package Managers
 			}
 			
 			//STOP MOVEMENT
-			var decrement:Number = 1;
-			if (Global.CheckKeyDown(Global.SPACE)) decrement = decrement / Global.DELAY_AMOUNT;
+			var decrement:Number = Global.CURR_PHYSICS_SPEED;
 			if (Global.CheckKeyDown(Global.LEFT) || Global.CheckKeyDown(Global.RIGHT))
 				stopRunCounter = 0;
 			else
@@ -200,12 +207,22 @@ package Managers
 			}
 		}
 		
+		public function HoldRecentlyPlayedNotes():void
+		{
+			var decay:int = 5*Global.DELAY_AMOUNT;
+			for (var i:int = 0; i < tempNoteFadeArray.length; i++)
+			{
+				tempNoteFadeArray[i][1] = decay;
+			}
+		}
+		
 		public function RemoveFromFadeArray(index:int):void
 		{
-			for (var i:int = 0; i < tempNoteFadeArray.length; i++)
+			for (var i:int = tempNoteFadeArray.length-1; i >= 0; i--)
 			{
 				if (tempNoteFadeArray[i][0] == index)
 				{
+					Game._driver.noteOff(tempNoteFadeArray[i][0]);
 					tempNoteFadeArray.splice(i, 1);
 					break;
 				}
@@ -238,13 +255,11 @@ package Managers
 		
 		private function UpdatePlayNotes(avatar:Avatar):void
 		{	
-			if (Global.CheckKeyDown(Global.SPACE))
-				_decay = 100;
+			_decay = 10/Global.CURR_PHYSICS_SPEED;
+			if (Global.CheckKeyPressed(Global.SPACE))
+				HoldRecentlyPlayedNotes();
 			else if (Global.CheckKeyUp(Global.SPACE))
-			{
-				_decay = 5;
 				StopAllNotes();
-			}
 			
 			if (Global.CheckKeyPressed(Global.A_KEY)){
 				asdfjklKeyCounters[0] = 3;
@@ -294,15 +309,6 @@ package Managers
 				PlayNoteFromArray(avatar, 7);
 				StopNoteFromArray(7, _decay);
 			}
-		}
-		
-		public function PlayedANote():Boolean
-		{
-			for (var i:int = 0; i < asdfjklKeyCounters.length; i++)
-			{
-				if (asdfjklKeyCounters[i] == 3) return true;
-			}
-			return false;
 		}
 	}
 }

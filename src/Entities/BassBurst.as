@@ -24,7 +24,7 @@ package Entities
 		public var radii:Array;
 		
 		private var numBursts:int;
-		private var newBurstCounter:int;
+		private var newBurstCounter:Number;
 		private var polarity:Boolean = true;
 		
 		public var visible:Boolean;
@@ -74,23 +74,23 @@ package Entities
 		{
 			for (var i:int = radii.length-1; i >= 0; i--)
 			{
-				radii[i][0]+=radii[i][1];
+				radii[i][0]+=(radii[i][1]*Global.CURR_PHYSICS_SPEED);
 				if (radii[i][0] > MAX_RADIUS)
 					radii.splice(i,1);
 				else
 				{
 					if (radii[i][1] <= MAX_SPEED)
-						radii[i][1]+= ACCELERATION;
+						radii[i][1]+= (ACCELERATION*Global.CURR_PHYSICS_SPEED);
 					else
 						radii[i][1] = MAX_SPEED;
-					radii[i][2] -= 0.03;
-					radii[i][3] += 0.2;
+					radii[i][2] -= (0.03*Global.CURR_PHYSICS_SPEED);
+					radii[i][3] += (0.2*Global.CURR_PHYSICS_SPEED);
 				}
 			}
 			
 			if (numBursts < MAX_BURSTS)
 			{
-				newBurstCounter++;
+				newBurstCounter+=Global.CURR_PHYSICS_SPEED;
 				if (newBurstCounter >= COUNTER_LIMIT)
 				{
 					newBurstCounter = 0;

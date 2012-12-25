@@ -50,8 +50,9 @@ package Entities
 		}
 		
 		public function Update():void
-		{				
-			if (++frameCount >= frameDelay)
+		{		
+			frameCount +=  Global.CURR_PHYSICS_SPEED;
+			if (frameCount >= frameDelay)
 			{
 				myAlpha -= 1/maxFrame;
 				if (++currFrame >= maxFrame)

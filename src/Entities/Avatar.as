@@ -82,13 +82,13 @@ package Entities
 				vel.y = -jump_vel;
 			}
 			if (float){
-				y-=2;
+				y-=(2*Global.CURR_PHYSICS_SPEED);
 				if (vel.y > 0)
-					y-=1;
+					y-=Global.CURR_PHYSICS_SPEED;
 			}
 			Gravity();
 			UpdateMovement(solids);
-			if (hit_head >= 2) y+=2;
+			if (hit_head >= 2) y+=(2*Global.CURR_PHYSICS_SPEED);
 			
 			UpdateAnimation();
 		}

@@ -19,9 +19,6 @@ package
 		public var L_bitmap:Bitmap;
 		public var LevelRenderer:BitmapData;
 		
-		private var _update:int = 0;
-		private var _updateCounter:int = 0;
-		
 		//entities
 		public var solids:Array;
 		public var bursts:Array;
@@ -120,42 +117,40 @@ package
 				ChangeWorldScale(avatar, musicInputManager.rootNote);
 			}
 			
-			if (Global.CheckKeyDown(Global.SPACE))
-				_updateCounter = Global.DELAY_AMOUNT;
-			else _updateCounter = 0;
-			
-			if (_update >= _updateCounter)
-			{
-				_update = 0;
-				//UPDATE THE ENTITIES
-				avatar.Update(solids);
-				var i:int;
-				for (i = bursts.length-1; i >= 0; i--){
-					bursts[i].Update();
-					if (!bursts[i].visible)
-						bursts.splice(i, 1);
-				}
-				for (i = bassBursts.length-1; i >= 0; i--){
-					bassBursts[i].Update();
-					if (!bassBursts[i].visible)
-					{
-						bassBursts.splice(i, 1);
-					}
-				}
-				for (i = bassSquares.length-1; i >= 0; i--){
-					bassSquares[i].Update(avatar, bassScaleArray);
-					var tempSquare:BassSquare = bassSquares[i];
-					if (!tempSquare.visible){
-						bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
-						ChangeWorldScale(avatar, bassSquares[i].noteIndex);
-						bassSquares.splice(i, 1);
-					}
-				}
-				
-				//MOVE THE VIEW SCREEN
-				UpdateView(avatar);
+			if (Global.CheckKeyDown(Global.SPACE)){
+				Global.CURR_PHYSICS_SPEED = 1 / Global.DELAY_AMOUNT;
 			}
-			_update++;
+			else{ 
+				Global.CURR_PHYSICS_SPEED = 1;
+			}
+			
+			//UPDATE THE ENTITIES
+			avatar.Update(solids);
+			var i:int;
+			for (i = bursts.length-1; i >= 0; i--){
+				bursts[i].Update();
+				if (!bursts[i].visible)
+					bursts.splice(i, 1);
+			}
+			for (i = bassBursts.length-1; i >= 0; i--){
+				bassBursts[i].Update();
+				if (!bassBursts[i].visible)
+				{
+					bassBursts.splice(i, 1);
+				}
+			}
+			for (i = bassSquares.length-1; i >= 0; i--){
+				bassSquares[i].Update(avatar, bassScaleArray);
+				var tempSquare:BassSquare = bassSquares[i];
+				if (!tempSquare.visible){
+					bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
+					ChangeWorldScale(avatar, bassSquares[i].noteIndex);
+					bassSquares.splice(i, 1);
+				}
+			}
+			
+			//MOVE THE VIEW SCREEN
+			UpdateView(avatar);
 		}
 		
 		public function UpdateView(avatar:Avatar):void
@@ -173,22 +168,22 @@ package
 			//move view right and left
 			if (avirb > right)
 			{
-				L_bitmap.x-= (avirb - right);
+				L_bitmap.x-= ((avirb - right)*Global.CURR_PHYSICS_SPEED);
 			}
 			else if (avilb < left)
 			{
-				L_bitmap.x+= (left - avilb);
+				L_bitmap.x+= ((left - avilb)*Global.CURR_PHYSICS_SPEED);
 			}
 			//move view up and down
 			if (avitb < top)
 			{
-				L_bitmap.y += (top - avitb);
+				L_bitmap.y += ((top - avitb)*Global.CURR_PHYSICS_SPEED);
 			}
 			else if (avibb > bottom)
-				L_bitmap.y-= (avibb - bottom);
+				L_bitmap.y-= ((avibb - bottom)*Global.CURR_PHYSICS_SPEED);
 				
 			if (avatar.on_ground && avitb-48 < top)
-					L_bitmap.y += 6;
+					L_bitmap.y += (6*Global.CURR_PHYSICS_SPEED);
 				
 			//prevent viewing off the edge
 			if (L_bitmap.x < (-1)*(L_bitmap.width-Global.stageWidth))

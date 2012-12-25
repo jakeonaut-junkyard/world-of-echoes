@@ -18,7 +18,7 @@ package Entities.Parents
 		public var image_sprite:Sprite;
 		
 		//animation stuff
-		public var frameCount:int;
+		public var frameCount:Number;
 		public var frameDelay:int;
 		public var currFrame:int;
 		public var currAniX:int;
@@ -73,7 +73,8 @@ package Entities.Parents
 		
 		public function UpdateAnimation():void
 		{
-			if (++frameCount >= frameDelay)
+			frameCount += Global.CURR_PHYSICS_SPEED;
+			if (frameCount >= frameDelay)
 			{
 				if (++currFrame >= maxFrame) 
 					currFrame = 0;

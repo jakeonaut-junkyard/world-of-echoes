@@ -5,7 +5,7 @@ package Entities.Parents
 		public var grav_acc:Number;
 		public var terminal_vel:Number;
 		public var on_ground:Boolean;
-		public var hit_head:int;
+		public var hit_head:Number;
 		
 		public var antigrav:Boolean = false;
 		
@@ -26,7 +26,7 @@ package Entities.Parents
 				
 			if (vel.y < terminal_vel)
 			{
-				vel.y += grav_acc;
+				vel.y += (grav_acc*Global.CURR_PHYSICS_SPEED);
 			}
 			else
 				vel.y = terminal_vel;
@@ -52,7 +52,7 @@ package Entities.Parents
 						x++;
 				}
 			}
-			x += vel.x;
+			x += (vel.x*Global.CURR_PHYSICS_SPEED);
 			
 			on_ground = false;
 			for (i = 0; i < solids.length; i++)
@@ -74,9 +74,9 @@ package Entities.Parents
 						y++;
 				}
 			}
-			y += vel.y;
+			y += (vel.y*Global.CURR_PHYSICS_SPEED);
 			
-			if (hit_head > 0) hit_head--;
+			if (hit_head > 0) (hit_head-=Global.CURR_PHYSICS_SPEED);
 		}
 	}
 }

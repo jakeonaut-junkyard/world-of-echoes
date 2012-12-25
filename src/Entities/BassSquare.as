@@ -69,7 +69,8 @@ package Entities
 				tempNote.masterVolume = 128;
 			}
 			
-			if (++frameCount >= frameDelay)
+			frameCount += Global.CURR_PHYSICS_SPEED;
+			if (frameCount >= frameDelay)
 			{
 				if (++currFrame >= maxFrame)
 				{

@@ -1,4 +1,5 @@
 TODO::
+0. Bursts should have blend modes that let them interact with each other's colors
 1. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
 2. Make hovering voice egg/orbs that change your color and voice (and play a mini arpeggio) when touched. Make them drop your old voice as a new egg/orb.

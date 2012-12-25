@@ -24,8 +24,8 @@ package Entities.Parents
 				CollideWithSolids(solids)
 			}
 			else{
-				x += vel.x;
-				y += vel.y;
+				x += (vel.x*Global.CURR_PHYSICS_SPEED);
+				y += (vel.y*Global.CURR_PHYSICS_SPEED);
 			}
 		}
 		
@@ -49,7 +49,7 @@ package Entities.Parents
 						x++;
 				}
 			}
-			x += vel.x;
+			x += (vel.x*Global.CURR_PHYSICS_SPEED);
 				
 			for (i = 0; i < solids.length; i++)
 			{
@@ -68,7 +68,7 @@ package Entities.Parents
 						y++;
 				}
 			}
-			y += vel.y;
+			y += (vel.y*Global.CURR_PHYSICS_SPEED);
 		}
 	}
 }
