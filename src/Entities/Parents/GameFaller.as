@@ -61,7 +61,6 @@ package Entities.Parents
 				if (CheckRectIntersect(solids[i], x+lb, y+tb+vel.y, x+rb, y+tb))
 				{
 					vel.y = 0;
-					hit_head = 3;
 					while (!CheckRectIntersect(solids[i], x+lb, y+tb-1, x+rb, y+tb))
 						y--;
 				}
@@ -75,8 +74,6 @@ package Entities.Parents
 				}
 			}
 			y += (vel.y*Global.CURR_PHYSICS_SPEED);
-			
-			if (hit_head > 0) (hit_head-=Global.CURR_PHYSICS_SPEED);
 		}
 	}
 }

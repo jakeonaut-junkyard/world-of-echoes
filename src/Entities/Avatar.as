@@ -19,6 +19,7 @@ package Entities
 		public var facing:int;
 		
 		public var inputJump:Boolean = false;
+		private var jumpCount:Number = 0;
 		public var float:Boolean = false;
 		
 		public var move_state:int;
@@ -79,16 +80,18 @@ package Entities
 			if (inputJump){
 				inputJump = false;
 				on_ground = false;
-				vel.y = -jump_vel;
+				vel.y = -jump_vel/(jumpCount+1);
+				jumpCount++;
 			}
 			if (float){
 				y-=(2*Global.CURR_PHYSICS_SPEED);
 				if (vel.y > 0)
 					y-=Global.CURR_PHYSICS_SPEED;
 			}
+			
 			Gravity();
 			UpdateMovement(solids);
-			if (hit_head >= 2) y+=(2*Global.CURR_PHYSICS_SPEED);
+			if (on_ground) jumpCount = 0;
 			
 			UpdateAnimation();
 		}

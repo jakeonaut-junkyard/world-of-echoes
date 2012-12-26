@@ -10,13 +10,15 @@ package Managers
 		private var noteArray:Array;
 		private var tempNoteFadeArray:Array;
 		private var _decay:Number = 10;
+		private var _hold:Number = 3;
 		
 		private var trackId:int = Global.AVATAR_VOICE_ID;
 		public var updateWorldScale:Boolean = false;
 		public var rootNote:int = 12;
 		
+		public var playedBassChord:Number = 0;
+		
 		private var justJumped:int = 0;
-		private var doubleJumped:Boolean = false;
 		private var stopRunCounter:Number;
 		private var runDir:int;
 		private const LEFT:int = 0;
@@ -33,7 +35,7 @@ package Managers
 		public function PlayedANote():Boolean
 		{
 			for (var i:int = 0; i < asdfjklKeyCounters.length; i++){
-				if (asdfjklKeyCounters[i] == 3) return true;
+				if (asdfjklKeyCounters[i] == _hold) return true;
 			}
 			return false;
 		}
@@ -60,7 +62,7 @@ package Managers
 			if (!Global.CheckKeyDown(Global.DOWN))
 			{
 				for (i = 0; i < 4; i++){
-					if (asdfjklKeyCounters[i] == 3){
+					if (asdfjklKeyCounters[i] == _hold){
 						move = true;
 						break;
 					}
@@ -84,7 +86,7 @@ package Managers
 			if (!Global.CheckKeyDown(Global.DOWN))
 			{
 				for (i = 4; i < 8; i++){
-					if (asdfjklKeyCounters[i] == 3){
+					if (asdfjklKeyCounters[i] == _hold){
 						move = true;
 						break;
 					}
@@ -123,8 +125,9 @@ package Managers
 		
 		private function PlayerJump(avatar:Avatar):void
 		{
+			playedBassChord-=Global.CURR_PHYSICS_SPEED;
 			//JUMPING
-			if (justJumped <= 0 && !doubleJumped)
+			if (justJumped <= 0)
 			{
 				var lcounter:int = 0;
 				var rcounter:int = 0;
@@ -141,15 +144,17 @@ package Managers
 				}
 				if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.UP)) 
 				{
-					justJumped = 5;
-					if (!avatar.on_ground) doubleJumped = true;
-					avatar.inputJump = true;
-					
-					updateWorldScale = true;
-					if (lcounter >= 3)
+					if (lcounter >= 3 && playedBassChord <= 0)
+					{
 						rootNote = (noteArray[0]%12)+12;
+						playedBassChord = 5;
+					}
 					else if (lcounter < 3)
-						rootNote = (noteArray[4]%12)+12;
+					{
+						justJumped = 5;
+						avatar.inputJump = true;
+						updateWorldScale = true;
+					}
 				}
 			}
 			else justJumped--;
@@ -163,8 +168,6 @@ package Managers
 				else
 					avatar.float = false;
 			}
-			
-			if (avatar.on_ground && doubleJumped) doubleJumped = false;
 		}
 		
 		public function PlayNoteFromArray(avatar:Avatar, index:int):void
@@ -207,15 +210,6 @@ package Managers
 			}
 		}
 		
-		public function HoldRecentlyPlayedNotes():void
-		{
-			var decay:int = 5*Global.DELAY_AMOUNT;
-			for (var i:int = 0; i < tempNoteFadeArray.length; i++)
-			{
-				tempNoteFadeArray[i][1] = decay;
-			}
-		}
-		
 		public function RemoveFromFadeArray(index:int):void
 		{
 			for (var i:int = tempNoteFadeArray.length-1; i >= 0; i--)
@@ -240,11 +234,11 @@ package Managers
 			for (i = 0; i < asdfjklKeyCounters.length; i++)
 			{
 				if (asdfjklKeyCounters[i] > 0)
-					asdfjklKeyCounters[i]--;
+					asdfjklKeyCounters[i]-=Global.CURR_PHYSICS_SPEED;
 			}
 			for (i = tempNoteFadeArray.length-1; i >= 0; i--)
 			{
-				tempNoteFadeArray[i][1]--;
+				tempNoteFadeArray[i][1]-= Global.CURR_PHYSICS_SPEED;
 				if (tempNoteFadeArray[i][1]<=0)
 				{
 					Game._driver.noteOff(tempNoteFadeArray[i][0]);
@@ -255,57 +249,53 @@ package Managers
 		
 		private function UpdatePlayNotes(avatar:Avatar):void
 		{	
-			_decay = 10/Global.CURR_PHYSICS_SPEED;
-			if (Global.CheckKeyPressed(Global.SPACE))
-				HoldRecentlyPlayedNotes();
-			else if (Global.CheckKeyUp(Global.SPACE))
-				StopAllNotes();
+			_decay = 10;
 			
 			if (Global.CheckKeyPressed(Global.A_KEY)){
-				asdfjklKeyCounters[0] = 3;
+				asdfjklKeyCounters[0] = _hold;
 				PlayNoteFromArray(avatar, 0);
 				StopNoteFromArray(0, _decay);
 			}	
 			
 			if (Global.CheckKeyPressed(Global.S_KEY)){
-				asdfjklKeyCounters[1] = 3;
+				asdfjklKeyCounters[1] = _hold;
 				PlayNoteFromArray(avatar, 1);
 				StopNoteFromArray(1, _decay);
 			}
 			
 			if (Global.CheckKeyPressed(Global.D_KEY)){
-				asdfjklKeyCounters[2] = 3;
+				asdfjklKeyCounters[2] = _hold;
 				PlayNoteFromArray(avatar, 2);
 				StopNoteFromArray(2, _decay);
 			}
 			
 			if (Global.CheckKeyPressed(Global.F_KEY)){
-				asdfjklKeyCounters[3] = 3;
+				asdfjklKeyCounters[3] = _hold;
 				PlayNoteFromArray(avatar, 3);
 				StopNoteFromArray(3, _decay);
 			}
 			
 			
 			if (Global.CheckKeyPressed(Global.J_KEY)){
-				asdfjklKeyCounters[4] = 3;
+				asdfjklKeyCounters[4] = _hold;
 				PlayNoteFromArray(avatar, 4);
 				StopNoteFromArray(4, _decay);
 			}
 			
 			if (Global.CheckKeyPressed(Global.K_KEY)){
-				asdfjklKeyCounters[5] = 3;
+				asdfjklKeyCounters[5] = _hold;
 				PlayNoteFromArray(avatar, 5);
 				StopNoteFromArray(5, _decay);
 			}
 			
 			if (Global.CheckKeyPressed(Global.L_KEY)){
-				asdfjklKeyCounters[6] = 3;
+				asdfjklKeyCounters[6] = _hold;
 				PlayNoteFromArray(avatar, 6);
 				StopNoteFromArray(6, _decay);
 			}
 			
 			if (Global.CheckKeyPressed(Global.SEMICOLON)){
-				asdfjklKeyCounters[7] = 3;
+				asdfjklKeyCounters[7] = _hold;
 				PlayNoteFromArray(avatar, 7);
 				StopNoteFromArray(7, _decay);
 			}

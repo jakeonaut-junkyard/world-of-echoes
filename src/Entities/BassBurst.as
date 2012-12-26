@@ -16,7 +16,7 @@ package Entities
 		private const INITIAL_SPEED:int = 1;
 		private const ACCELERATION:Number = 0.5;
 		private const MAX_SPEED:int = 10;
-		private const MAX_BURSTS:int = 5;
+		private const MAX_BURSTS:int = 4;
 		private const COUNTER_LIMIT:int = 3;
 		
 		public var x:Number;
@@ -44,7 +44,7 @@ package Entities
 			this.color.blueMultiplier = color.blueMultiplier;
 			this.color.greenMultiplier = color.greenMultiplier;
 			
-			radii = [[INITIAL_RADIUS, INITIAL_SPEED, 1, 0, SquareColor()]];
+			radii = [[INITIAL_RADIUS, INITIAL_SPEED, 1, 0, SquareColor(), x, y]];
 		}
 		
 		public function Render(levelRenderer:BitmapData):void
@@ -65,12 +65,12 @@ package Entities
 				radii[i][4].alphaMultiplier = radii[i][2];
 				var matrix:Matrix = new Matrix();
 				matrix.rotate(radii[i][3]);
-				matrix.translate(x, y);
+				matrix.translate(radii[i][5], radii[i][6]);
 				levelRenderer.draw(my_shape, matrix, radii[i][4]);
 			}
 		}
 		
-		public function Update():void
+		public function Update(newx:Number, newy:Number):void
 		{
 			for (var i:int = radii.length-1; i >= 0; i--)
 			{
@@ -83,7 +83,7 @@ package Entities
 						radii[i][1]+= (ACCELERATION*Global.CURR_PHYSICS_SPEED);
 					else
 						radii[i][1] = MAX_SPEED;
-					radii[i][2] -= (0.03*Global.CURR_PHYSICS_SPEED);
+					radii[i][2] -= (0.04*Global.CURR_PHYSICS_SPEED);
 					radii[i][3] += (0.2*Global.CURR_PHYSICS_SPEED);
 				}
 			}
@@ -95,7 +95,7 @@ package Entities
 				{
 					newBurstCounter = 0;
 					numBursts++;
-					radii.push([INITIAL_RADIUS, INITIAL_SPEED, 1, 0, SquareColor()]);
+					radii.push([INITIAL_RADIUS, INITIAL_SPEED, 1, 0, SquareColor(), newx, newy]);
 				}
 			}
 			else

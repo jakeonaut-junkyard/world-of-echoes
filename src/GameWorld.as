@@ -4,7 +4,6 @@ package
 	import Managers.MusicalInputManager;
 	import Managers.SoundManager;
 	import Entities.Avatar;
-	import Entities.BassSquare;
 	import Entities.BassBurst;
 	import Entities.Burst;
 	import Entities.Parents.GameObject;
@@ -13,6 +12,7 @@ package
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
+	import org.si.sion.sequencer.SiMMLTrack;
 	
 	public class GameWorld
 	{
@@ -23,7 +23,6 @@ package
 		public var solids:Array;
 		public var bursts:Array;
 		public var bassBursts:Array;
-		public var bassSquares:Array;
 		
 		//etc
 		public var _voice:VoiceManager;
@@ -45,12 +44,11 @@ package
 			solids = [
 				new GameObject(0, 0-16, 0, 0, L_bitmap.width, 32), //ceiling
 				new GameObject(0, L_bitmap.height-32, 0, 0, (L_bitmap.width), 32), //floor
-				new GameObject(0-16, 0, 0, 0, 32, Global.stageHeight-32), //Left wall
-				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, Global.stageHeight-16) //Right wall
+				new GameObject(0-16, 0, 0, 0, 32, L_bitmap.height), //Left wall
+				new GameObject(L_bitmap.width-16, 0, 0, 0, 32, L_bitmap.height) //Right wall
 			];
 			bursts = [];
 			bassBursts = [];
-			bassSquares = [];
 		}		
 		
 		public function EnterRoom(avatar:Avatar, avix:int, aviy:int, oldScale:Array = null):void
@@ -60,16 +58,8 @@ package
 			avatar.y = aviy;
 			bassBursts = [];
 			bursts = [];
-			bassSquares = [];
 			
 			UpdateView(avatar);
-			
-			bassSquares = [
-				new BassSquare(32, Global.stageHeight, _voice),
-				new BassSquare(32+112, Global.stageHeight, _voice),
-				new BassSquare(32+224, Global.stageHeight, _voice),
-				new BassSquare(32+336, Global.stageHeight, _voice)
-			];
 		}
 		
 		public function Render(avatar:Avatar):void
@@ -90,10 +80,6 @@ package
 				var s:GameObject = solids[i];
 				LevelRenderer.fillRect(new Rectangle(s.x, s.y, s.rb, s.bb), groundColor);
 			}
-			//draw interactive objects
-			for (i = 0; i < bassSquares.length; i++){
-				bassSquares[i].Render(LevelRenderer);
-			}
 			//draw player
 			avatar.Render(LevelRenderer);
 			
@@ -106,22 +92,25 @@ package
 		}
 		
 		public function Update(avatar:Avatar, musicInputManager:MusicalInputManager):void
-		{			
+		{	
+			SpaceSlowTime();
+			
 			//update player input
 			musicInputManager.Update(avatar, scaleArray);
 			if (musicInputManager.PlayedANote())
 				bursts.push(new Burst(avatar.x-20, avatar.y-20, avatar._voice.color));
-			if (musicInputManager.updateWorldScale)
+			if (musicInputManager.playedBassChord == 5)
+			{
+				musicInputManager.updateWorldScale = false;
+
+				ChangeWorldScale(avatar, avatar._voice.noteArray[0]);
+				avatar._voice.CreateRandomInstrument(scaleArray);
+				bassBursts.push(new BassBurst(avatar.x+10, avatar.y+10, avatar._voice.color));
+			}
+			else if (musicInputManager.updateWorldScale)
 			{
 				musicInputManager.updateWorldScale = false;
 				ChangeWorldScale(avatar, musicInputManager.rootNote);
-			}
-			
-			if (Global.CheckKeyDown(Global.SPACE)){
-				Global.CURR_PHYSICS_SPEED = 1 / Global.DELAY_AMOUNT;
-			}
-			else{ 
-				Global.CURR_PHYSICS_SPEED = 1;
 			}
 			
 			//UPDATE THE ENTITIES
@@ -133,24 +122,26 @@ package
 					bursts.splice(i, 1);
 			}
 			for (i = bassBursts.length-1; i >= 0; i--){
-				bassBursts[i].Update();
+				bassBursts[i].Update(avatar.x+10, avatar.y+10);
 				if (!bassBursts[i].visible)
 				{
 					bassBursts.splice(i, 1);
 				}
 			}
-			for (i = bassSquares.length-1; i >= 0; i--){
-				bassSquares[i].Update(avatar, bassScaleArray);
-				var tempSquare:BassSquare = bassSquares[i];
-				if (!tempSquare.visible){
-					bassBursts.push(new BassBurst(tempSquare.x+10, tempSquare.y+10, tempSquare._voice.color));
-					ChangeWorldScale(avatar, bassSquares[i].noteIndex);
-					bassSquares.splice(i, 1);
-				}
-			}
 			
 			//MOVE THE VIEW SCREEN
 			UpdateView(avatar);
+		}
+		
+		public function SpaceSlowTime():void
+		{
+			if (Global.CheckKeyDown(Global.SPACE)){
+				Global.CURR_PHYSICS_SPEED = (1 / Global.DELAY_AMOUNT);
+	
+			}
+			else{ 
+				Global.CURR_PHYSICS_SPEED = 1;
+			}
 		}
 		
 		public function UpdateView(avatar:Avatar):void
@@ -232,11 +223,6 @@ package
 			CreateScaleArray(rootNote, scales[randIndex]);
 			
 			//SET ENTITIES IN THE WORLD TO THE NEW SCALE
-			var i:int;
-			for (i = 0; i < bassSquares.length; i++)
-			{
-				bassSquares[i]._voice.TranslateNoteArray(bassScaleArray);
-			}
 			avatar._voice.TranslateNoteArray(scaleArray);
 		}
 	}

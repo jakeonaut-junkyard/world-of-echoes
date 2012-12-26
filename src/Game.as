@@ -40,7 +40,7 @@ package
 			
 			avatar = new Avatar(0, 0, gameWorld.scaleArray);
 			avatar._voice.CreateRandomInstrument(gameWorld.scaleArray);
-			gameWorld.EnterRoom(avatar, 48, Global.stageHeight/2, null);
+			gameWorld.EnterRoom(avatar, 16, Global.stageHeight, null);
 		}		
 		
 		public function Render():void
