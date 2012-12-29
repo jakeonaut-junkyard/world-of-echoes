@@ -29,9 +29,9 @@ package Entities
 			frameHeight = 64;
 			
 			this.color = new ColorTransform();
-			this.color.redMultiplier = 4 - color.redMultiplier;
-			this.color.blueMultiplier = 4 - color.blueMultiplier;
-			this.color.greenMultiplier = 4 - color.greenMultiplier;
+			this.color.redMultiplier = color.redMultiplier;
+			this.color.blueMultiplier = color.blueMultiplier;
+			this.color.greenMultiplier = color.greenMultiplier;
 		}
 		
 		override public function Render(levelRenderer:BitmapData):void

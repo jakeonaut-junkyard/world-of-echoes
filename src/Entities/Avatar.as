@@ -19,7 +19,7 @@ package Entities
 		public var facing:int;
 		
 		public var inputJump:Boolean = false;
-		private var jumpCount:Number = 0;
+		private var doubleJump:Boolean = false;
 		public var float:Boolean = false;
 		
 		public var move_state:int;
@@ -72,26 +72,34 @@ package Entities
 				matrix.translate(frameWidth, 0);
 			}
 			matrix.translate(x, y);
-			levelRenderer.draw(image_sprite, matrix, _voice.color);
+			levelRenderer.draw(image_sprite, matrix);
 		}
 		
 		public function Update(solids:Array):void
 		{
-			if (inputJump){
-				inputJump = false;
+			if (inputJump && !doubleJump){
+				vel.y = -jump_vel;
+				
+				if (!on_ground) doubleJump = true;
 				on_ground = false;
-				vel.y = -jump_vel/(jumpCount+1);
-				jumpCount++;
 			}
-			if (float){
-				y-=(2*Global.CURR_PHYSICS_SPEED);
-				if (vel.y > 0)
-					y-=Global.CURR_PHYSICS_SPEED;
-			}
+			inputJump = false;
 			
 			Gravity();
 			UpdateMovement(solids);
-			if (on_ground) jumpCount = 0;
+			
+			if (!on_ground)
+			{
+				if (float && !hit_head){
+					y-=(2*Global.CURR_PHYSICS_SPEED);
+					if (vel.y > 0)
+						y-=Global.CURR_PHYSICS_SPEED;
+				}
+				else if (hit_head)
+					y+=(3);
+			}
+			else
+				doubleJump = false;
 			
 			UpdateAnimation();
 		}

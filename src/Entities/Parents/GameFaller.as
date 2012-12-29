@@ -5,7 +5,7 @@ package Entities.Parents
 		public var grav_acc:Number;
 		public var terminal_vel:Number;
 		public var on_ground:Boolean;
-		public var hit_head:Number;
+		public var hit_head:Boolean;
 		
 		public var antigrav:Boolean = false;
 		
@@ -16,7 +16,7 @@ package Entities.Parents
 			grav_acc = 1;
 			terminal_vel = 6;
 			on_ground = false;
-			hit_head = 0;
+			hit_head = false;
 		}
 		
 		public function Gravity():void
@@ -55,12 +55,14 @@ package Entities.Parents
 			x += (vel.x*Global.CURR_PHYSICS_SPEED);
 			
 			on_ground = false;
+			hit_head = false;
 			for (i = 0; i < solids.length; i++)
 			{
 				//vertical solid collisions (TOP)
 				if (CheckRectIntersect(solids[i], x+lb, y+tb+vel.y, x+rb, y+tb))
 				{
 					vel.y = 0;
+					hit_head = true;
 					while (!CheckRectIntersect(solids[i], x+lb, y+tb-1, x+rb, y+tb))
 						y--;
 				}

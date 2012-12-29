@@ -13,12 +13,9 @@ package Managers
 		private var _hold:Number = 3;
 		
 		private var trackId:int = Global.AVATAR_VOICE_ID;
-		public var updateWorldScale:Boolean = false;
 		public var rootNote:int = 12;
 		
-		public var playedBassChord:Number = 0;
-		
-		private var justJumped:int = 0;
+		private var justJumped:Number = 0;
 		private var stopRunCounter:Number;
 		private var runDir:int;
 		private const LEFT:int = 0;
@@ -125,7 +122,6 @@ package Managers
 		
 		private function PlayerJump(avatar:Avatar):void
 		{
-			playedBassChord-=Global.CURR_PHYSICS_SPEED;
 			//JUMPING
 			if (justJumped <= 0)
 			{
@@ -144,20 +140,11 @@ package Managers
 				}
 				if (lcounter >= 3 || rcounter >= 3 || Global.CheckKeyPressed(Global.UP)) 
 				{
-					if (lcounter >= 3 && playedBassChord <= 0)
-					{
-						rootNote = (noteArray[0]%12)+12;
-						playedBassChord = 5;
-					}
-					else if (lcounter < 3)
-					{
-						justJumped = 5;
-						avatar.inputJump = true;
-						updateWorldScale = true;
-					}
+					justJumped = 5;
+					avatar.inputJump = true;
 				}
 			}
-			else justJumped--;
+			else justJumped-=Global.CURR_PHYSICS_SPEED;
 			
 			if (avatar.hit_head == 0)
 			{
@@ -255,24 +242,28 @@ package Managers
 				asdfjklKeyCounters[0] = _hold;
 				PlayNoteFromArray(avatar, 0);
 				StopNoteFromArray(0, _decay);
+				avatar._voice.SetRandomColor();
 			}	
 			
 			if (Global.CheckKeyPressed(Global.S_KEY)){
 				asdfjklKeyCounters[1] = _hold;
 				PlayNoteFromArray(avatar, 1);
 				StopNoteFromArray(1, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			if (Global.CheckKeyPressed(Global.D_KEY)){
 				asdfjklKeyCounters[2] = _hold;
 				PlayNoteFromArray(avatar, 2);
 				StopNoteFromArray(2, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			if (Global.CheckKeyPressed(Global.F_KEY)){
 				asdfjklKeyCounters[3] = _hold;
 				PlayNoteFromArray(avatar, 3);
 				StopNoteFromArray(3, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			
@@ -280,24 +271,28 @@ package Managers
 				asdfjklKeyCounters[4] = _hold;
 				PlayNoteFromArray(avatar, 4);
 				StopNoteFromArray(4, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			if (Global.CheckKeyPressed(Global.K_KEY)){
 				asdfjklKeyCounters[5] = _hold;
 				PlayNoteFromArray(avatar, 5);
 				StopNoteFromArray(5, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			if (Global.CheckKeyPressed(Global.L_KEY)){
 				asdfjklKeyCounters[6] = _hold;
 				PlayNoteFromArray(avatar, 6);
 				StopNoteFromArray(6, _decay);
+				avatar._voice.SetRandomColor();
 			}
 			
 			if (Global.CheckKeyPressed(Global.SEMICOLON)){
 				asdfjklKeyCounters[7] = _hold;
 				PlayNoteFromArray(avatar, 7);
 				StopNoteFromArray(7, _decay);
+				avatar._voice.SetRandomColor();
 			}
 		}
 	}

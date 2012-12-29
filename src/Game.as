@@ -2,6 +2,10 @@ package
 {
 	import Managers.MusicalInputManager;
 	import Entities.Avatar;
+	import Areas.Area;
+	import Areas.DiatonicMinor;
+	import Areas.PentatonicMajor;
+	import Areas.FieldIonicPentatonic;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -20,7 +24,8 @@ package
 		public var avatar:Avatar;
 		public var musicInputManager:MusicalInputManager;
 		
-		public var gameWorld:GameWorld;
+		public static var areaIndex:int;
+		public static var areas:Array;
 		
 		public function Game()
 		{
@@ -36,23 +41,24 @@ package
 			Global.keys_up = new Array();
 			
 			musicInputManager = new MusicalInputManager();
-			gameWorld = new GameWorld(Global.stageWidth/2-12, Global.stageHeight/2-12);
+			areaIndex = 2;
+			areas = [new PentatonicMajor(), new DiatonicMinor(), new FieldIonicPentatonic()];
 			
-			avatar = new Avatar(0, 0, gameWorld.scaleArray);
-			avatar._voice.CreateRandomInstrument(gameWorld.scaleArray);
-			gameWorld.EnterRoom(avatar, 16, Global.stageHeight, null);
+			avatar = new Avatar(0, 0, areas[areaIndex].scaleArray);
+			avatar._voice.CreateRandomInstrument(areas[areaIndex].scaleArray);
+			areas[areaIndex].EnterRoom(avatar, 124, 132, null);
 		}		
 		
 		public function Render():void
 		{
 			Screen.lock();
-			gameWorld.Render(avatar);
+			areas[areaIndex].Render(avatar);
 			Screen.unlock();
 		}
 		
 		public function Update():void
 		{						
-			gameWorld.Update(avatar, musicInputManager);
+			areas[areaIndex].Update(avatar, musicInputManager);
 			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();

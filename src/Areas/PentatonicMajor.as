@@ -2,29 +2,23 @@ package Areas
 {
 	import Entities.Avatar;
 	import Entities.Burst;
-	import Entities.GameObject;
+	import Entities.Parents.GameObject;
 	import Entities.Door;
-	import Entities.BassSquare;
-	import Entities.BassBurst;
+	import Managers.SoundManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
 	import org.si.sion.SiONDriver;
-	
+
 	public class PentatonicMajor extends Area
 	{
-		//environment sounds
-		[Embed(source = '../resources/sounds/cricketNight.mp3')]
-		private var Cricket_ambient:Class;
-		
-		public function PentatonicMajor(avix:int, aviy:int, id:int)
+		public function PentatonicMajor()
 		{
-			super(avix, aviy, Global.stageWidth*1.5, Global.stageHeight*1.4, id);
-			CreateScaleArray();
-			
+			super(Global.stageWidth*1.5, Global.stageHeight*1.4, Global.PENTATONIC_MAJOR_AREA);
+			CreateScaleArray(12, Global.IONIAN_MODE);
+
 			//create entities
 			solids = [
 				new GameObject(0, 0-16, 0, 0, L_bitmap.width, 32), //ceiling
@@ -37,46 +31,9 @@ package Areas
 				new Door(292, 167, Global.DIATONIC_MINOR_AREA, 0-16, Global.stageHeight-16, 0, 0, 24, 48), //left door
 				new Door(4, 167, Global.DIATONIC_MINOR_AREA, L_bitmap.width-8, Global.stageHeight-16, 0, 0, 24, 48) //right door
 			];
-			
-			//environmental
-			SoundManager.getInstance().addMusic(new Cricket_ambient(), "CricketAmbient");
-			SoundManager.getInstance().playMusic("CricketAmbient", -5, int.MAX_VALUE);
-			
+
 			//etc
 			groundColor = 0xFFFFFF;
-		}
-		
-		override public function EnterRoom(avatar:Avatar, avix:int, aviy:int, oldScale:Array = null):void
-		{
-			super.EnterRoom(avatar, avix, aviy, oldScale);
-			bassSquares = [
-				new BassSquare(32, Global.stageHeight, _voice),
-				new BassSquare(32+112, Global.stageHeight, _voice),
-				new BassSquare(32+224, Global.stageHeight, _voice),
-			];
-		}
-		
-		override public function CreateScaleArray():void
-		{
-			//Create Diatonic Cmajor scale
-			bassScaleArray = [];
-			scaleArray = [];
-			for (var i:int = 24; i < 84; i++)
-			{
-				if (i%12==0 || 		//C
-					(i-2)%12==0 ||	//D
-					(i-4)%12==0 || 	//E
-					(i-5)%12==0 || 	//F
-					(i-7)%12==0 ||	//G
-					(i+3)%12==0 ||	//A
-					(i+1)%12==0) 	//B
-				{
-					if (i >= 36)
-						scaleArray.push(i);
-					else if (i <= 48)
-						bassScaleArray.push(i);
-				}
-			}
 		}
 	}
 }

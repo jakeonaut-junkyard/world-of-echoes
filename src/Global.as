@@ -55,6 +55,11 @@ package
 		public static const AEOLIAN_MODE:Array = [0, 2, 3, 5, 7, 8, 10];
 		public static const LOCRIAN_MODE:Array = [0, 1, 3, 5, 6, 8, 10];
 		
+		//room ids
+		public static const PENTATONIC_MAJOR_AREA:int = 0;
+		public static const DIATONIC_MINOR_AREA:int = 1;
+		public static const FIELD_IONIC_PENTATONIC_AREA:int = 2;
+		
 		public function Global(){}	
 		
 		public static function CheckKeyDown(keycode:int):Boolean

@@ -16,7 +16,7 @@ package Entities.Parents
 		public var bb:int;
 		public var solid:Boolean;
 		
-		public function GameObject(x:Number, y:Number, lb:int, tb:int, rb:int, bb:int) 
+		public function GameObject(x:Number, y:Number, lb:int = 0, tb:int = 0, rb:int = 16, bb:int = 16) 
 		{
 			//basic collision/placement stuff
 			this.x = x;

@@ -46,6 +46,15 @@ package Managers
 			voice = voiceList[voiceIndex];
 		}
 		
+		public function SetNoteArray(array:Array):void
+		{
+			noteArray = [];
+			for (var i:int = 0; i < array.length; i++)
+			{
+				noteArray.push(array[i]);
+			}
+		}
+		
 		public function SetRandomNoteArray(scale:Array = null, baseNote:int = -1):void
 		{
 			if (scale == null) scale = scaleArray;

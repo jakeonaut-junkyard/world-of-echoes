@@ -1,11 +1,13 @@
 package Entities 
 {
+	import Entities.Parents.GameObject;
+	
 	public class Door extends GameObject
 	{
 		public var to_avix:int;
 		public var to_aviy:int;
 		public var to_roomIndex:int;
-		
+
 		public function Door(avix:int, aviy:int, roomIndex:int, x:int, y:int, lb:int, tb:int, rb:int, bb:int) 
 		{
 			super(x, y, lb, tb, rb, bb);
@@ -13,7 +15,7 @@ package Entities
 			to_aviy = aviy;
 			to_roomIndex = roomIndex;
 		}		
-		
+
 		public function Update(avatar:Avatar, scale:Array):void
 		{
 			if (CheckRectIntersect(avatar, x+lb, y+tb, x+rb, y+bb))
