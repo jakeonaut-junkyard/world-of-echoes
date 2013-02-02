@@ -6,9 +6,6 @@ package
 		public static var stageHeight:int = 160;
 		public static var zoom:int = 3;
 		
-		public static const DELAY_AMOUNT:Number = 8;
-		public static var CURR_PHYSICS_SPEED:Number = 1;
-		
 		//mouse input stuff
 		public static var mousePressed:Boolean;
 		public static var mouse_X:Number;
@@ -42,10 +39,6 @@ package
 		public static const E_KEY:int = 69;
 		public static const R_KEY:int = 82;
 		
-		//track ids for SiON
-		public static const AVATAR_VOICE_ID:int = 0;
-		public static const BASS_SQUARE_TRACK_ID:int = 1;
-		
 		//Musical Scale Modes
 		public static const IONIAN_MODE:Array = [0, 2, 4, 5, 7, 9, 11];
 		public static const DORIAN_MODE:Array = [0, 2, 3, 5, 7, 9, 10];
@@ -54,11 +47,6 @@ package
 		public static const MIXOLYDIAN_MODE:Array = [0, 2, 4, 5, 7, 9, 10];
 		public static const AEOLIAN_MODE:Array = [0, 2, 3, 5, 7, 8, 10];
 		public static const LOCRIAN_MODE:Array = [0, 1, 3, 5, 6, 8, 10];
-		
-		//room ids
-		public static const PENTATONIC_MAJOR_AREA:int = 0;
-		public static const DIATONIC_MINOR_AREA:int = 1;
-		public static const FIELD_IONIC_PENTATONIC_AREA:int = 2;
 		
 		public function Global(){}	
 		

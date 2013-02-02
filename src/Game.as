@@ -1,11 +1,5 @@
 package  
 {
-	import Managers.MusicalInputManager;
-	import Entities.Avatar;
-	import Areas.Area;
-	import Areas.DiatonicMinor;
-	import Areas.PentatonicMajor;
-	import Areas.FieldIonicPentatonic;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -13,25 +7,15 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
-	import org.si.sion.SiONDriver;
 	
 	public class Game
 	{
-		public static var _driver:SiONDriver;
 		public var screenBitmap:Bitmap;
 		public static var Screen:BitmapData;
-		
-		public var avatar:Avatar;
-		public var musicInputManager:MusicalInputManager;
-		
-		public static var areaIndex:int;
-		public static var areas:Array;
 		
 		public function Game()
 		{
 			trace("Game created!");
-			_driver = new SiONDriver();
-			_driver.play(null, false);
 			
 			Screen = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
 			screenBitmap = new Bitmap(Screen);
@@ -39,27 +23,16 @@ package
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();
 			Global.keys_up = new Array();
-			
-			musicInputManager = new MusicalInputManager();
-			areaIndex = 2;
-			areas = [new PentatonicMajor(), new DiatonicMinor(), new FieldIonicPentatonic()];
-			
-			avatar = new Avatar(0, 0, areas[areaIndex].scaleArray);
-			avatar._voice.CreateRandomInstrument(areas[areaIndex].scaleArray);
-			areas[areaIndex].EnterRoom(avatar, 124, 132, null);
 		}		
 		
 		public function Render():void
 		{
 			Screen.lock();
-			areas[areaIndex].Render(avatar);
 			Screen.unlock();
 		}
 		
 		public function Update():void
-		{						
-			areas[areaIndex].Update(avatar, musicInputManager);
-			
+		{									
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();

@@ -77,10 +77,8 @@ package Entities
 		
 		public function Update(solids:Array):void
 		{
-			if (inputJump && !doubleJump){
+			if (inputJump && on_ground){
 				vel.y = -jump_vel;
-				
-				if (!on_ground) doubleJump = true;
 				on_ground = false;
 			}
 			inputJump = false;
@@ -98,8 +96,6 @@ package Entities
 				else if (hit_head)
 					y+=(3);
 			}
-			else
-				doubleJump = false;
 			
 			UpdateAnimation();
 		}

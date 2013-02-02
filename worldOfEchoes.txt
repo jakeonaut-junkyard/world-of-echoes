@@ -1,8 +1,12 @@
+WORLD OF ECHOES REVISED FEBRUARY 2013!!!
+1. Pressing the x button generates a noise "hum". The frequency/rhythm at which you press and the duration of each button press it affects its pitch/tone?? Environment affects key.
+2. Every environment that you explore (see below, interconnected, see seiklus and fez) is completely dark (colorless and shadowed) and silent, but "humming" can bring color and noise to the environments.
+3. Different parts of the environment (solids, nonsolids, critters, secrets, etc) are uncovered at different hum pitches/tones or something.
+4. Explore the landscape and uncover hidden things using your echo/hum ability, and find and collect uh "essences" or whatever.
+
 TODO::
 3. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
-4. Work on making content/resources for areas and cycles.
-	-Color sky background fade to night to day.
 	
 ====================================================================================================
 WORLD AREAS::
