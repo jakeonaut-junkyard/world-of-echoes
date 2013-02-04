@@ -2,9 +2,12 @@ package
 {
 	public class Global 
 	{	
-		public static var stageWidth:int = 213;
-		public static var stageHeight:int = 160;
 		public static var zoom:int = 3;
+		public static var stageWidth:int = 640/zoom;
+		public static var stageHeight:int = 480/zoom;
+		
+		public static const DELAY_AMOUNT:Number = 8;
+		public static var CURR_PHYSICS_SPEED:Number = 1;
 		
 		//mouse input stuff
 		public static var mousePressed:Boolean;

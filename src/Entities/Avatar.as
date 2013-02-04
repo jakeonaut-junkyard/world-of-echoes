@@ -1,7 +1,6 @@
 package Entities 
 {
 	import Entities.Parents.GameFaller;
-	import Managers.VoiceManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -9,7 +8,6 @@ package Entities
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
-	import Global;
 	
 	public class Avatar extends GameFaller
 	{
@@ -29,17 +27,16 @@ package Entities
 		public const JUMPING:int = 2;
 		public const FALLING:int = 3;
 		
-		public var _voice:VoiceManager;
 		public var color:ColorTransform;
 		
-		[Embed(source = "../resources/images/avatar.png")]
+		[Embed(source = "../resources/images/avatar_sheet.png")]
 		private var sprite_sheet:Class;
 		
-		public function Avatar(x:int, y:int, scale:Array) 
+		public function Avatar(x:int, y:int) 
 		{
-			super(x, y, 9, 9, 15, 24);
-			top_xspeed = 3.5;
-			jump_vel = 8.33;
+			super(x, y, 4, 2, 12, 16);
+			top_xspeed = 2.0;
+			jump_vel = 8.50;
 			terminal_vel = 5.0;
 			grav_acc = 1.0;
 
@@ -47,14 +44,11 @@ package Entities
 			move_state = STANDING;
 			prev_move_state = move_state;
 			
-			//my voice
-			_voice = new VoiceManager();
-			
 			//animation management creation
 			frameDelay = 5;
-			maxFrame = 1;
-			frameWidth = 24;
-			frameHeight = 24;
+			maxFrame = 4;
+			frameWidth = 16;
+			frameHeight = 16;
 		}	
 		
 		override public function Render(levelRenderer:BitmapData):void
@@ -71,11 +65,11 @@ package Entities
 				matrix.scale(-1, 1);
 				matrix.translate(frameWidth, 0);
 			}
-			matrix.translate(x, y);
+			matrix.translate(int(x), int(y));
 			levelRenderer.draw(image_sprite, matrix);
 		}
 		
-		public function Update(solids:Array):void
+		public function Update(entities:Array, map:Array):void
 		{
 			if (inputJump && on_ground){
 				vel.y = -jump_vel;
@@ -84,7 +78,7 @@ package Entities
 			inputJump = false;
 			
 			Gravity();
-			UpdateMovement(solids);
+			UpdateMovement(entities, map);
 			
 			if (!on_ground)
 			{
@@ -125,22 +119,18 @@ package Entities
 				case STANDING:
 					currAniX = 0;
 					currAniY = 0;
-					maxFrame = 1;
 					break;
 				case RUNNING:
 					currAniX = 0;
 					currAniY = 1;
-					maxFrame = 4;
 					break;
 				case JUMPING:
 					currAniX = 0;
 					currAniY = 2;
-					maxFrame = 1;
 					break;
 				case FALLING:
-					currAniX = 1;
-					currAniY = 2;
-					maxFrame = 1;
+					currAniX = 0;
+					currAniY = 3;
 					break;
 			}
 			

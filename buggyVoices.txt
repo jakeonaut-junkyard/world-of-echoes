@@ -1,2 +1,0 @@
-Messed up voices (hold for too long... how fix? note killer)::
-voice [3][6]

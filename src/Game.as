@@ -1,5 +1,6 @@
 package  
 {
+	import Areas.*;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -10,15 +11,22 @@ package
 	
 	public class Game
 	{
-		public var screenBitmap:Bitmap;
-		public static var Screen:BitmapData;
+		public var gameBitmap:Bitmap;
+		public static var GameRenderer:BitmapData;
+		
+		public static var roomArray:Array;
+		public static var roomIndex:int;
 		
 		public function Game()
 		{
 			trace("Game created!");
 			
-			Screen = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
-			screenBitmap = new Bitmap(Screen);
+			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
+			gameBitmap = new Bitmap(GameRenderer);
+			
+			roomArray = [];
+			roomArray.push(new Room(208, 160, 0));
+			roomIndex = 0;
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();
@@ -27,12 +35,15 @@ package
 		
 		public function Render():void
 		{
-			Screen.lock();
-			Screen.unlock();
+			GameRenderer.lock();
+			roomArray[roomIndex].Render();
+			GameRenderer.unlock();
 		}
 		
 		public function Update():void
-		{									
+		{	
+			roomArray[roomIndex].Update();
+			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();

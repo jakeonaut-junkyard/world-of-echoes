@@ -15,11 +15,21 @@ package Entities.Parents
 			vel = new Point(0, 0);
 		}
 		
-		public function UpdateMovement(solids:Array = null):void
+		public function UpdateMovement(entities:Array, map:Array):void
 		{
+			var i:int;
+			var solids:Array = [];
+			for (i = 0; i < entities.length; i++){
+				if (entities[i].solid) solids.push(entities[i]);
+			}for (i = 0; i < map.length; i++){
+				for (var j:int = 0; j < map[i].length; j++){
+					if (map[i][j].solid) solids.push(map[i][j]);
+				}
+			}
+			
 			//Update movement			
 			//check for solid collisions
-			if (solids != null)
+			if (solids.length > 0)
 			{
 				CollideWithSolids(solids)
 			}
