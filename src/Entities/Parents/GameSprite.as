@@ -16,6 +16,7 @@ package Entities.Parents
 		
 		protected var image:BitmapData;
 		public var image_sprite:Sprite;
+		public var sprite_sheet:Class;
 		
 		//animation stuff
 		public var frameCount:Number;
@@ -47,11 +48,14 @@ package Entities.Parents
 		
 		public function Render(levelRenderer:BitmapData):void
 		{
-			if (!visible)
-				return;
-				
+			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
+			var temp_sheet:Bitmap = new sprite_sheet();
+			
+			DrawSpriteFromSheet(temp_image, temp_sheet);
+			
+			//RENDER IT
 			var matrix:Matrix = new Matrix();
-			matrix.translate(x, y);
+			matrix.translate(int(x), int(y));
 			levelRenderer.draw(image_sprite, matrix);
 		}
 		

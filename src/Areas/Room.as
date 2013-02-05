@@ -2,6 +2,7 @@ package Areas
 {
 	import Entities.Avatar;
 	import Entities.Tile;
+	import LoaderManagers.PlayerInputManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -25,6 +26,8 @@ package Areas
 		public var map:Array;
 		public var entities:Array;
 		public var playerIndex:int = -1;
+		public var pInput:PlayerInputManager;
+		public var scaleArray:Array;
 		
 		public function Room(width:int, height:int, id:int)
 		{
@@ -48,18 +51,13 @@ package Areas
 				}
 				map.push(row);
 			}
-			//ADD MORE SOLIDs
-			for (var k:int = 0; k < 2; k++){
-				map[8][4+k] = new Tile((4+k)*16, 8*16, 1, 0, true);
-				map[7][7+k] = new Tile((7+k)*16, 7*16, 1, 0, true);
-				map[5][9+k] = new Tile((9+k)*16, 5*16, 1, 0, true);
-				map[3][7+k] = new Tile((7+k)*16, 3*16, 1, 0, true);
-				map[3][3+k] = new Tile((3+k)*16, 3*16, 1, 0, true);
-			}
 			
 			entities = [];
-			entities.push(new Avatar(32, 32));
-			playerIndex = entities.length-1;
+			pInput = new PlayerInputManager();
+		}
+		
+		public function EnterRoom():void
+		{
 		}
 		
 		public function Render():void
@@ -69,8 +67,15 @@ package Areas
 			
 			var i:int, j:int;
 			var tile_sheet:Bitmap = new tile_set();
+			playerIndex = -1;
+			for (i = entities.length-1; i >= 0; i--){
+				if (entities[i] is Avatar) playerIndex = i;
+				else entities[i].Render(LevelRenderer);
+			}
 			for (i = 0; i < map.length; i++){
 				for (j = 0; j < map[i].length; j++){
+					if (map[i][j].tileset_x == 0 && map[i][j].tileset_y == 0)
+						continue;
 					var sprite_x:int = map[i][j].tileset_x*16;
 					var sprite_y:int = map[i][j].tileset_y*16;
 					var draw_x:int = j*16;
@@ -79,10 +84,8 @@ package Areas
 						new Rectangle(sprite_x, sprite_y, 16, 16),
 						new Point(draw_x, draw_y));
 				}
-			}
-			for (i = entities.length-1; i >= 0; i--){
-				entities[i].Render(LevelRenderer);
-			}
+			}if (playerIndex >= 0)
+				entities[playerIndex].Render(LevelRenderer);
 			
 			var matrix:Matrix = new Matrix();
 			matrix.translate(L_bitmap.x, L_bitmap.y);
@@ -94,12 +97,13 @@ package Areas
 		public function Update():void
 		{
 			if (playerIndex >= 0) 
-				PlayerInputManager.PlayerInput(entities[playerIndex]);
+				pInput.PlayerInput(entities, playerIndex);
 			SpaceSlowTime();
 			playerIndex = -1;
 			var i:int;
 			for (i = entities.length-1; i >= 0; i--){
 				entities[i].Update(entities, map);
+				if (entities[i].delete_me) entities.splice(i, 1);
 			}for (i = 0; i < entities.length; i++){
 				if (entities[i] is Avatar){ 
 					playerIndex = i;
@@ -152,6 +156,26 @@ package Areas
 			if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
 				L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
 			if (L_bitmap.y > 0) L_bitmap.y = 0;
+		}
+		
+		public function CreateScaleArray(root:int, mode:Array, top:int, bottom:int):void
+		{
+			//Create Diatonic Cmajor scale
+			Game._noteArray = [];
+
+			for (var i:int = 0; i < Global.ALL_PIANO_NOTE_STRINGS.length; i++)
+			{
+				var n:int = i + Global.PNOTE_OFFSET;
+				if (n < top || n > bottom) continue;
+				for (var j:int = 0; j < 6; j++)
+				{
+					if ((n-Math.abs(mode[j]+root-12))%12==0)
+					{
+						Game._noteArray.push(Global.ALL_PIANO_NOTE_STRINGS[i]);
+						break;
+					}
+				}
+			}
 		}
 	}
 }

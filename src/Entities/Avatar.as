@@ -14,7 +14,6 @@ package Entities
 		//movement members
 		public var top_xspeed:Number;
 		public var jump_vel:Number;
-		public var facing:int;
 		
 		public var inputJump:Boolean = false;
 		private var doubleJump:Boolean = false;
@@ -27,46 +26,31 @@ package Entities
 		public const JUMPING:int = 2;
 		public const FALLING:int = 3;
 		
-		public var color:ColorTransform;
+		public var trackId:int;
 		
 		[Embed(source = "../resources/images/avatar_sheet.png")]
-		private var sprite_sheet:Class;
+		private var my_sprite_sheet:Class;
 		
-		public function Avatar(x:int, y:int) 
+		public function Avatar(x:int, y:int, trackId:int) 
 		{
 			super(x, y, 4, 2, 12, 16);
 			top_xspeed = 2.0;
 			jump_vel = 8.50;
-			terminal_vel = 5.0;
+			terminal_vel = 6.5;
 			grav_acc = 1.0;
 
 			facing = Global.RIGHT;
 			move_state = STANDING;
 			prev_move_state = move_state;
 			
+			this.trackId = trackId;
+			
 			//animation management creation
+			sprite_sheet = my_sprite_sheet;
 			frameDelay = 5;
 			maxFrame = 4;
 			frameWidth = 16;
 			frameHeight = 16;
-		}	
-		
-		override public function Render(levelRenderer:BitmapData):void
-		{
-			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
-			var temp_sheet:Bitmap = new sprite_sheet();
-			
-			super.DrawSpriteFromSheet(temp_image, temp_sheet);
-			
-			//RENDER IT
-			var matrix:Matrix = new Matrix();
-			if (facing == Global.LEFT)
-			{
-				matrix.scale(-1, 1);
-				matrix.translate(frameWidth, 0);
-			}
-			matrix.translate(int(x), int(y));
-			levelRenderer.draw(image_sprite, matrix);
 		}
 		
 		public function Update(entities:Array, map:Array):void
@@ -90,7 +74,7 @@ package Entities
 				else if (hit_head)
 					y+=(3);
 			}
-			
+
 			UpdateAnimation();
 		}
 		

@@ -1,6 +1,7 @@
 package  
 {
 	import Areas.*;
+	import LoaderManagers.*;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -8,25 +9,38 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
+	import org.si.sion.SiONDriver;
 	
 	public class Game
 	{
+		public static var _driver:SiONDriver;
 		public var gameBitmap:Bitmap;
 		public static var GameRenderer:BitmapData;
 		
 		public static var roomArray:Array;
 		public static var roomIndex:int;
 		
+		public var entitySfxLoader:EntitySoundLoader;
+		public var pianoSfxLoader:PianoSoundLoader;
+		public static var _noteArray:Array;
+		
 		public function Game()
 		{
 			trace("Game created!");
+			_driver = new SiONDriver();
+			_driver.play(null, false);
 			
 			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
 			
+			entitySfxLoader = new EntitySoundLoader();
+			pianoSfxLoader = new PianoSoundLoader();
+			_noteArray = [];
+			
 			roomArray = [];
-			roomArray.push(new Room(208, 160, 0));
+			roomArray.push(new BigTreeField00());
 			roomIndex = 0;
+			roomArray[roomIndex].EnterRoom();
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();

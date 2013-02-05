@@ -1,18 +1,38 @@
 package Entities.Parents 
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.geom.Point;
-	/**
-	 * ...
-	 * @author Jake Trower
-	 */
+	import flash.geom.Matrix;
+	
 	public class GameMover extends GameSprite 
 	{
 		public var vel:Point;
+		public var facing:int;
 		
 		public function GameMover(x:Number, y:Number, lb:int, tb:int, rb:int, bb:int) 
 		{
 			super(x, y, lb, tb, rb, bb);
 			vel = new Point(0, 0);
+			facing = Global.RIGHT;
+		}
+		
+		override public function Render(levelRenderer:BitmapData):void
+		{
+			var temp_image:Bitmap = new Bitmap(new BitmapData(frameWidth, frameHeight));
+			var temp_sheet:Bitmap = new sprite_sheet();
+			
+			super.DrawSpriteFromSheet(temp_image, temp_sheet);
+			
+			//RENDER IT
+			var matrix:Matrix = new Matrix();
+			if (facing == Global.LEFT)
+			{
+				matrix.scale(-1, 1);
+				matrix.translate(frameWidth, 0);
+			}
+			matrix.translate(int(x), int(y));
+			levelRenderer.draw(image_sprite, matrix);
 		}
 		
 		public function UpdateMovement(entities:Array, map:Array):void

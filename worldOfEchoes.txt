@@ -1,10 +1,11 @@
 WORLD OF ECHOES REVISED FEBRUARY 2013!!!
-1. Pressing the x button generates a noise "hum". The frequency/rhythm at which you press and the duration of each button press it affects its pitch/tone?? Environment affects key.
-2. Every environment that you explore (see below, interconnected, see seiklus and fez) is completely dark (colorless and shadowed) and silent, but "humming" can bring color and noise to the environments.
-3. Different parts of the environment (solids, nonsolids, critters, secrets, etc) are uncovered at different hum pitches/tones or something.
-4. Explore the landscape and uncover hidden things using your echo/hum ability, and find and collect uh "essences" or whatever.
+1. You're a little egg bird that can walk around and flap their wings to fly. Only have a limited number of wing flaps which can be increased by collecting little bugs, which increases your maximum vertical limit.
+	-Every wing flap = a note on a scale of the world. Walking = pitter patter percussiony
+	-landing on ground || takking last wing flap = chord
 
 TODO::
+1. Refactor and get rid of SIONDRIVER and add real mp3s (see RealPiano wavs)
+2. Create levels. Hide bugs.
 3. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
 	
@@ -17,12 +18,12 @@ WORLD AREAS::
 4. Diatonic Minor Scale
 
 a. Main theme of room:: (p.s. little cats hidden throughout)
-	0. Marshy Wetland Estuaries (Hippos Catfish cranes bugs baby baboons)
+	0. CHAOS ROOM:: Your notes repeat ad infinitum (only keep an array of like 10 notes playing at a time)
 	i. GREEN:: Summer Buggy Treeland Forest (Cicadas, Wind blowing through leaves, Green Japanese Country Forest, Monkeys)
 	ii. YELLOW:: Great wheat plains (grasshoppers & swarms of locusts, wheat fields, bison, quails, pebbles frogs deer springhoppers (Days of Heaven) birds migrate overhead amber waves of grain)
+		-0. Marshy Wetland Estuaries (Hippos Catfish cranes bugs baby baboons)
 	iii. ORANGE:: Sandy Orange-Water Beach (Seagulls, waves on shore and crashing, fishies jumping, sand and wet crabbies running around snails) [Cumberland Island]
 	iv. PURPLE (+neon):: Asian Paper Lantern neon arcade vending machine(beeps boops neon electric, that one fez world alley) [Tokyo night] + GLITCH CITY??
-	v. RED:: Volcanic Desert Wasteland Mountains Graveyard Dead Trees salamanders Red sky clouds Grey Hills too (smoke and fire and magma on the ground)
 	vi. WHITE/BLUE:: Glacial artic hilly wasteland
 	vii. BLACK/BROWN:: Dark cave glowworm silk curtains. Carpet of cockroaches/cave crabs. Swarms of bats/caveswallows. Echolocation and blindness. Calcite stalagtites. Underwatercaves (snakes and glowfishies). White crystal gemstone slabs (Chandelier Ballroom)
 b. Weather condition
@@ -30,3 +31,6 @@ b. Weather condition
 	-Rain (lesser % chance)
 	-Day/Night cycle??? (In the night, the bursts illuminate the ground around you and you)
 c. Big creatures/secrets (Giganticism)
+
+-Minimal pixel, see pokepixel spirit eggs
+-Beauty lonely foreignness nostalgia
