@@ -20,6 +20,7 @@ package Entities
 		public function Burst(x:int, y:int) 
 		{
 			super(x, y, 0, 0, 48, 48);
+			isDisposable = true;
 
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;

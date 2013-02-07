@@ -3,6 +3,7 @@ package Areas
 	import Entities.Avatar;
 	import Entities.Tile;
 	import LoaderManagers.PlayerInputManager;
+	import LoaderManagers.SoundManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -20,6 +21,9 @@ package Areas
 		public var width:int;
 		public var height:int;
 		
+		public var room_x:int;
+		public var groundLevel:int;
+		
 		[Embed(source = '../resources/images/tileset.png')]
 		protected var tile_set:Class;
 		
@@ -27,26 +31,27 @@ package Areas
 		public var entities:Array;
 		public var playerIndex:int = -1;
 		public var pInput:PlayerInputManager;
-		public var scaleArray:Array;
 		
-		public function Room(width:int, height:int, id:int)
+		public function Room(width:int, height:int, id:int, room_x:int, groundLevel:int, r_width:int = -1, r_height:int = -1)
 		{
-			LevelRenderer = new BitmapData(width, height, false, 0x000000);
+			if (r_width < 0) r_width = width;
+			if (r_height < 0) r_height = height;
+			LevelRenderer = new BitmapData(r_width, r_height, false, 0x000000);
 			L_bitmap = new Bitmap(LevelRenderer);
 			_id = id;
 			this.width = width;
 			this.height = height;
+			this.room_x = room_x;
+			this.groundLevel = groundLevel;
 			
 			map = [];
-			for (var i:int = 0; i < height/16; i++){
+			for (var i:int = 0; i < r_height/16; i++){
 				var row:Array = [];
-				for (var j:int = 0; j < width/16; j++){
-					if (i == height/16-1)
+				for (var j:int = 0; j < r_width/16; j++){
+					if (i == r_height/16-1)
 						row.push(new Tile(j*16, i*16, 1, 0, true));
 					else{
-						if (j == 0 || j == width/16-1)
-							row.push(new Tile(j*16, i*16, 1, 0, true));
-						else row.push (new Tile(j*16, i*16, 0, 0));
+						row.push (new Tile(j*16, i*16, 0, 0));
 					}
 				}
 				map.push(row);
@@ -58,6 +63,35 @@ package Areas
 		
 		public function EnterRoom():void
 		{
+			SoundManager.getInstance().stopAllAmbientSounds();
+			if (Game.roomIndex == _id) return;
+			var oldRoom:Room = Game.roomArray[Game.roomIndex];
+			var oldEntities:Array = oldRoom.entities;
+			
+			pInput = oldRoom.pInput;
+			for (var i:int = 0; i < entities.length; i++){
+				if (entities[i] is Avatar){
+					playerIndex = i;
+					for (var j:int = oldEntities.length-1; j >= 0; j--){
+						if (oldEntities[j] is Avatar){
+							var newX:Number;
+							if (oldRoom.room_x > room_x)
+								newX = width-16;
+							else newX = 0;
+							var newY:Number = (height - oldRoom.height) + oldEntities[j].y + oldRoom.groundLevel - 1;
+							entities[i].facing = oldEntities[j].facing;
+							entities[i].vel = oldEntities[j].vel;
+							entities[i].x = newX;
+							entities[i].y = newY;
+						}else if (oldEntities[j].isDisposable){
+							oldEntities.splice(j, 1);
+						}
+					}
+					break;
+				}
+			}
+			L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
+			UpdateView(entities[playerIndex]);
 		}
 		
 		public function Render():void
@@ -67,6 +101,7 @@ package Areas
 			
 			var i:int, j:int;
 			var tile_sheet:Bitmap = new tile_set();
+			var foreground:Array = [];
 			playerIndex = -1;
 			for (i = entities.length-1; i >= 0; i--){
 				if (entities[i] is Avatar) playerIndex = i;
@@ -74,24 +109,32 @@ package Areas
 			}
 			for (i = 0; i < map.length; i++){
 				for (j = 0; j < map[i].length; j++){
-					if (map[i][j].tileset_x == 0 && map[i][j].tileset_y == 0)
-						continue;
-					var sprite_x:int = map[i][j].tileset_x*16;
-					var sprite_y:int = map[i][j].tileset_y*16;
-					var draw_x:int = j*16;
-					var draw_y:int = i*16;
-					LevelRenderer.copyPixels(tile_sheet.bitmapData,
-						new Rectangle(sprite_x, sprite_y, 16, 16),
-						new Point(draw_x, draw_y));
+					if (map[i][j].solid) DrawMapPiece(map[i][j], tile_sheet);
+					else if (map[i][j].tileset_x != 0 || map[i][j].tileset_y != 0)
+						foreground.push(map[i][j]);
 				}
 			}if (playerIndex >= 0)
 				entities[playerIndex].Render(LevelRenderer);
+			for (i = 0; i < foreground.length; i++){
+				DrawMapPiece(foreground[i], tile_sheet);
+			}
 			
 			var matrix:Matrix = new Matrix();
 			matrix.translate(L_bitmap.x, L_bitmap.y);
 			matrix.scale(Global.zoom, Global.zoom);
 			Game.GameRenderer.draw(L_bitmap, matrix);
 			LevelRenderer.unlock();
+		}
+		
+		public function DrawMapPiece(tile:Tile, tile_sheet:Bitmap):void
+		{
+			var sprite_x:int = tile.tileset_x*16;
+			var sprite_y:int = tile.tileset_y*16;
+			var draw_x:int = tile.x;
+			var draw_y:int = tile.y;
+			LevelRenderer.copyPixels(tile_sheet.bitmapData,
+				new Rectangle(sprite_x, sprite_y, 16, 16),
+				new Point(draw_x, draw_y));
 		}
 		
 		public function Update():void
@@ -136,9 +179,9 @@ package Areas
 
 			//move view right and left
 			if (avirb > right)
-				L_bitmap.x-= avatar.top_xspeed;
+				L_bitmap.x+= (right - avirb);
 			else if (avilb < left)
-				L_bitmap.x+= avatar.top_xspeed;
+				L_bitmap.x+= (left - avilb);
 			//move view up and down
 			if (avitb < top)
 				L_bitmap.y += ((top - avitb));
@@ -171,7 +214,8 @@ package Areas
 				{
 					if ((n-Math.abs(mode[j]+root-12))%12==0)
 					{
-						Game._noteArray.push(Global.ALL_PIANO_NOTE_STRINGS[i]);
+						if (n > top && n < bottom)
+							Game._noteArray.push(Global.ALL_PIANO_NOTE_STRINGS[i]);
 						break;
 					}
 				}

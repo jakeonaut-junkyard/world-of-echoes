@@ -21,6 +21,8 @@ package LoaderManagers
 		private var _sfxChannels:Dictionary;
 		private var _sfxVolumes:Dictionary;
 		private var _masterSfxVolume:Number;
+		
+		public var Ambient_Sounds:Array;
 
 		public function SoundManager() 
 		{
@@ -38,6 +40,8 @@ package LoaderManagers
 			_sfxChannels = new Dictionary;
 			_sfxVolumes = new Dictionary;
 			_masterSfxVolume = 0.6;
+			
+			Ambient_Sounds = [];
 		}
 
 		public static function getInstance():SoundManager
@@ -117,6 +121,13 @@ package LoaderManagers
 			for (var id:String in _musicChannels)
 			{
 				stopMusic(id);
+			}
+		}
+		
+		public function stopAllAmbientSounds():void
+		{
+			for (var ambientSound:String in Ambient_Sounds){
+				stopSfx(ambientSound);
 			}
 		}
 

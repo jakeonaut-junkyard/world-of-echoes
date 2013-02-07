@@ -28,10 +28,15 @@ package LoaderManagers
 			playedNote = false;
 			PlayerJump(entities[pIndex], entities);
 			PlayerRun(entities[pIndex]);
-			if (chordPlay > 0) PlayChords();
+			if (chordPlay > 0) PlayChords(entities[pIndex], entities);
+			
+			if (Global.CheckKeyPressed(Global.ENTER)){
+				Game.roomArray[0].EnterRoom();
+				Game.roomIndex = 0;
+			}
 		}
 		
-		private function PlayChords():void
+		private function PlayChords(avatar:Avatar, entities:Array):void
 		{
 			if (chordPlay%2==0){
 				var note:String = Game._noteArray[chordIndex];
@@ -42,6 +47,7 @@ package LoaderManagers
 					note = Game._noteArray[chordIndex];
 				}lastNote = note;
 				
+				entities.push(new Burst(avatar.x-16, avatar.y-8));
 				//SoundManager.getInstance().stopSfx(note);
 				SoundManager.getInstance().playSfx(note, 0, 1);
 				chordIndex++;
@@ -112,8 +118,10 @@ package LoaderManagers
 				if (avatar.on_ground)
 					avatar.move_state = avatar.RUNNING;
 			}else{
-				avatar.vel.x = 0;
-				avatar.move_state = avatar.STANDING;
+				if (avatar.on_ground){
+					avatar.vel.x = 0;
+					avatar.move_state = avatar.STANDING;
+				}
 			}
 		}
 	}

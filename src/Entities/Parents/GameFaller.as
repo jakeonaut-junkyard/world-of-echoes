@@ -1,5 +1,7 @@
 package Entities.Parents 
 {
+	import LoaderManagers.SoundManager;
+	
 	public class GameFaller extends GameMover
 	{
 		public var grav_acc:Number;

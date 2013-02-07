@@ -23,7 +23,7 @@ package Entities.GoldBugs
 
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;
-			frameDelay = 2;
+			frameDelay = 3;
 			maxFrame = 5;
 			frameWidth = 3;
 			frameHeight = 3;

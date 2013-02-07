@@ -1,13 +1,13 @@
 WORLD OF ECHOES REVISED FEBRUARY 2013!!!
 1. You're a little egg bird that can walk around and flap their wings to fly. Only have a limited number of wing flaps which can be increased by collecting little bugs, which increases your maximum vertical limit.
 	-Every wing flap = a note on a scale of the world. Walking = pitter patter percussiony
-	-landing on ground || takking last wing flap = chord
+	-taking last wing flap = chord
 
 TODO::
-1. Refactor and get rid of SIONDRIVER and add real mp3s (see RealPiano wavs)
-2. Create levels. Hide bugs.
-3. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
+1. Create levels. Hide bugs.
+2. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
+3. Compose bass lines/backgrounds behind the ambience to fill each room.
 	
 ====================================================================================================
 WORLD AREAS::

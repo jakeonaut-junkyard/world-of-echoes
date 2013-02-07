@@ -109,6 +109,7 @@ package Entities.Field
 		
 		public function UpdateMoveFromAvatar(avatar:Avatar):void
 		{
+			if (avatar.vel.x == 0 && avatar.vel.y == 0) return;
 			if (CheckRectIntersect(avatar, x+lb-8, y+tb-8, x+rb+8, y+bb+8)){
 				yvel = -1;
 			}

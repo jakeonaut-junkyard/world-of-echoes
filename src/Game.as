@@ -2,6 +2,7 @@ package
 {
 	import Areas.*;
 	import LoaderManagers.*;
+	import Entities.Avatar;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -30,7 +31,7 @@ package
 			_driver = new SiONDriver();
 			_driver.play(null, false);
 			
-			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom, Global.stageHeight*Global.zoom, false, 0x000000);
+			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom+1, Global.stageHeight*Global.zoom+1, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
 			
 			entitySfxLoader = new EntitySoundLoader();
@@ -38,7 +39,9 @@ package
 			_noteArray = [];
 			
 			roomArray = [];
-			roomArray.push(new BigTreeField00());
+			roomArray.push(new Nest00());
+			roomArray.push(new BigTreeField01());
+			roomArray.push(new RockyBeach02());
 			roomIndex = 0;
 			roomArray[roomIndex].EnterRoom();
 			
