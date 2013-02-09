@@ -2,7 +2,7 @@ package
 {
 	public class Global 
 	{	
-		public static var zoom:int = 3;
+		public static var zoom:Number = 3;
 		public static var stageWidth:int = 640/zoom;
 		public static var stageHeight:int = 480/zoom;
 		

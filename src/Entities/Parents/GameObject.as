@@ -34,6 +34,10 @@ package Entities.Parents
 			isDisposable = false;
 		}
 		
+		public function Update(entities:Array, map:Array):void
+		{
+		}
+		
 		public function CheckRectIntersect(obj2:GameObject, lb:int, 
 			tb:int, rb:int, bb:int):Boolean
 		{			

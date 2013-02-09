@@ -51,7 +51,7 @@ package Entities
 			levelRenderer.draw(image_sprite, matrix, color);
 		}
 
-		public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Array):void
 		{		
 			frameCount +=  Global.CURR_PHYSICS_SPEED;
 			if (frameCount >= frameDelay)

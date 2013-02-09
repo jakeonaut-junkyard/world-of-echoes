@@ -4,10 +4,14 @@ WORLD OF ECHOES REVISED FEBRUARY 2013!!!
 	-taking last wing flap = chord
 
 TODO::
-1. Create levels. Hide bugs.
+1. Create levels. Hide bugs (by which I mean insects).
+	-SOME WAY TO TELEPORT BETWEEN AREAS???
 2. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
 	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
 3. Compose bass lines/backgrounds behind the ambience to fill each room.
+	-MAKE AMBIENT NOISES AND BASSLINES CROSSFADE WHEN CHANGING ROOMS
+4. Create sprites/etc.
+5. If time and creativity permits, create way to use sound to further explore the landscape/manipulate it?
 	
 ====================================================================================================
 WORLD AREAS::

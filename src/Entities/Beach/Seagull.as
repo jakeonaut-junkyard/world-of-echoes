@@ -1,16 +1,17 @@
-package Entities.Field 
+package Entities.Beach 
 {
 	import Entities.Parents.GameMover;
 	import Entities.Avatar;
+	import LoaderManagers.SoundManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
 	
-	public class Butterfly extends GameMover
+	public class Seagull extends GameMover
 	{
-		[Embed(source = "../../resources/images/field/butterfly.png")]
+		[Embed(source = "../../resources/images/beach/seagull_sheet.png")]
 		private var my_sprite_sheet:Class;
 		
 		private var base_x:int;
@@ -19,16 +20,18 @@ package Entities.Field
 		private var yvel:Number;
 		private var moveCounterX:int;
 		private var moveCounterY:int;
+		private var cawTimer:int;
 		
-		public function Butterfly(x:int, y:int)
+		public function Seagull(x:int, y:int)
 		{
-			super(x, y, 0, 0, 8, 8);
+			super(x, y, 0, 0, 16, 16);
 			
 			base_x = x;
 			base_y = y;
+			cawTimer = Math.floor(Math.random()*25)+30;
 			
-			moveCounterX = 4;
-			moveCounterY = 3;
+			moveCounterX = 6;
+			moveCounterY = 5;
 			facing = Global.RIGHT;
 			xvel = (1-Math.floor(Math.random()*3));
 			yvel = (1-Math.floor(Math.random()*3));
@@ -36,13 +39,12 @@ package Entities.Field
 			
 			//image stuff
 			sprite_sheet = my_sprite_sheet;
-			currAniY = Math.floor(Math.random()*4);
 			
-			frameDelay = 4;
+			frameDelay = 6;
 			frameCount = Math.floor(Math.random()*2);
 			maxFrame = 2;
-			frameWidth = 8;
-			frameHeight = 8;
+			frameWidth = 16;
+			frameHeight = 16;
 		}
 		
 		override public function Render(levelRenderer:BitmapData):void
@@ -76,6 +78,12 @@ package Entities.Field
 			var avatar_distance:int = Math.abs((x+rb/2)-(avatar.x+avatar.rb/2));
 			if (avatar_distance >= 300) return;
 			
+			cawTimer--;
+			if (cawTimer <= 0){
+				SoundManager.getInstance().playSfx("SeagullSound", 0, 1);
+				cawTimer = Math.floor(Math.random()*25)+30;
+			}
+			
 			UpdateMoveTimerMove();
 			UpdateMoveFromAvatar(avatar);
 			
@@ -96,14 +104,14 @@ package Entities.Field
 				if (xvel < 0) facing = Global.LEFT;
 				else if (xvel > 0) facing = Global.RIGHT;
 				
-				moveCounterX = 4;
+				moveCounterX = 6;
 			}
 			if (moveCounterY <= 0){
 				yvel = (1-Math.floor(Math.random()*3));
 				if (y >= base_y+8) yvel = -1;
 				else if (y <= base_y-8) yvel = 1;
 				
-				moveCounterY = 3;
+				moveCounterY = 5;
 			}
 		}
 		

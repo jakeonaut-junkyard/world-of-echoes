@@ -15,9 +15,9 @@ package Entities
 		public var top_xspeed:Number;
 		public var jump_vel:Number;
 		
-		public var inputJump:Boolean = false;
-		private var doubleJump:Boolean = false;
 		public var float:Boolean = false;
+		public var inputJump:Boolean = false;
+		public var lastGroundY:Number;
 		
 		public var move_state:int;
 		public var prev_move_state:int;
@@ -39,6 +39,7 @@ package Entities
 			terminal_vel = 6.5;
 			grav_acc = 1.0;
 
+			lastGroundY = y;
 			facing = Global.RIGHT;
 			move_state = STANDING;
 			prev_move_state = move_state;
@@ -53,19 +54,12 @@ package Entities
 			frameHeight = 16;
 		}
 		
-		public function Update(entities:Array, map:Array):void
-		{
-			if (inputJump && on_ground){
-				vel.y = -jump_vel;
-				on_ground = false;
-			}
-			inputJump = false;
-			
+		override public function Update(entities:Array, map:Array):void
+		{			
 			Gravity();
 			UpdateMovement(entities, map);
 			
-			if (!on_ground)
-			{
+			if (!on_ground){
 				if (float && !hit_head){
 					y-=(2*Global.CURR_PHYSICS_SPEED);
 					if (vel.y > 0)
@@ -73,7 +67,7 @@ package Entities
 				}
 				else if (hit_head)
 					y+=(3);
-			}
+			}else{ lastGroundY = y; }
 
 			UpdateAnimation();
 		}

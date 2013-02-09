@@ -1,4 +1,4 @@
-package Entities.GoldBugs 
+package Entities 
 {
 	import Entities.Parents.GameSprite;
 	import flash.display.Bitmap;
@@ -14,7 +14,7 @@ package Entities.GoldBugs
 		public var color:ColorTransform;
 		protected var myAlpha:Number;
 
-		[Embed(source = "../../resources/images/gold_twinkle_sheet.png")]
+		[Embed(source = "../resources/images/gold_twinkle_sheet.png")]
 		private var my_sprite_sheet:Class;
 
 		public function GoldTwinkle(x:int, y:int) 
@@ -29,7 +29,7 @@ package Entities.GoldBugs
 			frameHeight = 3;
 		}
 
-		public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Array):void
 		{		
 			frameCount +=  Global.CURR_PHYSICS_SPEED;
 			if (frameCount >= frameDelay)

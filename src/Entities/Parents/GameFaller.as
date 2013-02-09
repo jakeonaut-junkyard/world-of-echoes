@@ -40,8 +40,18 @@ package Entities.Parents
 			for (i = 0; i < solids.length; i++)
 			{
 				//horizontal solid collisions (LEFT)
+				var newBB:int = bb;
 				if (CheckRectIntersect(solids[i], x+lb+vel.x, y+tb, x+lb, y+bb))
 				{
+					while(on_ground && !CheckRectIntersect(solids[i], x+lb+vel.x, y+tb, x+lb, y+tb+4)){
+						newBB-=1;
+						if (!CheckRectIntersect(solids[i], x+lb+vel.x, y+tb, x+lb, y+newBB)){
+							y += newBB-bb;
+							break;
+						}
+						if (newBB < bb-4) break;
+					}
+					if (newBB != bb) continue;
 					vel.x = 0;
 					while (!CheckRectIntersect(solids[i], x+lb-1, y+tb, x+lb, y+bb))
 						x--;
@@ -49,8 +59,17 @@ package Entities.Parents
 				//horizontal solid collisions (RIGHT)
 				if (CheckRectIntersect(solids[i], x+rb, y+tb, x+rb+vel.x, y+bb))
 				{
+					while(on_ground && !CheckRectIntersect(solids[i], x+rb, y+tb, x+rb+vel.x, y+tb+4)){
+						newBB-=1;
+						if (!CheckRectIntersect(solids[i], x+lb+vel.x, y+tb, x+lb, y+newBB)){
+							y += newBB-bb;
+							break;
+						}
+						if (newBB < bb-4) break;
+					}
+					if (newBB != bb) continue;
 					vel.x = 0;
-					while (!CheckRectIntersect(solids[i], x+rb, y+tb, x+rb+1, y+bb))
+					while (!CheckRectIntersect(solids[i], x+rb, y+tb, x+rb+1, y+newBB))
 						x++;
 				}
 			}

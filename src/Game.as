@@ -19,8 +19,10 @@ package
 		public static var GameRenderer:BitmapData;
 		
 		public static var roomArray:Array;
-		public static var roomIndex:int;
+		public static var roomRow:int;
+		public static var roomColumn:int;
 		
+		public var ambientSfxLoader:AmbientSoundLoader;
 		public var entitySfxLoader:EntitySoundLoader;
 		public var pianoSfxLoader:PianoSoundLoader;
 		public static var _noteArray:Array;
@@ -34,16 +36,22 @@ package
 			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom+1, Global.stageHeight*Global.zoom+1, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
 			
+			ambientSfxLoader = new AmbientSoundLoader();
 			entitySfxLoader = new EntitySoundLoader();
 			pianoSfxLoader = new PianoSoundLoader();
 			_noteArray = [];
 			
 			roomArray = [];
-			roomArray.push(new Nest00());
-			roomArray.push(new BigTreeField01());
-			roomArray.push(new RockyBeach02());
-			roomIndex = 0;
-			roomArray[roomIndex].EnterRoom();
+			var newRow:Array = [];
+			newRow.push(new Nest00());
+			newRow.push(new BigTreeField01());
+			newRow.push(new RockyBeach02());
+			newRow.push(new Beach03());
+			newRow.push(new Cave04());
+			roomArray.push(newRow);
+			roomRow = 0;
+			roomColumn = 0;
+			roomArray[roomColumn][roomRow].EnterRoom();
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();
@@ -53,13 +61,13 @@ package
 		public function Render():void
 		{
 			GameRenderer.lock();
-			roomArray[roomIndex].Render();
+			roomArray[roomColumn][roomRow].Render();
 			GameRenderer.unlock();
 		}
 		
 		public function Update():void
 		{	
-			roomArray[roomIndex].Update();
+			roomArray[roomColumn][roomRow].Update();
 			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();

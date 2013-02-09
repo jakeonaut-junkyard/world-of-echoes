@@ -41,7 +41,7 @@ package LoaderManagers
 			_sfxVolumes = new Dictionary;
 			_masterSfxVolume = 0.6;
 			
-			Ambient_Sounds = [];
+			Ambient_Sounds = new Array;
 		}
 
 		public static function getInstance():SoundManager
@@ -126,8 +126,8 @@ package LoaderManagers
 		
 		public function stopAllAmbientSounds():void
 		{
-			for (var ambientSound:String in Ambient_Sounds){
-				stopSfx(ambientSound);
+			for (var i:int = 0; i < Ambient_Sounds.length; i++){
+				stopSfx(Ambient_Sounds[i]);
 			}
 		}
 

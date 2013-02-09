@@ -29,11 +29,6 @@ package LoaderManagers
 			PlayerJump(entities[pIndex], entities);
 			PlayerRun(entities[pIndex]);
 			if (chordPlay > 0) PlayChords(entities[pIndex], entities);
-			
-			if (Global.CheckKeyPressed(Global.ENTER)){
-				Game.roomArray[0].EnterRoom();
-				Game.roomIndex = 0;
-			}
 		}
 		
 		private function PlayChords(avatar:Avatar, entities:Array):void
@@ -58,10 +53,12 @@ package LoaderManagers
 		private function PlayerJump(avatar:Avatar, entities:Array):void
 		{
 			//CONTROL AVATAR JUMPING
-			if (Global.CheckKeyPressed(Global.X_KEY)){
+			if (Global.CheckKeyPressed(Global.X_KEY) || avatar.inputJump){
 				if (currWingFlaps < Global.MAX_WINGFLAPS){
-					avatar.on_ground = false;
+					avatar.inputJump = false;
 					avatar.vel.y = -avatar.jump_vel;
+					if (!avatar.on_ground) avatar.vel.y/=1.5;
+					avatar.on_ground = false;
 					
 					entities.push(new Burst(avatar.x-16, avatar.y-20));
 					currWingFlaps++;
@@ -79,7 +76,6 @@ package LoaderManagers
 						chordPlay = 6;
 						chordIndex = index;
 					}else{
-						//SoundManager.getInstance().stopSfx(note);
 						SoundManager.getInstance().playSfx(note, 0, 1);
 					}
 				}

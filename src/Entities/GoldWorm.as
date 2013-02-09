@@ -1,4 +1,4 @@
-package Entities.GoldBugs 
+package Entities 
 {
 	import Entities.Avatar;
 	import Entities.Parents.GameMover;
@@ -6,7 +6,7 @@ package Entities.GoldBugs
 	
 	public class GoldWorm extends GameMover
 	{
-		[Embed(source = "../../resources/images/gold_worm_sheet.png")]
+		[Embed(source = "../resources/images/gold_worm_sheet.png")]
 		private var my_sprite_sheet:Class;
 		private var twinkle:int;
 		
@@ -31,14 +31,14 @@ package Entities.GoldBugs
 			if (xvel < 0) facing = Global.LEFT;
 			
 			sprite_sheet = my_sprite_sheet;
-			frameWidth = 10;
-			frameHeight = 10;
+			frameWidth = 16;
+			frameHeight = 16;
 			frameDelay = 3;
 			maxFrame = 2;
 			twinkle = 5+Math.floor(Math.random()*10);
 		}
 		
-		public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Array):void
 		{
 			if (delete_me) return;
 			
@@ -46,8 +46,9 @@ package Entities.GoldBugs
 			for (var i:int = 0; i < entities.length; i++){
 				if (entities[i] is Avatar){
 					avatar = entities[i];
-					if (CheckRectIntersect(entities[i], x+lb, y+tb, x+rb, y+bb)){
+					if (CheckRectIntersect(avatar, x+lb, y+tb, x+rb, y+bb)){
 						SoundManager.getInstance().playSfx("InsectSound", 0, 1);
+						avatar.inputJump = true;
 						delete_me = true;
 						visible = true;
 						Global.MAX_WINGFLAPS++;
@@ -63,8 +64,8 @@ package Entities.GoldBugs
 			
 			twinkle--;
 			if (twinkle <= 0){
-				var rx:int = Math.floor(Math.random()*7)-3;
-				var ry:int = Math.floor(Math.random()*7)-3;
+				var rx:int = Math.floor(Math.random()*(rb+6))-3;
+				var ry:int = Math.floor(Math.random()*(bb+6))-3;
 				entities.push(new GoldTwinkle(x+rx, y+ry));
 				twinkle = 5+Math.floor(Math.random()*10);
 			}
@@ -77,19 +78,16 @@ package Entities.GoldBugs
 			moveCounterX-=Global.CURR_PHYSICS_SPEED;
 			moveCounterY-=Global.CURR_PHYSICS_SPEED;
 			if (moveCounterX <= 0){
-				xvel = (1-Math.floor(Math.random()*3));
-				if (x >= base_x+4) xvel = -1;
-				else if (x <= base_x-4) xvel = 1;
-				
-				if (xvel < 0) facing = Global.LEFT;
-				else if (xvel > 0) facing = Global.RIGHT;
+				xvel = (1-Math.floor(Math.random()*3))*0.5;
+				if (x >= base_x+4) xvel = -0.5;
+				else if (x <= base_x-4) xvel = 0.5;
 				
 				moveCounterX = 6;
 			}
 			if (moveCounterY <= 0){
-				yvel = (1-Math.floor(Math.random()*3));
-				if (y >= base_y+4) yvel = -1;
-				else if (y <= base_y-4) yvel = 1;
+				yvel = (1-Math.floor(Math.random()*3))*0.5;
+				if (y >= base_y+4) yvel = -0.5;
+				else if (y <= base_y-4) yvel = 0.5;
 				
 				moveCounterY = 5;
 			}
