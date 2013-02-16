@@ -5,13 +5,13 @@ package Areas
 	import Entities.GoldWorm;
 	import Areas.Parents.BeachRoom;
 	
-	public class Beach03 extends BeachRoom
+	public class Beach53 extends BeachRoom
 	{		
 		
-		public function Beach03() 
+		public function Beach53() 
 		{
 			//TODO:: ALWAYS CHECK THAT THE FINAL 2 INPUT PARAMETERS MATCH THE TWO DIGITS IN THE NAME OF THE ROOM!!!
-			super(320, 240, 0, 3);
+			super(320, 240, 5, 3);
 			
 			entities.push(new GoldWorm(100, height-64));
 		}

@@ -1,7 +1,12 @@
+http://www.hymnsite.com/how_to/midi2wav.html
+
 WORLD OF ECHOES REVISED FEBRUARY 2013!!!
 1. You're a little egg bird that can walk around and flap their wings to fly. Only have a limited number of wing flaps which can be increased by collecting little bugs, which increases your maximum vertical limit.
 	-Every wing flap = a note on a scale of the world. Walking = pitter patter percussiony
 	-taking last wing flap = chord
+-Instruments/colors hidden around various levels. Switch between them!!
+-Animation squishsquash and pause (very briefly) upon landing impact to make character feel weighty. Visual depth as well with black outline and two colors (pokemonhamtaro)? 
+-Each world has part of a sung melody in its mode hiding with the instrument you find. Start off with one jump. Collect little glowing rolling rock shinies to increase number of jumps (they play an "aah" multitonal sound. Make world about half/fourth as big as you initially thought. Activate warp statues to warp between them. Don't stress out. Bass notes?
 
 TODO::
 1. Create levels. Hide bugs (by which I mean insects).

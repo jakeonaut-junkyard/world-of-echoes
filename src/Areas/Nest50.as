@@ -7,12 +7,12 @@ package Areas
 	import Areas.Parents.ForestRoom;
 	import LoaderManagers.SoundManager;
 	
-	public class Nest00 extends ForestRoom
+	public class Nest50 extends ForestRoom
 	{				
-		public function Nest00() 
+		public function Nest50() 
 		{
 			//TODO:: ALWAYS CHECK THAT THE FINAL 2 INPUT PARAMETERS MATCH THE TWO DIGITS IN THE NAME OF THE ROOM!!!
-			super(320, 240, 0, 0);
+			super(320, 240, 5, 0);
 			
 			var i:int;
 			for (i = 0; i < height/16; i++){

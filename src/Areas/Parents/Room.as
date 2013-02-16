@@ -54,7 +54,7 @@ package Areas.Parents
 			}
 			
 			entities = [];
-			entities.push(new Avatar(16, height-33, 1));
+			entities.push(new Avatar(32, height-33, 1));
 			playerIndex = entities.length-1;
 			pInput = new PlayerInputManager();
 		}
@@ -74,10 +74,17 @@ package Areas.Parents
 						if (oldEntities[j] is Avatar){
 							var newX:Number, newY:Number;
 							if (oldRoom.room_row > room_row)
-								newX = width-16;
-							else newX = 0;
+								newX = width-32;
+							else if (oldRoom.room_row < room_row) 
+								newX = 16;
+							else newX = oldEntities[j].x;
 							newY = oldEntities[j].y - 
-								((room_column-oldRoom.room_column)*240);
+								((room_column - oldRoom.room_column) * 240);
+							if (oldRoom.room_column > room_column)
+								newY -= 16;
+							else if (oldRoom.room_column < room_column) 
+								newY += 16;
+							
 							entities[i].facing = oldEntities[j].facing;
 							entities[i].vel = oldEntities[j].vel;
 							entities[i].x = newX;

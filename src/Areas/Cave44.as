@@ -5,13 +5,13 @@ package Areas
 	import Entities.GoldWorm;
 	import Areas.Parents.CaveRoom;
 	
-	public class Cave04 extends CaveRoom
+	public class Cave44 extends CaveRoom
 	{		
 		
-		public function Cave04() 
+		public function Cave44() 
 		{
 			//TODO:: ALWAYS CHECK THAT THE FINAL 2 INPUT PARAMETERS MATCH THE TWO DIGITS IN THE NAME OF THE ROOM!!!
-			super(320, 240, 0, 4);
+			super(320, 240, 4, 4);
 			
 			var i:int;
 			for (i = 0; i < height/16; i++){
@@ -23,6 +23,7 @@ package Areas
 			}
 			for (i = 12; i < 18; i++){
 				map[0][i] = new Tile(i*16, 0, 0, 0);
+				map[height/16-1][i] = new Tile(i*16, height-16, 0, 0);
 			}
 			for (i = 0; i < 4; i++){
 				map[5][12+i] = new Tile((12+i)*16, 5*16, 1, 0, true);

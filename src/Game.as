@@ -10,11 +10,11 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
-	import org.si.sion.SiONDriver;
+	//import org.si.sion.SiONDriver;
 	
 	public class Game
 	{
-		public static var _driver:SiONDriver;
+		//public static var _driver:SiONDriver;
 		public var gameBitmap:Bitmap;
 		public static var GameRenderer:BitmapData;
 		
@@ -30,8 +30,8 @@ package
 		public function Game()
 		{
 			trace("Game created!");
-			_driver = new SiONDriver();
-			_driver.play(null, false);
+			//_driver = new SiONDriver();
+			//_driver.play(null, false);
 			
 			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom+1, Global.stageHeight*Global.zoom+1, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
@@ -41,16 +41,7 @@ package
 			pianoSfxLoader = new PianoSoundLoader();
 			_noteArray = [];
 			
-			roomArray = [];
-			var newRow:Array = [];
-			newRow.push(new Nest00());
-			newRow.push(new BigTreeField01());
-			newRow.push(new RockyBeach02());
-			newRow.push(new Beach03());
-			newRow.push(new Cave04());
-			roomArray.push(newRow);
-			roomRow = 0;
-			roomColumn = 0;
+			CreateRoomArray();
 			roomArray[roomColumn][roomRow].EnterRoom();
 			
 			Global.keys_pressed = new Array();
@@ -72,6 +63,62 @@ package
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();
+		}
+		
+		public function CreateRoomArray():void
+		{
+			var newRow:Array;
+			roomArray = [];
+			newRow = []; //row 0
+			newRow.push(null); //row 0 column 0
+			newRow.push(null); //row 0 column 1
+			newRow.push(null); //row 0 column 2
+			newRow.push(null); //row 0 column 3
+			newRow.push(null); //row 0 column 4
+			roomArray.push(newRow);
+			
+			newRow = []; //row 1
+			newRow.push(null); //row 1 column 0
+			newRow.push(null); //row 1 column 1
+			newRow.push(null); //row 1 column 2
+			newRow.push(null); //row 1 column 3
+			newRow.push(null); //row 1 column 4
+			roomArray.push(newRow);
+			
+			newRow = []; //row 2
+			newRow.push(null); //row 2 column 0
+			newRow.push(null); //row 2 column 1
+			newRow.push(null); //row 2 column 2
+			newRow.push(null); //row 2 column 3
+			newRow.push(null); //row 2 column 4
+			roomArray.push(newRow);
+			
+			newRow = []; //row 3
+			newRow.push(null); //row 3 column 0
+			newRow.push(null); //row 3 column 1
+			newRow.push(null); //row 3 column 2
+			newRow.push(null); //row 3 column 3
+			newRow.push(null); //row 3 column 4
+			roomArray.push(newRow);
+			
+			newRow = []; //row 4
+			newRow.push(null); //row 4 column 0
+			newRow.push(null); //row 4 column 1
+			newRow.push(null); //row 4 column 2
+			newRow.push(null); //row 4 column 3
+			newRow.push(new Cave44()); //row 4 column 4
+			roomArray.push(newRow);
+			
+			newRow = []; //row 5
+			newRow.push(new Nest50()); //row 5 column 0
+			newRow.push(new BigTreeField51()); //row 5 column 1
+			newRow.push(new RockyBeach52()); //row 5 column 2
+			newRow.push(new Beach53()); //row 5 column 3
+			newRow.push(new Cave54()); //row 5 column 4
+			roomArray.push(newRow);
+			
+			roomRow = 0;
+			roomColumn = roomArray.length-1;
 		}
 		
 		/*************************************************************************************/
