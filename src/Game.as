@@ -1,6 +1,5 @@
 package  
 {
-	import Areas.*;
 	import LoaderManagers.*;
 	import Entities.Avatar;
 	import flash.display.Bitmap;
@@ -18,9 +17,7 @@ package
 		public var gameBitmap:Bitmap;
 		public static var GameRenderer:BitmapData;
 		
-		public static var roomArray:Array;
-		public static var roomRow:int;
-		public static var roomColumn:int;
+		public static var world:GameWorld;
 		
 		public var ambientSfxLoader:AmbientSoundLoader;
 		public var entitySfxLoader:EntitySoundLoader;
@@ -41,8 +38,7 @@ package
 			pianoSfxLoader = new PianoSoundLoader();
 			_noteArray = [];
 			
-			CreateRoomArray();
-			roomArray[roomColumn][roomRow].EnterRoom();
+			world = new GameWorld(640, 240);
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();
@@ -52,73 +48,17 @@ package
 		public function Render():void
 		{
 			GameRenderer.lock();
-			roomArray[roomColumn][roomRow].Render();
+			world.Render();
 			GameRenderer.unlock();
 		}
 		
 		public function Update():void
 		{	
-			roomArray[roomColumn][roomRow].Update();
+			world.Update();
 			
 			//clear out the "keys_up" array for next update
 			Global.keys_up = new Array();
 			Global.keys_pressed = new Array();
-		}
-		
-		public function CreateRoomArray():void
-		{
-			var newRow:Array;
-			roomArray = [];
-			newRow = []; //row 0
-			newRow.push(null); //row 0 column 0
-			newRow.push(null); //row 0 column 1
-			newRow.push(null); //row 0 column 2
-			newRow.push(null); //row 0 column 3
-			newRow.push(null); //row 0 column 4
-			roomArray.push(newRow);
-			
-			newRow = []; //row 1
-			newRow.push(null); //row 1 column 0
-			newRow.push(null); //row 1 column 1
-			newRow.push(null); //row 1 column 2
-			newRow.push(null); //row 1 column 3
-			newRow.push(null); //row 1 column 4
-			roomArray.push(newRow);
-			
-			newRow = []; //row 2
-			newRow.push(null); //row 2 column 0
-			newRow.push(null); //row 2 column 1
-			newRow.push(null); //row 2 column 2
-			newRow.push(null); //row 2 column 3
-			newRow.push(null); //row 2 column 4
-			roomArray.push(newRow);
-			
-			newRow = []; //row 3
-			newRow.push(null); //row 3 column 0
-			newRow.push(null); //row 3 column 1
-			newRow.push(null); //row 3 column 2
-			newRow.push(null); //row 3 column 3
-			newRow.push(null); //row 3 column 4
-			roomArray.push(newRow);
-			
-			newRow = []; //row 4
-			newRow.push(null); //row 4 column 0
-			newRow.push(null); //row 4 column 1
-			newRow.push(null); //row 4 column 2
-			newRow.push(null); //row 4 column 3
-			newRow.push(new Cave44()); //row 4 column 4
-			roomArray.push(newRow);
-			
-			newRow = []; //row 5
-			newRow.push(new Nest50()); //row 5 column 0
-			newRow.push(new BigTreeField51()); //row 5 column 1
-			newRow.push(new RockyBeach52()); //row 5 column 2
-			newRow.push(new Beach53()); //row 5 column 3
-			newRow.push(new Cave54()); //row 5 column 4
-			roomArray.push(newRow);
-			
-			roomRow = 0;
-			roomColumn = roomArray.length-1;
 		}
 		
 		/*************************************************************************************/

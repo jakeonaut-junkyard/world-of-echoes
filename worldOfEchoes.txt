@@ -16,7 +16,6 @@ TODO::
 3. Compose bass lines/backgrounds behind the ambience to fill each room.
 	-MAKE AMBIENT NOISES AND BASSLINES CROSSFADE WHEN CHANGING ROOMS
 4. Create sprites/etc.
-5. If time and creativity permits, create way to use sound to further explore the landscape/manipulate it?
 	
 ====================================================================================================
 WORLD AREAS::

@@ -4,6 +4,7 @@ package Entities.Parents
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Matrix;
+	import flash.utils.*;
 	
 	public class GameMover extends GameSprite 
 	{
@@ -35,16 +36,15 @@ package Entities.Parents
 			levelRenderer.draw(image_sprite, matrix);
 		}
 		
-		public function UpdateMovement(entities:Array, map:Array):void
+		public function UpdateMovement(entities:Array, map:Dictionary):void
 		{
 			var i:int;
 			var solids:Array = [];
 			for (i = 0; i < entities.length; i++){
 				if (entities[i].solid) solids.push(entities[i]);
-			}for (i = 0; i < map.length; i++){
-				for (var j:int = 0; j < map[i].length; j++){
-					if (map[i][j].solid) solids.push(map[i][j]);
-				}
+			}
+			for each (var tile:GameObject in map){
+				if (tile.solid) solids.push(tile);
 			}
 			
 			//Update movement			

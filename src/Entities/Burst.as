@@ -8,6 +8,7 @@ package Entities
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
+	import flash.utils.*;
 
 	public class Burst extends GameSprite
 	{
@@ -31,9 +32,9 @@ package Entities
 			frameHeight = 48;
 
 			color = new ColorTransform();
-			color.redMultiplier = Math.floor(Math.random()*4);
-			color.blueMultiplier = Math.floor(Math.random()*4);
-			color.greenMultiplier = Math.floor(Math.random()*4);
+			color.redMultiplier = Math.floor(Math.random()*3);
+			color.blueMultiplier = Math.floor(Math.random()*3);
+			color.greenMultiplier = Math.floor(Math.random()*3);
 		}
 
 		override public function Render(levelRenderer:BitmapData):void
@@ -51,7 +52,7 @@ package Entities
 			levelRenderer.draw(image_sprite, matrix, color);
 		}
 
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{		
 			frameCount +=  Global.CURR_PHYSICS_SPEED;
 			if (frameCount >= frameDelay)

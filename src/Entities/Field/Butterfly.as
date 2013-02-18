@@ -7,6 +7,7 @@ package Entities.Field
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
+	import flash.utils.*;
 	
 	public class Butterfly extends GameMover
 	{
@@ -63,7 +64,7 @@ package Entities.Field
 			levelRenderer.draw(image_sprite, matrix);
 		}
 		
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{	
 			var avatar:Avatar;
 			for (var i:int = 0; i < entities.length; i++){

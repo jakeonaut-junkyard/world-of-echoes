@@ -8,6 +8,7 @@ package Entities
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
+	import flash.utils.*;
 	
 	public class Avatar extends GameFaller
 	{
@@ -33,7 +34,7 @@ package Entities
 		
 		public function Avatar(x:int, y:int, trackId:int) 
 		{
-			super(x, y, 4, 2, 12, 16);
+			super(x, y, 4, 6, 12, 15);
 			top_xspeed = 2.0;
 			jump_vel = 8.50;
 			terminal_vel = 6.5;
@@ -48,13 +49,13 @@ package Entities
 			
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;
-			frameDelay = 5;
+			frameDelay = 7;
 			maxFrame = 4;
 			frameWidth = 16;
 			frameHeight = 16;
 		}
 		
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{			
 			Gravity();
 			UpdateMovement(entities, map);
@@ -97,10 +98,12 @@ package Entities
 				case STANDING:
 					currAniX = 0;
 					currAniY = 0;
+					frameDelay = 7;
 					break;
 				case RUNNING:
 					currAniX = 0;
 					currAniY = 1;
+					frameDelay = 4;
 					break;
 				case JUMPING:
 					currAniX = 0;

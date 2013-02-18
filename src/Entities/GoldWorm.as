@@ -3,6 +3,7 @@ package Entities
 	import Entities.Avatar;
 	import Entities.Parents.GameMover;
 	import LoaderManagers.SoundManager;
+	import flash.utils.*;
 	
 	public class GoldWorm extends GameMover
 	{
@@ -38,7 +39,7 @@ package Entities
 			twinkle = 5+Math.floor(Math.random()*10);
 		}
 		
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{
 			if (delete_me) return;
 			

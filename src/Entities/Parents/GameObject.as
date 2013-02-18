@@ -1,9 +1,7 @@
 package Entities.Parents 
 {
-	/**
-	 * ...
-	 * @author Jake Trower
-	 */
+	import flash.utils.*;
+	 
 	public class GameObject 
 	{
 		public var x:Number;
@@ -34,7 +32,7 @@ package Entities.Parents
 			isDisposable = false;
 		}
 		
-		public function Update(entities:Array, map:Array):void
+		public function Update(entities:Array, map:Dictionary):void
 		{
 		}
 		

@@ -8,6 +8,7 @@ package Entities
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
+	import flash.utils.*;
 
 	public class GoldTwinkle extends GameSprite
 	{
@@ -29,7 +30,7 @@ package Entities
 			frameHeight = 3;
 		}
 
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{		
 			frameCount +=  Global.CURR_PHYSICS_SPEED;
 			if (frameCount >= frameDelay)

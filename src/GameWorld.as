@@ -1,4 +1,4 @@
-package Areas.Parents 
+package  
 {
 	import Entities.Avatar;
 	import Entities.Tile;
@@ -13,96 +13,46 @@ package Areas.Parents
 	import flash.geom.ColorTransform;
 	import flash.utils.*;
 	
-	public class Room 
+	public class GameWorld
 	{
 		public var L_bitmap:Bitmap;
 		public var LevelRenderer:BitmapData;
 		
 		public var width:int;
 		public var height:int;
-		public var room_row:int;
-		public var room_column:int;
+		public var baseX:int;
 		
-		[Embed(source = '../../resources/images/tileset.png')]
+		[Embed(source = 'resources/images/tileset.png')]
 		protected var tile_set:Class;
 		
-		public var map:Array;
+		public var map:Dictionary;
 		public var entities:Array;
 		public var playerIndex:int = -1;
 		public var pInput:PlayerInputManager;
 		
-		public function Room(width:int, height:int, room_column:int, room_row:int)
+		public function GameWorld(width:int, height:int)
 		{
 			LevelRenderer = new BitmapData(width, height, false, 0x000000);
 			L_bitmap = new Bitmap(LevelRenderer);
 			this.width = width;
 			this.height = height;
-			this.room_row = room_row;
-			this.room_column = room_column;
 			
-			map = [];
-			for (var i:int = 0; i < height/16; i++){
-				var row:Array = [];
-				for (var j:int = 0; j < width/16; j++){
-					if (i == height/16-1 || i == 0)
-						row.push(new Tile(j*16, i*16, 1, 0, true));
-					else{
-						row.push(new Tile(j*16, i*16, 0, 0));
-					}
-				}
-				map.push(row);
-			}
+			map = new Dictionary();
+			MapGenerator.GenerateField(map, 240, height, 0);
+			baseX = 0;
 			
 			entities = [];
-			entities.push(new Avatar(32, height-33, 1));
+			entities.push(new Avatar(64, height-125, 1));
 			playerIndex = entities.length-1;
 			pInput = new PlayerInputManager();
-		}
-		
-		public function EnterRoom():void
-		{
-			SoundManager.getInstance().stopAllAmbientSounds();
-			if (Game.roomRow == room_row && Game.roomColumn == room_column) return;
-			var oldRoom:Room = Game.roomArray[Game.roomColumn][Game.roomRow];
-			var oldEntities:Array = oldRoom.entities;
 			
-			pInput = oldRoom.pInput;
-			for (var i:int = 0; i < entities.length; i++){
-				if (entities[i] is Avatar){
-					playerIndex = i;
-					for (var j:int = oldEntities.length-1; j >= 0; j--){
-						if (oldEntities[j] is Avatar){
-							var newX:Number, newY:Number;
-							if (oldRoom.room_row > room_row)
-								newX = width-32;
-							else if (oldRoom.room_row < room_row) 
-								newX = 16;
-							else newX = oldEntities[j].x;
-							newY = oldEntities[j].y - 
-								((room_column - oldRoom.room_column) * 240);
-							if (oldRoom.room_column > room_column)
-								newY -= 16;
-							else if (oldRoom.room_column < room_column) 
-								newY += 16;
-							
-							entities[i].facing = oldEntities[j].facing;
-							entities[i].vel = oldEntities[j].vel;
-							entities[i].x = newX;
-							entities[i].y = newY;
-							UpdateView(entities[i]);
-						}else if (oldEntities[j].isDisposable){
-							oldEntities.splice(j, 1);
-						}
-					}
-					break;
-				}
-			}
+			CreateScaleArray(12, Global.DORIAN_MODE, 12, 48);
 		}
 		
 		public function Render():void
 		{
 			LevelRenderer.lock();
-			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), 0x000000);
+			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), 0xFFFFFF);
 			
 			var i:int, j:int;
 			var tile_sheet:Bitmap = new tile_set();
@@ -112,18 +62,10 @@ package Areas.Parents
 				if (entities[i] is Avatar) playerIndex = i;
 				else entities[i].Render(LevelRenderer);
 			}
-			for (i = 0; i < map.length; i++){
-				for (j = 0; j < map[i].length; j++){
-					if (map[i][j].solid) DrawMapPiece(map[i][j], tile_sheet);
-					else if (map[i][j].tileset_x != 0 || map[i][j].tileset_y != 0)
-						foreground.push(map[i][j]);
-				}
-			}if (playerIndex >= 0)
-				entities[playerIndex].Render(LevelRenderer);
-			for (i = 0; i < foreground.length; i++){
-				DrawMapPiece(foreground[i], tile_sheet);
-			}
-			
+			for each (var tile:Tile in map) {
+				if (tile.solid) DrawMapPiece(tile, tile_sheet);
+			}if (playerIndex >= 0) entities[playerIndex].Render(LevelRenderer);
+
 			var matrix:Matrix = new Matrix();
 			matrix.translate(L_bitmap.x, L_bitmap.y);
 			matrix.scale(Global.zoom, Global.zoom);
@@ -157,9 +99,28 @@ package Areas.Parents
 				}
 			}
 			
-			if (playerIndex >= 0){ 
-				UpdateRoomIndex(entities[playerIndex]);
+			if (playerIndex >= 0){
+				UpdateMap(entities[playerIndex]);
 				UpdateView(entities[playerIndex]);
+			}
+		}
+		
+		public function UpdateMap(avatar:Avatar):void
+		{
+			var avirb:Number = avatar.x+avatar.rb+avatar.vel.x;
+			var avilb:Number = avatar.x+avatar.lb+avatar.vel.x;
+			var avitb:Number = avatar.y+avatar.tb-32;
+			var avibb:Number = avatar.y+avatar.bb+16;
+			if (!avatar.on_ground) avibb+=16;
+			
+			if (avatar.facing == Global.RIGHT && avirb > baseX+112){
+				trace("RIGHT!");
+				MapGenerator.GenerateField(map, 240, height, baseX+240);
+				baseX+=240;
+			}else if (avatar.facing == Global.LEFT && avilb < baseX-112){
+				trace("LEFT!");
+				MapGenerator.GenerateField(map, 240, height, baseX-464);
+				baseX-=240;
 			}
 		}
 		
@@ -202,21 +163,6 @@ package Areas.Parents
 			if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
 				L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
 			if (L_bitmap.y > 0) L_bitmap.y = 0;
-		}
-		
-		public function UpdateRoomIndex(avatar:Avatar):void
-		{
-			var roomRow:int = Game.roomRow;
-			var roomColumn:int = Game.roomColumn;
-			if (avatar.x < 0) roomRow--;
-			else if (avatar.x+16 > width) roomRow++;
-			else if (avatar.y < 0) roomColumn--;
-			else if (avatar.y+16 > height) roomColumn++;
-			
-			if (roomRow != Game.roomRow || roomColumn != Game.roomColumn)
-				Game.roomArray[roomColumn][roomRow].EnterRoom();
-			Game.roomRow = roomRow;
-			Game.roomColumn = roomColumn;
 		}
 		
 		public function CreateScaleArray(root:int, mode:Array, top:int, bottom:int):void

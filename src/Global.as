@@ -8,7 +8,7 @@ package
 		
 		public static const DELAY_AMOUNT:Number = 8;
 		public static var CURR_PHYSICS_SPEED:Number = 1;
-		public static var MAX_WINGFLAPS:int = 10;
+		public static var MAX_WINGFLAPS:int = 8;
 		
 		public static var PNOTE_OFFSET:int;
 		public static var ALL_PIANO_NOTE_STRINGS:Array;

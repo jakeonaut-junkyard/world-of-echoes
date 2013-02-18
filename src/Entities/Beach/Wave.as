@@ -1,6 +1,7 @@
 package Entities.Beach 
 {
 	import Entities.Parents.GameSprite;
+	import flash.utils.*;
 	
 	public class Wave extends GameSprite
 	{
@@ -20,7 +21,7 @@ package Entities.Beach
 			visible = true;
 		}		
 		
-		override public function Update(entities:Array, map:Array):void
+		override public function Update(entities:Array, map:Dictionary):void
 		{		
 			if (currFrame == 2 || currFrame == 5) frameDelay = 12;
 			else if (currFrame == 0 || currFrame == 4) frameDelay = 2;
