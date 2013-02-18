@@ -46,5 +46,37 @@ package
 				}
 			}
 		}
+		
+		public static function ShiftChunks(map:Dictionary, width:int, height:int, baseX:int, baseY:int, xShft:int, yShft:int):void
+		{
+			for (var i:int = (baseY+height)/16-1; i >= baseY/16; i--){
+				for (var j:int = (baseX+width)/16-1; j >= baseX/16 ; j--){
+					var normString:String = "y"+i.toString()+"x"+j.toString();
+					var newString:String = "y"+(i+(yShft/16)).toString()+"x"+(j+(xShft/16)).toString();
+					if (map[normString] != null){
+						map[newString] = map[normString];
+						map[newString].x += xShft;
+						map[newString].y += yShft;
+						delete map[normString];
+					}
+				}
+			}
+		}
+		
+		public static function DeleteChunk(map:Dictionary, width:int, height:int, baseX:int):Boolean
+		{
+			var returnVal:Boolean = false;
+			var baseY:int = 0;
+			for (var i:int = (baseY+height)/16-1; i >= baseY/16; i--){
+				for (var j:int = baseX/16; j < (baseX+width)/16; j++){
+					var normString:String = "y"+i.toString()+"x"+j.toString();
+					if (map[normString] != null) returnVal = true;
+					else break;
+					delete map[normString];
+				}
+			}
+			trace("DELETED: "+returnVal);
+			return returnVal;
+		}
 	}
 }

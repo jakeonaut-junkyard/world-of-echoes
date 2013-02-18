@@ -38,7 +38,7 @@ package
 			pianoSfxLoader = new PianoSoundLoader();
 			_noteArray = [];
 			
-			world = new GameWorld(640, 240);
+			world = new GameWorld(720, 240);
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();

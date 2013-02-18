@@ -38,11 +38,11 @@ package
 			this.height = height;
 			
 			map = new Dictionary();
-			MapGenerator.GenerateField(map, 240, height, 0);
-			baseX = 0;
+			MapGenerator.GenerateField(map, width, height, 0);
+			baseX = 240;
 			
 			entities = [];
-			entities.push(new Avatar(64, height-125, 1));
+			entities.push(new Avatar(240, height-125, 1));
 			playerIndex = entities.length-1;
 			pInput = new PlayerInputManager();
 			
@@ -53,6 +53,8 @@ package
 		{
 			LevelRenderer.lock();
 			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), 0xFFFFFF);
+			LevelRenderer.fillRect(new Rectangle(baseX+240, 0, 1, LevelRenderer.height), 0x0000FF);
+			LevelRenderer.fillRect(new Rectangle(baseX, 0, 1, LevelRenderer.height), 0xFF0000);
 			
 			var i:int, j:int;
 			var tile_sheet:Bitmap = new tile_set();
@@ -113,14 +115,40 @@ package
 			var avibb:Number = avatar.y+avatar.bb+16;
 			if (!avatar.on_ground) avibb+=16;
 			
-			if (avatar.facing == Global.RIGHT && avirb > baseX+112){
+			if (avirb > baseX+240 && avatar.facing==Global.RIGHT){
 				trace("RIGHT!");
+				MapGenerator.DeleteChunk(map, 240, height, baseX-240);
+				MapGenerator.ShiftChunks(map, 240, height, baseX, 0, -240, 0);
+				MapGenerator.ShiftChunks(map, 240, height, baseX+240, 0, -240, 0);
 				MapGenerator.GenerateField(map, 240, height, baseX+240);
-				baseX+=240;
-			}else if (avatar.facing == Global.LEFT && avilb < baseX-112){
+				ShiftEntities(-240, 0);
+				L_bitmap.x+=240;
+				trace("KEYS:"+countKeys(map));
+			}else if (avilb < baseX && avatar.facing==Global.LEFT){
 				trace("LEFT!");
-				MapGenerator.GenerateField(map, 240, height, baseX-464);
-				baseX-=240;
+				trace("KEYS:"+countKeys(map));
+				MapGenerator.DeleteChunk(map, 240, height, baseX+240);
+				MapGenerator.ShiftChunks(map, 480, height, baseX-240, 0, 240, 0);
+				MapGenerator.GenerateField(map, 240, height, baseX-240);
+				ShiftEntities(240, 0);
+				L_bitmap.x-=240;
+			}
+		}
+		
+		public static function countKeys(myDictionary:Dictionary):int 
+		{
+			var n:int = 0;
+			for (var key:* in myDictionary) {
+				n++;
+			}
+			return n;
+		}
+		
+		public function ShiftEntities(xShft:int, yShft:int):void
+		{
+			for (var i:int = 0; i < entities.length; i++){
+				entities[i].x+=xShft;
+				entities[i].y+=yShft;
 			}
 		}
 		
