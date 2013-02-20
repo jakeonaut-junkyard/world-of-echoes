@@ -29,7 +29,7 @@ package Entities
 		
 		public var trackId:int;
 		
-		[Embed(source = "../resources/images/avatar_sheet.png")]
+		[Embed(source = "../resources/images/babyBird_sheet.png")]
 		private var my_sprite_sheet:Class;
 		
 		public function Avatar(x:int, y:int, trackId:int) 
@@ -50,7 +50,7 @@ package Entities
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;
 			frameDelay = 7;
-			maxFrame = 4;
+			maxFrame = 3;
 			frameWidth = 16;
 			frameHeight = 16;
 		}

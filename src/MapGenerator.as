@@ -10,9 +10,14 @@ package
 		{
 		}
 		
-		public static function GenerateField(map:Dictionary, width:int, height:int, baseX:int):void
+		public static function GenerateMap(terrain:int, map:Dictionary, width:int, height:int, baseX:int):void
 		{
-			var baseY:int = 0;
+			if (terrain == Global.FOREST_FIELD_TERRAIN)
+				GenerateForest(map, width, height, baseX, 0);
+		}
+		
+		public static function GenerateForest(map:Dictionary, width:int, height:int, baseX:int, baseY:int):void
+		{
 			var rand:int = -1;
 			var solid:Boolean = false;
 			
@@ -75,7 +80,6 @@ package
 					delete map[normString];
 				}
 			}
-			trace("DELETED: "+returnVal);
 			return returnVal;
 		}
 	}

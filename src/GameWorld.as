@@ -1,7 +1,7 @@
 package  
 {
-	import Entities.Avatar;
-	import Entities.Tile;
+	import Entities.*;
+	import Entities.Field.Tree;
 	import LoaderManagers.PlayerInputManager;
 	import LoaderManagers.SoundManager;
 	import flash.display.Bitmap;
@@ -25,10 +25,11 @@ package
 		[Embed(source = 'resources/images/tileset.png')]
 		protected var tile_set:Class;
 		
+		public var terrain:int;
 		public var map:Dictionary;
 		public var entities:Array;
 		public var playerIndex:int = -1;
-		public var pInput:PlayerInputManager;
+		public static var pInput:PlayerInputManager;
 		
 		public function GameWorld(width:int, height:int)
 		{
@@ -37,16 +38,18 @@ package
 			this.width = width;
 			this.height = height;
 			
+			terrain = Global.FOREST_FIELD_TERRAIN;
 			map = new Dictionary();
-			MapGenerator.GenerateField(map, width, height, 0);
+			MapGenerator.GenerateMap(terrain, map, width, height, 0);
 			baseX = 240;
 			
 			entities = [];
 			entities.push(new Avatar(240, height-125, 1));
 			playerIndex = entities.length-1;
 			pInput = new PlayerInputManager();
+			EntitySpawner.SpawnEntities(terrain, entities, map, width, height, 0);
 			
-			CreateScaleArray(12, Global.DORIAN_MODE, 12, 48);
+			CreateScaleArray(12, Global.DORIAN_MODE, 19, 48);
 		}
 		
 		public function Render():void
@@ -120,17 +123,19 @@ package
 				MapGenerator.DeleteChunk(map, 240, height, baseX-240);
 				MapGenerator.ShiftChunks(map, 240, height, baseX, 0, -240, 0);
 				MapGenerator.ShiftChunks(map, 240, height, baseX+240, 0, -240, 0);
-				MapGenerator.GenerateField(map, 240, height, baseX+240);
+				MapGenerator.GenerateMap(terrain, map, 240, height, baseX+240);
+				EntitySpawner.Despawn(avatar, entities);
 				ShiftEntities(-240, 0);
+				EntitySpawner.SpawnEntities(terrain, entities, map, 240, height, baseX+240);
 				L_bitmap.x+=240;
-				trace("KEYS:"+countKeys(map));
 			}else if (avilb < baseX && avatar.facing==Global.LEFT){
 				trace("LEFT!");
-				trace("KEYS:"+countKeys(map));
 				MapGenerator.DeleteChunk(map, 240, height, baseX+240);
 				MapGenerator.ShiftChunks(map, 480, height, baseX-240, 0, 240, 0);
-				MapGenerator.GenerateField(map, 240, height, baseX-240);
+				MapGenerator.GenerateMap(terrain, map, 240, height, baseX-240);
+				EntitySpawner.Despawn(avatar, entities);
 				ShiftEntities(240, 0);
+				EntitySpawner.SpawnEntities(terrain, entities, map, 240, height, baseX-240);
 				L_bitmap.x-=240;
 			}
 		}
@@ -197,21 +202,30 @@ package
 		{
 			//Create Diatonic Cmajor scale
 			Game._noteArray = [];
+			Game._SiONArray = [];
 
-			for (var i:int = 0; i < Global.ALL_PIANO_NOTE_STRINGS.length; i++)
+			var i:int, j:int;
+			for (i = 0; i < Global.ALL_PIANO_NOTE_STRINGS.length; i++)
 			{
 				var n:int = i + Global.PNOTE_OFFSET;
 				if (n < top || n > bottom) continue;
-				for (var j:int = 0; j < 6; j++)
+				for (j = 0; j < 6; j++)
 				{
-					if ((n-Math.abs(mode[j]+root-12))%12==0)
-					{
+					if ((n-Math.abs(mode[j]+root-12))%12==0){
 						if (n > top && n < bottom)
 							Game._noteArray.push(Global.ALL_PIANO_NOTE_STRINGS[i]);
 						break;
 					}
 				}
+			}for (i = top; i < bottom; i++){
+				for (j = 0; j < 6; j++)
+				{
+					if ((i-Math.abs(mode[j]+root-12))%12==0){
+						Game._SiONArray.push(i);
+					}
+				}
 			}
+			trace(Game._SiONArray);
 		}
 	}
 }

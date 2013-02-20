@@ -17,19 +17,29 @@ package Entities
 
 		[Embed(source = "../resources/images/circle_burst.png")]
 		private var my_sprite_sheet:Class;
+		[Embed(source = "../resources/images/small_circle_burst.png")]
+		private var small_sprite_sheet:Class;
 
-		public function Burst(x:int, y:int) 
+		public function Burst(x:int, y:int, small:Boolean = false) 
 		{
 			super(x, y, 0, 0, 48, 48);
 			isDisposable = true;
 
 			//animation management creation
-			sprite_sheet = my_sprite_sheet;
+			if (small){
+				sprite_sheet = small_sprite_sheet;
+				frameWidth = 32;
+				frameHeight = 32;
+			}
+			else{ 
+				sprite_sheet = my_sprite_sheet;
+				frameWidth = 48;
+				frameHeight = 48;
+			}
+			
 			myAlpha = 1;
 			frameDelay = 1;
 			maxFrame = 15;
-			frameWidth = 48;
-			frameHeight = 48;
 
 			color = new ColorTransform();
 			color.redMultiplier = Math.floor(Math.random()*3);

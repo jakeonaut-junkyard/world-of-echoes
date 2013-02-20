@@ -2,7 +2,7 @@ package
 {
 	public class Global 
 	{	
-		public static var zoom:Number = 3;
+		public static var zoom:Number = 1;
 		public static var stageWidth:int = 640/zoom;
 		public static var stageHeight:int = 480/zoom;
 		
@@ -12,6 +12,9 @@ package
 		
 		public static var PNOTE_OFFSET:int;
 		public static var ALL_PIANO_NOTE_STRINGS:Array;
+		
+		//TERRAINS
+		public static const FOREST_FIELD_TERRAIN:int = 0;
 		
 		//mouse input stuff
 		public static var mousePressed:Boolean;
@@ -40,6 +43,7 @@ package
 		public static const K_KEY:int = 75;
 		public static const L_KEY:int = 76;
 		public static const X_KEY:int = 88;
+		public static const Z_KEY:int = 90;
 		public static const SEMICOLON:int = 186;
 		public static const Q_KEY:int = 81;
 		public static const W_KEY:int = 87;

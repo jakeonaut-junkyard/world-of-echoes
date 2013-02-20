@@ -9,11 +9,11 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
-	//import org.si.sion.SiONDriver;
+	import org.si.sion.SiONDriver;
 	
 	public class Game
 	{
-		//public static var _driver:SiONDriver;
+		public static var _driver:SiONDriver;
 		public var gameBitmap:Bitmap;
 		public static var GameRenderer:BitmapData;
 		
@@ -23,12 +23,13 @@ package
 		public var entitySfxLoader:EntitySoundLoader;
 		public var pianoSfxLoader:PianoSoundLoader;
 		public static var _noteArray:Array;
+		public static var _SiONArray:Array;
 		
 		public function Game()
 		{
 			trace("Game created!");
-			//_driver = new SiONDriver();
-			//_driver.play(null, false);
+			_driver = new SiONDriver();
+			_driver.play(null, false);
 			
 			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom+1, Global.stageHeight*Global.zoom+1, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
@@ -37,6 +38,7 @@ package
 			entitySfxLoader = new EntitySoundLoader();
 			pianoSfxLoader = new PianoSoundLoader();
 			_noteArray = [];
+			_SiONArray = [];
 			
 			world = new GameWorld(720, 240);
 			

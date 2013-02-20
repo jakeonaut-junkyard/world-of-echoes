@@ -25,6 +25,8 @@ package LoaderManagers
 		
 		public function PlayerInput(entities:Array, pIndex:int):void
 		{
+			if (Global.CheckKeyPressed(Global.Z_KEY))
+				SoundManager.getInstance().playSfx("InsectSound", 0, 1);
 			playedNote = false;
 			PlayerJump(entities[pIndex], entities);
 			PlayerRun(entities[pIndex]);

@@ -42,6 +42,10 @@ package Entities.Parents
 			var solids:Array = [];
 			for (i = 0; i < entities.length; i++){
 				if (entities[i].solid) solids.push(entities[i]);
+				else if (entities[i].topDownSolid){
+					if (y+bb < entities[i].y+entities[i].tb)
+						solids.push(entities[i]);
+				}
 			}
 			for each (var tile:GameObject in map){
 				if (tile.solid) solids.push(tile);

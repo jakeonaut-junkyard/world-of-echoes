@@ -13,6 +13,7 @@ package Entities.Parents
 		public var rb:int;
 		public var bb:int;
 		public var solid:Boolean;
+		public var topDownSolid:Boolean;
 		public var delete_me:Boolean;
 		public var isDisposable:Boolean;
 		
@@ -28,6 +29,7 @@ package Entities.Parents
 			
 			//assume the object is solid at first (this will be the class used by room borders
 			solid = true;
+			topDownSolid = false;
 			delete_me = false;
 			isDisposable = false;
 		}
