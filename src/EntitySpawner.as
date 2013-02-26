@@ -1,8 +1,10 @@
 package  
 {
-	import Entities.*;
-	import Entities.Field.*;
+	import Entities.Avatar;
+	import Entities.Followers.*;
+	import Entities.Forest.*;
 	import Entities.Beach.*;
+	import Entities.Parents.PlayerFollower;
 	import flash.utils.*;
 	
 	public class EntitySpawner 
@@ -12,53 +14,88 @@ package
 		{	
 		}
 		
-		public static function SpawnEntities(terrain:int, entities:Array, map:Dictionary, width:int, height:int, baseX:int):void
+		public static function SpawnEntities(terrain:int, entities:Array, map:Dictionary, width:int, height:int, baseX:int, baseY:int):void
 		{
 			if (terrain == Global.FOREST_FIELD_TERRAIN)
-				SpawnEntitiesForest(entities, map, width, height, baseX, 0);
+				SpawnEntitiesForest(entities, map, width, height, baseX, baseY);
 		}
 		
 		public static function SpawnEntitiesForest(entities:Array, map:Dictionary, width:int, height:int, baseX:int, baseY:int):void
 		{
 			var rand:int = -1;
-			var numEntities:int = 0;
 			var columns:Array = [];
 			
-			var spawnDeerDog:Boolean = true;
+			var spawnFollower:Boolean = true;
+			var followers:Array = [];
+			followers.push(new DeerDog(0, 0));
+			followers.push(new RedMonkey(0, 0));
+			followers.push(new HornBird(0, 0));
 			
 			var i:int;
+			var l:int;
 			for (i = 0; i < entities.length; i++){
-				if (entities[i] is DeerDog) spawnDeerDog = false;
+				if (entities[i] is PlayerFollower && !entities[i].followingPlayer) spawnFollower = false;
+				else{
+					if (entities[i] is RedMonkey){
+						for (l = followers.length-1; l >= 0; l--){
+							if (followers[l] is RedMonkey){
+								followers.splice(l, 1);
+								break;
+							}
+						}
+					}else if (entities[i] is DeerDog){
+						for (l = followers.length-1; l >= 0; l--){
+							if (followers[l] is DeerDog){
+								followers.splice(l, 1);
+								break;
+							}
+						}
+					}else if (entities[i] is HornBird){
+						for (l = followers.length-1; l >= 0; l--){
+							if (followers[l] is HornBird){
+								followers.splice(l, 1);
+								break;
+							}
+						}
+					}
+				}
 			}
-			for (i = baseY/16; i < (baseY+height)/16; i++){
+			for (i = baseY/16; i <= (baseY+height)/16; i++){
 				var skipABeat:Boolean;
 				for (var j:int = baseX/16; j < (baseX+width)/16; j++){					
-					var shouldIBreak:Boolean = false;
+					var shouldIContinue:Boolean = false;
 					for (var k:int = 0; k < columns.length; k++){
 						if (columns[k] == j){
-							shouldIBreak = true;
+							shouldIContinue = true;
 							break;
 						}
-					}if (shouldIBreak) break;
-					if (skipABeat){
-						skipABeat = false;
-						break;
-					}
+					}if (shouldIContinue) continue;
 					
 					var ipu1String:String = "y"+(i).toString()+"x"+j.toString();
-					if (map[ipu1String] != null && map[ipu1String].solid){
-						rand = Math.floor(Math.random()*(numEntities+2));
-						columns.push(j);
+					if (map[ipu1String] != null && map[ipu1String].solid){						
+						rand = Math.floor(Math.random()*4);
 						if (rand <= 0){
-							skipABeat = true;
-							numEntities++;
-							rand = Math.floor(Math.random()*4);
-							if (rand <= 0 && spawnDeerDog){
-								entities.push(new DeerDog(j*16, i*16-16));
-								spawnDeerDog = false;
-							}else{
-								entities.push(new Tree(j*16-16, i*16-80));
-							}
+							if (!spawnFollower || followers.length <= 0) break;
+							spawnFollower = false;
+							rand = Math.floor(Math.random()*followers.length);
+							followers[rand].x = j*16;
+							followers[rand].y = i*16-followers[rand].bb;
+							entities.push(followers[rand]);
+							followers.splice(rand, 1);
+						}
+						
+						if (true){
+							columns.push(j);
+							columns.push(j+1);
+							columns.push(j+2);
+							var newTree:Tree = new Tree(j*16-16, i*16-80);
+							if (Math.floor(Math.random()*3) <= 0)
+								entities.push(new Cicada(newTree.x+Math.floor(Math.random()*8)+18, newTree.y+Math.floor(Math.random()*20)+30, newTree.currAniX));
+							if (Math.floor(Math.random()*3) <= 0)
+								entities.push(new Cicada(newTree.x+Math.floor(Math.random()*8)+18, newTree.y+Math.floor(Math.random()*10)+50, newTree.currAniX));
+							if (Math.floor(Math.random()*3) <= 0)
+								entities.push(new Songbird(newTree.x+8, newTree.y-9, 0));
+							entities.push(newTree);
 						}
 					}
 				}
@@ -70,8 +107,8 @@ package
 			for (var i:int = entities.length-1; i >= 0; i--){
 				if (entities[i].x > avatar.x+avatar.rb+240 ||
 					entities[i].x+entities[i].rb < avatar.x-240 ||
-					entities[i].y > avatar.y+avatar.bb+240 ||
-					entities[i].y+entities[i].bb < avatar.y-240){
+					entities[i].y > avatar.y+avatar.bb+160 ||
+					entities[i].y+entities[i].bb < avatar.y-160){
 						entities.splice(i, 1);
 				}
 			}

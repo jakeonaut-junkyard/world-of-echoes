@@ -42,7 +42,7 @@ package Entities.Parents
 			var solids:Array = [];
 			for (i = 0; i < entities.length; i++){
 				if (entities[i].solid) solids.push(entities[i]);
-				else if (entities[i].topDownSolid){
+				else if (entities[i].topDownSolid && !Global.CheckKeyDown(Global.DOWN)){
 					if (y+bb < entities[i].y+entities[i].tb)
 						solids.push(entities[i]);
 				}

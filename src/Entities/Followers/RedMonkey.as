@@ -1,6 +1,8 @@
-package Entities 
+package Entities.Followers 
 {
-	import Entities.Parents.GameFaller;
+	import Entities.Avatar;
+	import Entities.Burst;
+	import Entities.Parents.PlayerFollower;
 	import LoaderManagers.VoiceManager;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -11,49 +13,29 @@ package Entities
 	import flash.geom.Point;
 	import flash.utils.*;
 	
-	public class DeerDog extends GameFaller
-	{
-		//movement members
-		public var top_xspeed:Number;
-		public var jump_vel:Number;
+	public class RedMonkey extends PlayerFollower
+	{		
+		public static const REDMONKEY_TRACKID:int = 2;
+		public var breather:int;
+		public var breatherMax:int;
+		public var baseY:Number;
 		
-		public var followingPlayer:Boolean;
-		public var wanderTimer:int;
-		public var runX:int;
-		public var playedNote:Boolean;
-		
-		public var move_state:int;
-		public var prev_move_state:int;
-		public const STANDING:int = 0;
-		public const RUNNING:int = 1;
-		public const JUMPING:int = 2;
-		public const FALLING:int = 3;
-		
-		private var _voice:VoiceManager;
-		private var noteQueue:Array;
-		
-		[Embed(source = "../resources/images/deerDog_sheet.png")]
+		[Embed(source = "../../resources/images/redMonkey_sheet.png")]
 		private var my_sprite_sheet:Class;
 		
-		public function DeerDog(x:int, y:int) 
+		public function RedMonkey(x:int, y:int) 
 		{
 			super(x, y, 4, 6, 12, 15);
-			top_xspeed = 2.0;
-			jump_vel = 8.50;
-			terminal_vel = 6.5;
-			grav_acc = 1.0;
-
-			playedNote = false;
-			wanderTimer = 0;
-			runX = 0;
-			followingPlayer = false;
+			breather = 0;
+			breatherMax = 15;
 			facing = Global.RIGHT;
-			move_state = STANDING;
-			prev_move_state = move_state;
+			baseY = y;
 			
-			_voice = new VoiceManager();
-			_voice.SetVoice(9, 1);
-			noteQueue = [];
+			//_voice.SetVoice(2, 17);
+			//_voice.SetVoice(12, 4);
+			//_voice.SetVoice(14, 23);
+			_voice.SetVoice(14, 8);
+			//_voice.SetVoice(3, 17);
 			
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;
@@ -68,33 +50,30 @@ package Entities
 			var i:int;
 			_voice.TranslateNoteArray(Game._SiONArray);
 			if (Global.CheckKeyPressed(Global.Z_KEY) && followingPlayer){
-				followingPlayer = false;
-				noteQueue = [];
-				for (i = 0; i < 2; i++){
-					noteQueue.push(i*10);
-				}noteQueue.push(3);
+				StopFollowingPlayer();
 			}
 			
 			for (i = noteQueue.length-1; i >= 0; i--){
 				noteQueue[i]--;
-				if (noteQueue[i] < 0){
+				if (noteQueue[i] <= 0){
 					var rand:int = Math.floor(Math.random()*_voice.noteArray.length);
-					Game._driver.noteOff(_voice.noteArray[rand]);
-					Game._driver.noteOn(_voice.noteArray[rand], _voice.voice, 1);
+					Game._driver.noteOff(_voice.noteArray[rand], REDMONKEY_TRACKID);
+					Game._driver.noteOn(_voice.noteArray[rand], _voice.voice, 1, 0, 0, REDMONKEY_TRACKID);
 					entities.push(new Burst(x-8, y-10, true));
 					noteQueue.splice(i, 1);
-					if (noteQueue.length <= 0) playedNote = false;
 				}
 			}
 			for (i = 0; i < entities.length; i++){
 				if (entities[i] is Avatar){
+					baseY = entities[i].y;
 					if (followingPlayer) FollowPlayerRun(entities[i]);
-					else WanderAndGetTagged(entities[i]);
+					else WanderAndGetTagged(entities[i], entities);
 					break;
 				}
 			}
 			Gravity();
 			UpdateMovement(entities, map);
+			PlayRhythms();
 			FollowPlayerJump();
 			
 			if (!on_ground && hit_head){
@@ -128,59 +107,35 @@ package Entities
 			else if (avatar.x+avatar.rb < x) facing = Global.LEFT;
 		}
 		
-		public function WanderAndGetTagged(avatar:Avatar):void
-		{
-			if (CheckRectIntersect(avatar, x+lb, y+tb, x+rb, y+bb)){
-				followingPlayer = true;
-				noteQueue = [];
-				for (var i:int = 0; i < 4; i++){
-					noteQueue.push(i*3);
-				}
-			}
-				
-			wanderTimer--;
-			if (wanderTimer <= 0){
-				wanderTimer = Math.floor(Math.random()*25)+20;
-				var rand:int = Math.floor(Math.random()*3);
-				if (rand > 0)
-					runX = Math.floor(Math.random()*3)-1;
-				else runX = 0;
-			}
-			if (runX != 0) vel.x = runX*(top_xspeed/2);
-			else vel.x = 0;
-			
-			if (vel.x == 0) move_state = STANDING;
-			else move_state = RUNNING;
-		}
-		
 		public function FollowPlayerJump():void
 		{
-			if (runX != 0 && vel.x == 0 || 
-					(GameWorld.pInput.playedNote && followingPlayer)){
-				
-				if (on_ground || (GameWorld.pInput.playedNote && followingPlayer)
-						|| (!playedNote && runX != 0 && vel.x == 0)){
-					playedNote = true;
-					if (noteQueue.length <= 0){
-						noteQueue.push(0);
-						noteQueue.push(5);
-					}else{
-						var base:int = noteQueue[0];
-						noteQueue = [];
-						for (var i:int = 0; i < 2; i++){
-							noteQueue.push(base+5*i);
-						}
-					}
+			if (runX != 0 && vel.x == 0 || (GameWorld.pInput.playedNote && followingPlayer)){
+				if (GameWorld.pInput.playedNote && followingPlayer){
+					breather = breatherMax;
+					noteQueue = [];
+					noteQueue.push(0);
+					noteQueue.push(3*breatherMax/4);
 				}
-
 				move_state = JUMPING;
 				if (on_ground){
 					on_ground = false;
-					vel.y = -jump_vel;
+					if (y > baseY-32 || !followingPlayer) vel.y = -jump_vel;
 				}else{
-					vel.y = -jump_vel/2;
+					if (y > baseY-32 || !followingPlayer) vel.y = -jump_vel/1.5;
 				}
 			}
+		}
+		
+		public function PlayRhythms():void
+		{
+			if (runX != 0){
+				breather--;
+				if (breather <= 0 && noteQueue.length <= 0){
+					breather = breatherMax;
+					noteQueue = [];
+					noteQueue.push(0);
+				}
+			}else breather = 0;
 		}
 		
 		override public function UpdateAnimation():void

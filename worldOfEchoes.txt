@@ -1,33 +1,23 @@
-http://www.hymnsite.com/how_to/midi2wav.html
+-http://wonderfl.net/c/f5eX
+-Mononoke forest spirits and mushroom nausicaa spores insects
 
 WORLD OF ECHOES REVISED FEBRUARY 2013!!!
-1. You're a little egg bird that can walk around and flap their wings to fly. Only have a limited number of wing flaps which can be increased by collecting little bugs, which increases your maximum vertical limit.
-	-Every wing flap = a note on a scale of the world. Walking = pitter patter percussiony
-	-taking last wing flap = chord
--Instruments/colors hidden around various levels. Switch between them!!
--Animation squishsquash and pause (very briefly) upon landing impact to make character feel weighty. Visual depth as well with black outline and two colors (pokemonhamtaro)? 
--Each world has part of a sung melody in its mode hiding with the instrument you find. Start off with one jump. Collect little glowing rolling rock shinies to increase number of jumps (they play an "aah" multitonal sound. Make world about half/fourth as big as you initially thought. Activate warp statues to warp between them. Don't stress out. Bass notes?
-
-TODO::
-1. Create levels. Hide bugs (by which I mean insects).
-	-SOME WAY TO TELEPORT BETWEEN AREAS???
-2. Add environmental objects (ambience audiovisually) that fit the theme of the area you're in
-	i. Little animals that hop away from you (grasshoppers etc.) and follow you a bit(doggies/birdy/fishy)
-3. Compose bass lines/backgrounds behind the ambience to fill each room.
-	-MAKE AMBIENT NOISES AND BASSLINES CROSSFADE WHEN CHANGING ROOMS
-4. Create sprites/etc.
+1. flOw type progression:: spawn at the beach, (loops around left to the other side of the island), and in the middle of the forest there are taller trees which you can climb up to a mushroom sporey insect crustacean whale floating place centered with a pulsating rhythmic entity which fades into static when you touch it. 
+	-Implement by keeping track of baseX and baseY terrain and map spawning based on these.
+0. Colors hidden around various levels. Switch between them!! (colors/environment)
+1. Start spawning crickets/bird flocks/seagulls/crows/ambience
+2. Cat Otter who plays a violin scratch when you press X and holds a bow until you release
 	
 ====================================================================================================
 WORLD AREAS::
 
-1. Pentatonic Major Scale Starting Area fluffy forest field
-2. Cave of Silence/footsteps and Leaky Drops (light in the dark)
-3. Full Chromatic Chaotic Practice Area Wastelands
-4. Diatonic Minor Scale
+1. Cave of Silence/footsteps and Leaky Drops (light in the dark)
+2. Full Chromatic Chaotic Practice Area Wastelands
+3. Diatonic Minor Scale
 
 a. Main theme of room:: (p.s. little cats hidden throughout)
 	0. CHAOS ROOM:: Your notes repeat ad infinitum (only keep an array of like 10 notes playing at a time)
-	i. GREEN:: Summer Buggy Treeland Forest (Cicadas, Wind blowing through leaves, Green Japanese Country Forest, Monkeys)
+	i. GREEN:: Summer Buggy Treeland Forest (Cicadas, Wind blowing through leaves, Green Japanese Country Forest, Monkeys, Boars)
 	ii. YELLOW:: Great wheat plains (grasshoppers & swarms of locusts, wheat fields, bison, quails, pebbles frogs deer springhoppers (Days of Heaven) birds migrate overhead amber waves of grain)
 		-0. Marshy Wetland Estuaries (Hippos Catfish cranes bugs baby baboons)
 	iii. ORANGE:: Sandy Orange-Water Beach (Seagulls, waves on shore and crashing, fishies jumping, sand and wet crabbies running around snails) [Cumberland Island]

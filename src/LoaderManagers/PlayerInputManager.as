@@ -5,51 +5,32 @@ package LoaderManagers
 	
 	public class PlayerInputManager 
 	{
-		public var trackId:int;
+		public static const AVATAR_TRACKID:int = 0;
 		public var currWingFlaps:int
 		public var lastNote:String;
 		public var playedNote:Boolean;
 		
-		public var chordPlay:int;
-		public var chordIndex:int;
+		public var _voice:VoiceManager;
 		
 		public function PlayerInputManager() 
 		{
-			trackId = 0;
+			_voice = new VoiceManager();
+			_voice.SetVoice(0, 13);
+			//_voice.SetVoice(2, 6);
+			
 			currWingFlaps = 0;
 			lastNote = "";
 			playedNote = false;
-			chordPlay = 0;
-			chordIndex = 0;
 		}
 		
 		public function PlayerInput(entities:Array, pIndex:int):void
 		{
+			_voice.TranslateNoteArray(Game._SiONArray);
 			if (Global.CheckKeyPressed(Global.Z_KEY))
 				SoundManager.getInstance().playSfx("InsectSound", 0, 1);
 			playedNote = false;
 			PlayerJump(entities[pIndex], entities);
 			PlayerRun(entities[pIndex]);
-			if (chordPlay > 0) PlayChords(entities[pIndex], entities);
-		}
-		
-		private function PlayChords(avatar:Avatar, entities:Array):void
-		{
-			if (chordPlay%2==0){
-				var note:String = Game._noteArray[chordIndex];
-				if (note == lastNote){
-					chordIndex++; 
-					if (chordIndex >= Game._noteArray.length) 
-						chordIndex = 0;
-					note = Game._noteArray[chordIndex];
-				}lastNote = note;
-				
-				entities.push(new Burst(avatar.x-16, avatar.y-8));
-				//SoundManager.getInstance().stopSfx(note);
-				SoundManager.getInstance().playSfx(note, 0, 1);
-				chordIndex++;
-			}
-			chordPlay--;
 		}
 		
 		private function PlayerJump(avatar:Avatar, entities:Array):void
@@ -65,21 +46,10 @@ package LoaderManagers
 					entities.push(new Burst(avatar.x-16, avatar.y-20));
 					currWingFlaps++;
 					
-					var index:int = Math.floor(Math.random()*Game._noteArray.length);
-					var note:String = Game._noteArray[index];
-					if (note == lastNote){
-						index++; 
-						if (index >= Game._noteArray.length) 
-							index = 0;
-						note = Game._noteArray[index];
-					}lastNote = note;
 					playedNote = true;
-					if (currWingFlaps == Global.MAX_WINGFLAPS){
-						chordPlay = 6;
-						chordIndex = index;
-					}else{
-						SoundManager.getInstance().playSfx(note, 0, 1);
-					}
+					var rand:int = Math.floor(Math.random()*_voice.noteArray.length);
+					Game._driver.noteOff(_voice.noteArray[rand], AVATAR_TRACKID);
+					Game._driver.noteOn(_voice.noteArray[rand], _voice.voice, 4, 0, 0, AVATAR_TRACKID);
 				}
 			}
 			if (avatar.hit_head == 0){

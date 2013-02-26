@@ -19,10 +19,7 @@ package
 		
 		public static var world:GameWorld;
 		
-		public var ambientSfxLoader:AmbientSoundLoader;
-		public var entitySfxLoader:EntitySoundLoader;
-		public var pianoSfxLoader:PianoSoundLoader;
-		public static var _noteArray:Array;
+		public var sfxLoader:SoundLoader;
 		public static var _SiONArray:Array;
 		
 		public function Game()
@@ -34,13 +31,10 @@ package
 			GameRenderer = new BitmapData(Global.stageWidth*Global.zoom+1, Global.stageHeight*Global.zoom+1, false, 0x000000);
 			gameBitmap = new Bitmap(GameRenderer);
 			
-			ambientSfxLoader = new AmbientSoundLoader();
-			entitySfxLoader = new EntitySoundLoader();
-			pianoSfxLoader = new PianoSoundLoader();
-			_noteArray = [];
+			sfxLoader = new SoundLoader();
 			_SiONArray = [];
 			
-			world = new GameWorld(720, 240);
+			world = new GameWorld(720, 480);
 			
 			Global.keys_pressed = new Array();
 			Global.keys_down = new Array();

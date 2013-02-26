@@ -2,16 +2,13 @@ package
 {
 	public class Global 
 	{	
-		public static var zoom:Number = 1;
+		public static var zoom:Number = 3;
 		public static var stageWidth:int = 640/zoom;
 		public static var stageHeight:int = 480/zoom;
 		
 		public static const DELAY_AMOUNT:Number = 8;
 		public static var CURR_PHYSICS_SPEED:Number = 1;
 		public static var MAX_WINGFLAPS:int = 8;
-		
-		public static var PNOTE_OFFSET:int;
-		public static var ALL_PIANO_NOTE_STRINGS:Array;
 		
 		//TERRAINS
 		public static const FOREST_FIELD_TERRAIN:int = 0;

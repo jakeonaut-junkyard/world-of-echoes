@@ -11,7 +11,7 @@ package Entities
 	import flash.utils.*;
 	
 	public class Avatar extends GameFaller
-	{
+	{	
 		//movement members
 		public var top_xspeed:Number;
 		public var jump_vel:Number;
@@ -27,12 +27,10 @@ package Entities
 		public const JUMPING:int = 2;
 		public const FALLING:int = 3;
 		
-		public var trackId:int;
-		
 		[Embed(source = "../resources/images/babyBird_sheet.png")]
 		private var my_sprite_sheet:Class;
 		
-		public function Avatar(x:int, y:int, trackId:int) 
+		public function Avatar(x:int, y:int) 
 		{
 			super(x, y, 4, 6, 12, 15);
 			top_xspeed = 2.0;
@@ -44,9 +42,7 @@ package Entities
 			facing = Global.RIGHT;
 			move_state = STANDING;
 			prev_move_state = move_state;
-			
-			this.trackId = trackId;
-			
+					
 			//animation management creation
 			sprite_sheet = my_sprite_sheet;
 			frameDelay = 7;
