@@ -1,4 +1,4 @@
-package Entities.Forest 
+package Entities.Environment 
 {
 	import Entities.Avatar;
 	import Entities.Parents.GameMover;

@@ -15,8 +15,8 @@ package LoaderManagers
 		public function PlayerInputManager() 
 		{
 			_voice = new VoiceManager();
-			_voice.SetVoice(0, 13);
-			//_voice.SetVoice(2, 6);
+			_voice.SetVoice(16, 52);
+			//_voice.SetVoice(0, 13);
 			
 			currWingFlaps = 0;
 			lastNote = "";

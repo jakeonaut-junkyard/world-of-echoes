@@ -1,6 +1,7 @@
 package  
 {
 	import Entities.*;
+	import Entities.Parents.*;
 	import LoaderManagers.EnvironmentManager;
 	import LoaderManagers.PlayerInputManager;
 	import LoaderManagers.SoundManager;
@@ -20,11 +21,11 @@ package
 		
 		public var width:int;
 		public var height:int;
-		public var chunkWidth:int = 240;
-		public var chunkHeight:int = 160;
-		public var baseX:int;
-		public var baseY:int;
-		public static const GROUND_LEVEL:int = 320;
+		public static const C_WIDTH:int = 240;
+		public static const C_HEIGHT:int = 160;
+		public static var baseX:int;
+		public static var baseY:int;
+		public static const GROUND_LEVEL:int = 160;
 		
 		[Embed(source = 'resources/images/tileset.png')]
 		protected var tile_set:Class;
@@ -32,7 +33,6 @@ package
 		public var modeArray:Array;
 		public var currMode:int;
 		
-		public var terrain:int;
 		public static var environment:EnvironmentManager;
 		public var map:Dictionary;
 		public var entities:Array;
@@ -56,21 +56,19 @@ package
 			modeArray.push(Global.LOCRIAN_MODE);
 			currMode = 1;
 			
-			terrain = Global.FOREST_FIELD_TERRAIN;
 			environment = new EnvironmentManager();
 			map = new Dictionary();
-			MapGenerator.GenerateMap(terrain, map, width, chunkHeight, 0, 0, false);
-			MapGenerator.GenerateMap(terrain, map, width, chunkHeight, 0, chunkHeight, true);
-			//MapGenerator.GenerateMap(terrain, map, width, chunkHeight, 0, chunkHeight*2, true);
-			baseX = 240;
-			baseY = GROUND_LEVEL;
-			
+			baseX = 0;
+			baseY = GROUND_LEVEL;			
 			entities = [];
-			entities.push(new Avatar(240, height-baseY));
+			entities.push(new Avatar(240, (2*height/3)-32));
 			playerIndex = entities.length-1;
 			pInput = new PlayerInputManager();
 			//entities.push(new GlowbugSwarm(208, height-125));
-			EntitySpawner.SpawnEntities(terrain, entities, map, width, height, 0, 0);
+			for (var i:int = 0; i < 3; i++){
+				MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, C_HEIGHT);
+				EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, C_HEIGHT);
+			}
 			
 			CreateScaleArray(12, modeArray[currMode], 19, 48);
 		}
@@ -88,6 +86,8 @@ package
 			playerIndex = -1;
 			for (i = entities.length-1; i >= 0; i--){
 				if (entities[i] is Avatar) playerIndex = i;
+				else if (entities[i] is GameSprite && entities[i].foreground)
+					foreground.push(entities[i]);
 				else entities[i].Render(LevelRenderer);
 			}
 			environment.Render(LevelRenderer, L_bitmap);
@@ -97,7 +97,9 @@ package
 					foreground.push(tile);
 			}if (playerIndex >= 0) entities[playerIndex].Render(LevelRenderer);
 			for (i = 0; i < foreground.length; i++){
-				DrawMapPiece(foreground[i], tile_sheet);
+				if (foreground[i] is Tile)
+					DrawMapPiece(foreground[i], tile_sheet);
+				else foreground[i].Render(LevelRenderer);
 			}
 
 			var matrix:Matrix = new Matrix();
@@ -144,8 +146,8 @@ package
 				}
 			}
 			
-			environment.Update(entities);
 			if (playerIndex >= 0){
+				environment.Update(entities, playerIndex);
 				UpdateMap(entities[playerIndex]);
 				UpdateView(entities[playerIndex]);
 			}
@@ -161,65 +163,72 @@ package
 			var calcX:int = 240;
 			var calcY:int = 320;
 			
-			//FIRST HORIZONTAL
-			var groundLevel:Boolean = (baseY == GROUND_LEVEL);
-			var spawnHeight:int = chunkHeight*3;
-			if (baseY == GROUND_LEVEL){ 
-				spawnHeight = chunkHeight;
-				groundLevel = true;
-			}else if (baseY == GROUND_LEVEL-chunkHeight){
-				spawnHeight = chunkHeight*2;
-				groundLevel = true;
-			}
-			
-			if (avirb > calcX+chunkWidth && avatar.facing==Global.RIGHT){
-				//trace("RIGHT!");
-				baseX+=chunkWidth;
+			var i:int;
+			var spawnHeight:int = C_HEIGHT*2;
+			if (baseY == GROUND_LEVEL) spawnHeight = C_HEIGHT*2;
+			//FIRST HORIZONTAL			
+			if (avirb > calcX+C_WIDTH && avatar.facing==Global.RIGHT){
+				trace("RIGHT!");
+				baseX+=C_WIDTH;
+				if (baseX >= 2400) baseX -= 2400;
+				//trace("baseX:"+baseX);
 				TryToChangeScaleArray();
-				MapGenerator.DeleteChunk(map, chunkWidth, spawnHeight, calcX-chunkWidth, calcY-chunkHeight);
-				MapGenerator.ShiftChunks(map, chunkWidth, spawnHeight, calcX, calcY-chunkHeight, -chunkWidth, 0);
-				MapGenerator.ShiftChunks(map, chunkWidth, spawnHeight, calcX+chunkWidth, calcY-chunkHeight, -chunkWidth, 0);
-				MapGenerator.GenerateMap(terrain, map, chunkWidth, spawnHeight, calcX+chunkWidth, calcY-chunkHeight, groundLevel);
+				MapGenerator.DeleteChunk(map, C_WIDTH, spawnHeight, 0, 0);
+				MapGenerator.ShiftChunks(map, C_WIDTH, spawnHeight, C_WIDTH, 0, -C_WIDTH, 0);
+				MapGenerator.ShiftChunks(map, C_WIDTH, spawnHeight, C_WIDTH*2, 0, -C_WIDTH, 0);
+				ShiftEntities(-C_WIDTH, 0);
 				EntitySpawner.Despawn(avatar, entities);
-				ShiftEntities(-chunkWidth, 0);
-				EntitySpawner.SpawnEntities(terrain, entities, map, chunkWidth, spawnHeight, calcX+chunkWidth, calcY-chunkHeight);
-				L_bitmap.x+=chunkWidth;
+				for (i = 0; i < spawnHeight; i+=C_HEIGHT){
+					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, C_WIDTH*2, i);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, C_WIDTH*2, i);
+				}
+				L_bitmap.x+=C_WIDTH;
 			}else if (avilb < calcX && avatar.facing==Global.LEFT){
-				//trace("LEFT!");
-				baseX-=chunkWidth;
+				trace("LEFT!");
+				baseX-=C_WIDTH;
+				if (baseX < 0) baseX += 2400;
+				//trace("baseX:"+baseX);
 				TryToChangeScaleArray();
-				MapGenerator.DeleteChunk(map, chunkWidth, spawnHeight, calcX+chunkWidth, calcY-chunkHeight);
-				MapGenerator.ShiftChunks(map, chunkWidth*2, spawnHeight, calcX-chunkWidth, calcY-chunkHeight, chunkWidth, 0);
-				MapGenerator.GenerateMap(terrain, map, chunkWidth, spawnHeight, calcX-chunkWidth, calcY-chunkHeight, groundLevel);
+				MapGenerator.DeleteChunk(map, C_WIDTH, spawnHeight, C_WIDTH*2, 0);
+				MapGenerator.ShiftChunks(map, C_WIDTH*2, spawnHeight, 0, 0, C_WIDTH, 0);
+				ShiftEntities(C_WIDTH, 0);
 				EntitySpawner.Despawn(avatar, entities);
-				ShiftEntities(chunkWidth, 0);
-				EntitySpawner.SpawnEntities(terrain, entities, map, chunkWidth, spawnHeight, calcX-chunkWidth, calcY-chunkHeight);
-				L_bitmap.x-=chunkWidth;
+				for (i = 0; i < spawnHeight; i+=C_HEIGHT){
+					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, 0, i);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, 0, i);
+				}
+				L_bitmap.x-=C_WIDTH;
 			}
 			//NOW FOR VERTICAL
-			else if (avibb > calcY+chunkHeight && avatar.vel.y > 0 && baseY != GROUND_LEVEL){
-				//trace("DOWN!");
-				baseY+=chunkHeight;
+			else if (avibb > calcY+C_HEIGHT && avatar.vel.y > 1 && baseY != GROUND_LEVEL){
+				trace("DOWN!");
+				baseY+=C_HEIGHT;
 				TryToChangeScaleArray();
-				MapGenerator.DeleteChunk(map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY-chunkHeight);
-				MapGenerator.ShiftChunks(map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY, 0, -chunkHeight);
-				MapGenerator.ShiftChunks(map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY+chunkHeight, 0, -chunkHeight);
-				MapGenerator.GenerateMap(terrain, map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY+chunkHeight, baseY == GROUND_LEVEL);
+				MapGenerator.DeleteChunk(map, C_WIDTH*3, C_HEIGHT, 0, 0);
+				MapGenerator.ShiftChunks(map, C_WIDTH*3, C_HEIGHT, 0, C_HEIGHT, 0, -C_HEIGHT);
+				MapGenerator.ShiftChunks(map, C_WIDTH*3, C_HEIGHT, 0, C_HEIGHT*2, 0, -C_HEIGHT);
+				ShiftEntities(0, -C_HEIGHT);
 				EntitySpawner.Despawn(avatar, entities);
-				ShiftEntities(0, -chunkHeight);
-				EntitySpawner.SpawnEntities(terrain, entities, map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY+chunkHeight);
-				L_bitmap.y+=chunkHeight;
-			}else if (avitb < calcY && avatar.vel.y < 0){
-				//trace("UP!");
-				baseY-=chunkHeight
+				L_bitmap.y+=C_HEIGHT;
+				
+				if (baseY == GROUND_LEVEL) return;
+				for (i = 0; i < 3; i++){
+					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, spawnHeight);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, spawnHeight);
+				}
+			}else if (avitb < calcY && avatar.on_ground){
+				trace("UP!");
+				baseY-=C_HEIGHT;
 				TryToChangeScaleArray();
-				MapGenerator.DeleteChunk(map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY+chunkHeight);
-				MapGenerator.ShiftChunks(map, chunkWidth*3, chunkHeight*2, calcX-chunkWidth, calcY-chunkHeight, 0, chunkHeight);
-				MapGenerator.GenerateMap(terrain, map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY-chunkHeight, baseY == GROUND_LEVEL);
+				MapGenerator.DeleteChunk(map, C_WIDTH*3, C_HEIGHT, 0, C_HEIGHT*2);
+				MapGenerator.ShiftChunks(map, C_WIDTH*3, C_HEIGHT*2, 0, 0, 0, C_HEIGHT);
+				ShiftEntities(0, C_HEIGHT);
 				EntitySpawner.Despawn(avatar, entities);
-				ShiftEntities(0, chunkHeight);
-				EntitySpawner.SpawnEntities(terrain, entities, map, chunkWidth*3, chunkHeight, calcX-chunkWidth, calcY-chunkHeight);
-				L_bitmap.y-=chunkHeight;
+				for (i = 0; i < 3; i++){
+					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, 0);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, 0);
+				}
+				L_bitmap.y-=C_HEIGHT;
 			}
 		}
 		
@@ -273,7 +282,9 @@ package
 				L_bitmap.x = (-1)*(L_bitmap.width-Global.stageWidth);
 			if (L_bitmap.x > 0) L_bitmap.x = 0;
 
-			if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
+			if (baseY == GROUND_LEVEL && L_bitmap.y < -GROUND_LEVEL)
+				L_bitmap.y = -GROUND_LEVEL;
+			else if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
 				L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
 			if (L_bitmap.y > 0) L_bitmap.y = 0;
 		}
@@ -309,7 +320,7 @@ package
 					}
 				}
 			}
-			trace(Game._SiONArray);
+			//trace(Game._SiONArray);
 		}
 	}
 }

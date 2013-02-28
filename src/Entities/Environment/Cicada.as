@@ -1,4 +1,4 @@
-package Entities.Forest 
+package Entities.Environment 
 {
 	import Entities.Avatar;
 	import Entities.Parents.GameSprite;
@@ -21,6 +21,10 @@ package Entities.Forest
 		private var flyAway:Boolean;
 		private var myAlpha:Number;
 		
+		private var lastAniY:int;
+		private var glitchTimer:int = 0;
+		private var glitched:Boolean = false;
+		
 		public function Cicada(x:int, y:int, currAniY:int) 
 		{
 			super(x, y, 0, 0, 8, 8);
@@ -30,6 +34,7 @@ package Entities.Forest
 			frameHeight = 8;
 			frameDelay = 2;
 			this.currAniY = currAniY;
+			lastAniY = currAniY;
 			
 			myAlpha = 1;
 			buzzTimer = 30+Math.floor(Math.random()*50);
@@ -69,6 +74,13 @@ package Entities.Forest
 				return;
 			}
 			
+			GlitchUp();
+			CicadaBuzz();
+			GetScaredAway(entities);
+		}
+		
+		public function CicadaBuzz():void
+		{
 			buzzTimer--;
 			if (buzzTimer <= 0){
 				var repeat:int = Math.floor(Math.random()*7)+4;
@@ -87,7 +99,31 @@ package Entities.Forest
 				}
 				buzzTimer = 30+Math.floor(Math.random()*50);
 			}
-			
+		}
+		
+		public function GlitchUp():void
+		{
+			glitchTimer--;
+			if (glitchTimer <= 0){
+				if (glitched){
+					currAniY = lastAniY;
+					glitchTimer = Math.floor(Math.random()*50)+100;
+				}else{
+					if (Math.floor(Math.random()*4) <= 0){
+						lastAniY = currAniY;
+						glitched = true;
+						currAniY = Math.floor(Math.random()*3)+lastAniY+1;
+						if (currAniY >= 4) currAniY -= 4;
+						glitchTimer = 2;
+					}
+				}
+				glitched = !glitched;
+			}
+		}
+		
+		public function GetScaredAway(entities:Array):void
+		{
+			var speed:Number = 2.0;
 			for (var i:int = 0; i < entities.length; i++){
 				if (entities[i] is Avatar || (entities[i] is PlayerFollower && entities[i].followingPlayer)){
 					if (CheckRectIntersect(entities[i], x-8, y-8, x+16, y+16) || GameWorld.environment.rain){
@@ -99,8 +135,9 @@ package Entities.Forest
 						vel.y = speed/2;
 						flyAway = true;
 						maxFrame = 2;
+						isDisposable = true;
 						
-						pitch = Math.floor(Math.random()*3)+1;
+						var pitch:int = Math.floor(Math.random()*3)+1;
 						switch(pitch){
 							case 1: 
 								SoundManager.getInstance().playSfx("Cicada1Death", -5, 1);

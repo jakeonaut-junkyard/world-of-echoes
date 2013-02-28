@@ -1,7 +1,7 @@
 package LoaderManagers 
 {
-	import Entities.Forest.Cicada;
-	import Entities.Forest.Firefly;
+	import Entities.Avatar;
+	import Entities.Environment.*;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -15,6 +15,8 @@ package LoaderManagers
 		public var rainTimer:int;
 		public var maxPrecipitation:int;
 		
+		public static var treeVoice:VoiceManager;
+		public var beachTimer:int;
 		public var fireflyTimer:int;
 		
 		public var x:Number;
@@ -29,7 +31,10 @@ package LoaderManagers
 			width = Global.stageWidth;
 			height = Global.stageHeight;
 			
+			treeVoice = new VoiceManager();
+			treeVoice.SetVoice(7, 10);
 			fireflyTimer = 2;
+			beachTimer = 0;
 			
 			rain = false;
 			rainDrops = [];
@@ -48,9 +53,16 @@ package LoaderManagers
 			}
 		}
 		
-		public function Update(entities:Array):void
+		public function Update(entities:Array, avatarIndex:int):void
 		{	
-			//if (!rain){
+			treeVoice.TranslateNoteArray(Game._SiONArray);
+			if (Global.CheckKeyPressed(Global.ENTER)){
+				treeVoice.SetRandomVoice();
+			}
+			
+			
+			var avatar:Avatar = entities[avatarIndex];
+			if (GameWorld.baseX >= 240 && GameWorld.baseX <= 1200){
 				fireflyTimer--;
 				if (fireflyTimer <= 0){
 					var randX:int = Math.floor(Math.random()*(Global.stageWidth-64))+32;
@@ -62,9 +74,17 @@ package LoaderManagers
 					entities.push(new Firefly(randX+x, randY+y));
 					fireflyTimer = Math.floor(Math.random()*20)+10;
 				}
-			//}
+			}
 			
-			UpdateWeather();
+			if (GameWorld.baseX < 480 || GameWorld.baseX >= 1440){
+				beachTimer--;
+				if (beachTimer <= 0){
+					SoundManager.getInstance().playSfx("ShoreAmbience", -5, 1);
+					beachTimer = 230;
+				}
+			}else{ beachTimer = 0; }
+			
+			//UpdateWeather();
 		}
 		
 		public function UpdateWeather():void

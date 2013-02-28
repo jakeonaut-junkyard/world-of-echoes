@@ -1,4 +1,4 @@
-package Entities.Forest 
+package Entities.Environment 
 {
 	import Entities.Avatar;
 	import Entities.Parents.GameSprite;
@@ -11,9 +11,9 @@ package Entities.Forest
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	
-	public class Songbird extends GameSprite
+	public class Seagull extends GameSprite
 	{
-		[Embed(source = "../../resources/images/songbird_sheet.png")]
+		[Embed(source = "../../resources/images/seagull_sheet.png")]
 		private var my_sprite_sheet:Class;
 		private var singTimer:int;
 		private var hopTimer:int;
@@ -23,8 +23,9 @@ package Entities.Forest
 		private var flyAway:Boolean;
 		private var myAlpha:Number;
 		private var facing:int;
+		private var cawCounter:int;
 		
-		public function Songbird(x:int, y:int, currAniY:int) 
+		public function Seagull(x:int, y:int) 
 		{
 			super(x, y, 0, 0, 8, 7);
 			sprite_sheet = my_sprite_sheet;
@@ -32,7 +33,6 @@ package Entities.Forest
 			frameWidth = 16;
 			frameHeight = 16;
 			frameDelay = 2;
-			this.currAniY = currAniY + Math.floor(Math.random()*4);
 			
 			myAlpha = 1;
 			singTimer = 50+Math.floor(Math.random()*50);
@@ -40,6 +40,7 @@ package Entities.Forest
 			baseX = x;
 			vel = new Point(0, 0);
 			flyAway = false;
+			cawCounter = 0;
 			
 			facing = Global.RIGHT;
 			if (Math.floor(Math.random()*2) <= 0) 
@@ -68,9 +69,10 @@ package Entities.Forest
 		}
 		
 		override public function Update(entities:Array, map:Dictionary):void
-		{			
+		{	
 			var speed:Number = 3.0;
 			UpdateAnimation();
+			SingASong();
 			if (flyAway){
 				if (vel.y > -speed*1.5) vel.y -= 1;
 				if (vel.x > 0) vel.x -= 0.05;
@@ -82,28 +84,29 @@ package Entities.Forest
 				if (myAlpha <= 0) delete_me = true;
 				return;
 			}
+			HopAround();
+			GetScaredAway(entities);
+		}
+		
+		public function SingASong():void
+		{
 			singTimer--;
 			if (singTimer <= 0){
-				var repeat:int = Math.floor(Math.random()*3)+1;
-				var pitch:int = Math.floor(Math.random()*3)+1;
-				var chirp:Boolean = (Math.floor(Math.random()*2) <= 0);
-				switch(pitch){
-					case 1: 
-						if (chirp) SoundManager.getInstance().playSfx("BirdChirp1Sound", -5, repeat);
-						else SoundManager.getInstance().playSfx("BirdCheep1Sound", -5, repeat);
-						break;
-					case 2:
-						if (chirp) SoundManager.getInstance().playSfx("BirdChirp2Sound", -5, repeat);
-						else SoundManager.getInstance().playSfx("BirdCheep2Sound", -5, repeat);
-						break;
-					case 3:
-						if (chirp) SoundManager.getInstance().playSfx("BirdChirp3Sound", -5, repeat);
-						else SoundManager.getInstance().playSfx("BirdCheep3Sound", -5, repeat);
-						break;
-					default: break;
+				if (!flyAway){
+					if (Math.floor(Math.random()*4) <= 0)
+						SoundManager.getInstance().playSfx("SeagullSound", -5, 1);
+					singTimer = 50+Math.floor(Math.random()*50);
+				}else if (cawCounter < 3){
+					SoundManager.getInstance().playSfx("SeagullSound", -5, 1);
+					singTimer = 5+Math.floor(Math.random()*5);
+					cawCounter++;
 				}
-				singTimer = 50+Math.floor(Math.random()*50);
 			}
+		}
+		
+		public function HopAround():void
+		{
+			var speed:Number = 3.0;
 			hopTimer--;
 			if (hopTimer <= 0){
 				if (Math.floor(Math.random()*2) <= 0){
@@ -129,7 +132,11 @@ package Entities.Forest
 			}if (vel.x > 0) facing = Global.RIGHT;
 			else if (vel.x < 0) facing = Global.LEFT;
 			x += vel.x;
-			
+		}
+		
+		public function GetScaredAway(entities:Array):void
+		{
+			var speed:Number = 3.0;
 			for (var i:int = 0; i < entities.length; i++){
 				if (entities[i] is Avatar || (entities[i] is PlayerFollower && entities[i].followingPlayer)){
 					if (CheckRectIntersect(entities[i], x-16, y-16, x+rb+16, y+bb+16) || GameWorld.environment.rain){
@@ -144,7 +151,11 @@ package Entities.Forest
 						flyAway = true;
 						currAniX = 2;
 						maxFrame = 2;
+						isDisposable = true;
 						SoundManager.getInstance().playSfx("BirdFlapSound", -5, 1);
+						SoundManager.getInstance().playSfx("SeagullSound", -5, 1);
+						singTimer = 5+Math.floor(Math.random()*5)
+						cawCounter+=Math.floor(Math.random()*2)+1;
 						break;
 					}
 				}

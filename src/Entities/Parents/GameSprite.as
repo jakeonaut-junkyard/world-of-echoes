@@ -13,6 +13,7 @@ package Entities.Parents
 	public class GameSprite extends GameObject
 	{
 		public var visible:Boolean;
+		public var foreground:Boolean;
 		
 		protected var image:BitmapData;
 		public var image_sprite:Sprite;
@@ -37,6 +38,7 @@ package Entities.Parents
 			solid = false;
 			
 			//image stuff
+			foreground = false;
 			visible = true;
 			frameCount = 0;
 			currFrame = 0;
