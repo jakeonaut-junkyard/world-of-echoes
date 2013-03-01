@@ -53,6 +53,10 @@ package Entities.Followers
 			_voice.TranslateNoteArray(Game._SiONArray);
 			if (Global.CheckKeyPressed(Global.Z_KEY) && followingPlayer){
 				StopFollowingPlayer();
+			}if (Global.CheckKeyPressed(Global.ENTER) && followingPlayer){
+				_voice.SetVoice(3, 4);
+			}else if (Global.CheckKeyPressed(Global.SPACE) && followingPlayer){
+				_voice.SetRandomVoice();
 			}
 			
 			for (i = noteQueue.length-1; i >= 0; i--){
@@ -78,6 +82,7 @@ package Entities.Followers
 			}
 			Gravity();
 			UpdateMovement(entities, map);
+			if (vel.y != 0) on_ground = false;
 			FollowPlayerJump();
 			
 			if (!on_ground && hit_head){
@@ -156,6 +161,8 @@ package Entities.Followers
 			}
 			
 			if (on_ground) baseY = y;
+			if (baseY < 0) baseY+=160;
+			else if (baseY > 480) baseY -= 160;
 			wanderTimer--;
 			noteWanderTimer--;
 			if (noteWanderTimer <= 0){

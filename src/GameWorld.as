@@ -67,7 +67,7 @@ package
 			//entities.push(new GlowbugSwarm(208, height-125));
 			for (var i:int = 0; i < 3; i++){
 				MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, C_HEIGHT);
-				EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, C_HEIGHT);
+				EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, C_HEIGHT, Global.RIGHT);
 			}
 			
 			CreateScaleArray(12, modeArray[currMode], 19, 48);
@@ -75,8 +75,10 @@ package
 		
 		public function Render():void
 		{
+			var bgColor:uint = 0xFFFFFF;
+			bgColor = environment.bgColor;
 			LevelRenderer.lock();
-			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), 0xFFFFFF);
+			LevelRenderer.fillRect(new Rectangle(0, 0, LevelRenderer.width, LevelRenderer.height), bgColor);
 			//LevelRenderer.fillRect(new Rectangle(baseX+240, 0, 1, LevelRenderer.height), 0x0000FF);
 			//LevelRenderer.fillRect(new Rectangle(baseX, 0, 1, LevelRenderer.height), 0xFF0000);
 			
@@ -128,6 +130,7 @@ package
 				pInput.PlayerInput(entities, playerIndex);
 				pX = entities[playerIndex].x;
 				pY = entities[playerIndex].y;
+				environment.Update(entities, playerIndex);
 			}
 			playerIndex = -1;
 			var i:int;
@@ -147,9 +150,8 @@ package
 			}
 			
 			if (playerIndex >= 0){
-				environment.Update(entities, playerIndex);
-				UpdateMap(entities[playerIndex]);
 				UpdateView(entities[playerIndex]);
+				UpdateMap(entities[playerIndex]);
 			}
 		}
 		
@@ -157,20 +159,19 @@ package
 		{
 			var avirb:Number = avatar.x+avatar.rb+avatar.vel.x;
 			var avilb:Number = avatar.x+avatar.lb+avatar.vel.x;
-			var avitb:Number = avatar.y+avatar.tb+160;
+			var avitb:Number = avatar.y+160;
 			var avibb:Number = avatar.y+avatar.bb+160;
-			if (!avatar.on_ground) avibb+=16;
 			var calcX:int = 240;
 			var calcY:int = 320;
 			
 			var i:int;
-			var spawnHeight:int = C_HEIGHT*2;
+			var spawnHeight:int = C_HEIGHT*3;
 			if (baseY == GROUND_LEVEL) spawnHeight = C_HEIGHT*2;
 			//FIRST HORIZONTAL			
 			if (avirb > calcX+C_WIDTH && avatar.facing==Global.RIGHT){
 				trace("RIGHT!");
 				baseX+=C_WIDTH;
-				if (baseX >= 2400) baseX -= 2400;
+				if (baseX >= 2880) baseX -= 2880;
 				//trace("baseX:"+baseX);
 				TryToChangeScaleArray();
 				MapGenerator.DeleteChunk(map, C_WIDTH, spawnHeight, 0, 0);
@@ -180,13 +181,13 @@ package
 				EntitySpawner.Despawn(avatar, entities);
 				for (i = 0; i < spawnHeight; i+=C_HEIGHT){
 					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, C_WIDTH*2, i);
-					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, C_WIDTH*2, i);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, C_WIDTH*2, i, Global.RIGHT);
 				}
 				L_bitmap.x+=C_WIDTH;
 			}else if (avilb < calcX && avatar.facing==Global.LEFT){
 				trace("LEFT!");
 				baseX-=C_WIDTH;
-				if (baseX < 0) baseX += 2400;
+				if (baseX < 0) baseX += 2880;
 				//trace("baseX:"+baseX);
 				TryToChangeScaleArray();
 				MapGenerator.DeleteChunk(map, C_WIDTH, spawnHeight, C_WIDTH*2, 0);
@@ -195,7 +196,7 @@ package
 				EntitySpawner.Despawn(avatar, entities);
 				for (i = 0; i < spawnHeight; i+=C_HEIGHT){
 					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, 0, i);
-					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, 0, i);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, 0, i, Global.LEFT);
 				}
 				L_bitmap.x-=C_WIDTH;
 			}
@@ -211,10 +212,11 @@ package
 				EntitySpawner.Despawn(avatar, entities);
 				L_bitmap.y+=C_HEIGHT;
 				
+				spawnHeight = C_HEIGHT*2;
 				if (baseY == GROUND_LEVEL) return;
 				for (i = 0; i < 3; i++){
 					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, spawnHeight);
-					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, spawnHeight);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, spawnHeight, Global.DOWN);
 				}
 			}else if (avitb < calcY && avatar.on_ground){
 				trace("UP!");
@@ -226,7 +228,7 @@ package
 				EntitySpawner.Despawn(avatar, entities);
 				for (i = 0; i < 3; i++){
 					MapGenerator.GenerateMap(baseX, baseY, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, 0);
-					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, 0);
+					EntitySpawner.SpawnEntities(baseX, baseY, entities, map, C_WIDTH, C_HEIGHT, i*C_WIDTH, 0, Global.UP);
 				}
 				L_bitmap.y-=C_HEIGHT;
 			}
@@ -254,17 +256,11 @@ package
 			var avirb:Number = avatar.x+avatar.rb+88;
 			var avilb:Number = avatar.x+avatar.lb-88;
 			var avitb:Number = avatar.y+avatar.tb-32;
-			var avibb:Number = avatar.y+avatar.bb+16;
-			if (!avatar.on_ground) avibb+=16;
+			var avibb:Number = avatar.y+avatar.bb+32;
 			var right:Number = Global.stageWidth-L_bitmap.x;
 			var left:Number = 0-(L_bitmap.x);
 			var top:Number = 0-(L_bitmap.y);
 			var bottom:Number = Global.stageHeight-L_bitmap.y;
-			if (avatar.vel.y > 0 && avatar.y < avatar.lastGroundY){ 
-				var bottomOffset:Number = avatar.y - avatar.lastGroundY;
-				if (bottomOffset < -64) bottomOffset = -64;
-				bottom += bottomOffset;
-			}
 
 			//move view right and left
 			if (avirb > right)
@@ -284,9 +280,9 @@ package
 
 			if (baseY == GROUND_LEVEL && L_bitmap.y < -GROUND_LEVEL)
 				L_bitmap.y = -GROUND_LEVEL;
-			else if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
+			/*else if (L_bitmap.y < (L_bitmap.height-Global.stageHeight)*(-1))
 				L_bitmap.y = (L_bitmap.height-Global.stageHeight)*(-1);
-			if (L_bitmap.y > 0) L_bitmap.y = 0;
+			if (L_bitmap.y > 0) L_bitmap.y = 0;*/
 		}
 		
 		public function TryToChangeScaleArray():void

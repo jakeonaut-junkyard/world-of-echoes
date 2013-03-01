@@ -2,8 +2,8 @@ package
 {
 	public class Global 
 	{	
-		public static var zoom:Number = 1;
-		public static var stageWidth:int = 720/zoom; //TODO::***
+		public static var zoom:Number = 3;
+		public static var stageWidth:int = 640/zoom; //TODO::***
 		public static var stageHeight:int = 480/zoom;
 		
 		public static const DELAY_AMOUNT:Number = 8;
@@ -14,6 +14,7 @@ package
 		public static const BEACH_TERRAIN:int = 0;
 		public static const FOREST_FIELD_TERRAIN:int = 1;
 		public static const MUSHROOM_FOREST_TERRAIN:int = 2;
+		public static const SEA_BREEZE_TERRAIN:int = 3;
 		
 		//mouse input stuff
 		public static var mousePressed:Boolean;

@@ -15,7 +15,12 @@ package LoaderManagers
 		public var rainTimer:int;
 		public var maxPrecipitation:int;
 		
+		public static var nightTimer:int;
+		public var bgColor:int;
+		
 		public static var treeVoice:VoiceManager;
+		/*public var whaleTimer:int;
+		public var windTimer:int;*/
 		public var beachTimer:int;
 		public var fireflyTimer:int;
 		
@@ -33,8 +38,12 @@ package LoaderManagers
 			
 			treeVoice = new VoiceManager();
 			treeVoice.SetVoice(7, 10);
-			fireflyTimer = 2;
+			//whaleTimer = 0;
+			fireflyTimer = 0;
 			beachTimer = 0;
+			//windTimer = 0;
+			nightTimer = 2070;
+			bgColor = 0xFFFFFF;
 			
 			rain = false;
 			rainDrops = [];
@@ -55,14 +64,56 @@ package LoaderManagers
 		
 		public function Update(entities:Array, avatarIndex:int):void
 		{	
-			treeVoice.TranslateNoteArray(Game._SiONArray);
-			if (Global.CheckKeyPressed(Global.ENTER)){
-				treeVoice.SetRandomVoice();
+			nightTimer--;
+			if (nightTimer <= -1785){
+				nightTimer = 4590;
+			}else if (nightTimer <= 255 && nightTimer > 0){
+				bgColor = 0xFFFFFF;
+				var subtrahend:uint = 0x010101;
+				subtrahend *= (uint)(255 - nightTimer);
+				bgColor -= subtrahend;
+				if (bgColor < 0x000000) bgColor = 0x000000;
+			}else if (nightTimer == 0){
+				SoundManager.getInstance().playMusic("NightSong", -5, 1);
+			}
+			else if (nightTimer > 4335){
+				bgColor = 0x000000;
+				var addend:uint = 0x010101;
+				addend *= (uint)(255 - (nightTimer-4335));
+				bgColor += addend;
+				if (bgColor > 0xFFFFFF) bgColor = 0xFFFFFF;
 			}
 			
+			//SeaBreezeAmbience(entities, avatarIndex);
+			ForestAmbience(entities, avatarIndex);
+			SoundAmbience();
+			UpdateWeather();
+		}
+		
+		/*public function SeaBreezeAmbience(entities:Array, avatarIndex:int):void
+		{
+			if (GameWorld.baseY > -800) return;
 			
-			var avatar:Avatar = entities[avatarIndex];
-			if (GameWorld.baseX >= 240 && GameWorld.baseX <= 1200){
+			var avatar:Avatar = entities[avatarIndex];			
+			whaleTimer--;
+			if (whaleTimer <= 0){
+				var wX:int = (Math.floor(Math.random()*2)*200)-96;
+				var wY:int = Math.floor(Math.random()*40)-20+avatar.y;
+				trace("whaleX:"+wX+",whaleY:"+wY);
+				var dir:int = Global.LEFT;
+				if (wX < 0) dir = Global.RIGHT;
+				
+				entities.push(new WhaleFish(wX, wY, dir));
+				whaleTimer = Math.floor(Math.random()*50)+320;
+			}
+		}*/
+		
+		public function ForestAmbience(entities:Array, avatarIndex:int):void
+		{
+			treeVoice.TranslateNoteArray(Game._SiONArray);
+			
+			if (GameWorld.baseX >= 240 && GameWorld.baseX <= 1680 
+					&& GameWorld.baseY >= GameWorld.GROUND_LEVEL - GameWorld.C_HEIGHT){
 				fireflyTimer--;
 				if (fireflyTimer <= 0){
 					var randX:int = Math.floor(Math.random()*(Global.stageWidth-64))+32;
@@ -75,8 +126,11 @@ package LoaderManagers
 					fireflyTimer = Math.floor(Math.random()*20)+10;
 				}
 			}
-			
-			if (GameWorld.baseX < 480 || GameWorld.baseX >= 1440){
+		}
+		
+		public function SoundAmbience():void
+		{
+			if (GameWorld.baseX < 480 || GameWorld.baseX >= 1920){
 				beachTimer--;
 				if (beachTimer <= 0){
 					SoundManager.getInstance().playSfx("ShoreAmbience", -5, 1);
@@ -84,7 +138,13 @@ package LoaderManagers
 				}
 			}else{ beachTimer = 0; }
 			
-			//UpdateWeather();
+			/*if (GameWorld.baseY < 0){
+				windTimer--;
+				if (windTimer <= 0){
+					SoundManager.getInstance().playSfx("SandstormSound", -5, 1);
+					windTimer = 270;
+				}
+			}else windTimer = 0;*/
 		}
 		
 		public function UpdateWeather():void
@@ -105,7 +165,7 @@ package LoaderManagers
 				}
 				
 				if (rainDrops.length < maxPrecipitation){
-					for (i = 0; i < 3; i++){
+					for (i = 0; i < 4; i++){
 						if (rainDrops.length >= maxPrecipitation) break;
 						var x:Number = Math.floor(Math.random()*width);
 						var grav:Number = Math.random()*6+10;

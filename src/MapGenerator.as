@@ -15,14 +15,15 @@ package
 			for (var i:int = calcX; i < calcX+width; i+=GameWorld.C_WIDTH){
 				for (var j:int = calcY+height-GameWorld.C_HEIGHT; j >= calcY; j-=GameWorld.C_HEIGHT){
 					var terrain:int = -1;
-					if (baseX+i == 1200) terrain = Global.MUSHROOM_FOREST_TERRAIN;
-					else if (baseX+i >= 480 && baseX+i <= 1920) terrain = Global.FOREST_FIELD_TERRAIN;
+					if (baseX+i >= 1200 && baseX+i < 1680) terrain = Global.MUSHROOM_FOREST_TERRAIN;
+					else if (baseX+i >= 480 && baseX+i <= 2400) terrain = Global.FOREST_FIELD_TERRAIN;
 					else terrain = Global.BEACH_TERRAIN;
+					if (baseY < -160) return;
 					var myGroundLevel:int = baseY-height+j;
 					switch(terrain){
 						case Global.MUSHROOM_FOREST_TERRAIN:
-							GenerateMushroomForest(map, width, height, i, j, (myGroundLevel == GameWorld.GROUND_LEVEL));
-							break;
+							//GenerateMushroomForest(map, width, height, i, j, (myGroundLevel == GameWorld.GROUND_LEVEL));
+							//break;
 						case Global.FOREST_FIELD_TERRAIN:
 							GenerateForest(map, width, height, i, j, (myGroundLevel == GameWorld.GROUND_LEVEL));
 							break;

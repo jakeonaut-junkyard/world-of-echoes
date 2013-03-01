@@ -1,15 +1,10 @@
--http://wonderfl.net/c/f5eX
 -Mononoke forest spirits and mushroom nausicaa spores insects
 
 WORLD OF ECHOES REVISED FEBRUARY 2013!!!
-0. What is going on with vertical spawning??? (viewPort movement)
-1. Make sky darken the higher you get (until you get to bass Square Ocean).
-	-Spawn Red Monkey and Horn Bird in swamp trees.
-	-Give swamp forest ambience (glitchy trees/clouds/???)
-2. Flesh out bass square ocean (jellyfish and schools of fish and whale creatures and static)
-3. TO SAVE ON PROCESSING POWER:: when shifting chunks, don't generate 3 chunks at once... ONLY GENERATE 2 CHUNKS!!!
-4. Cat Otter who plays a violin scratch when you press X and holds a bow until you release
-5. Colors hidden around various levels. Switch between them!! (palette swap???)
+1. Rain semitransparent (also only at beach or mushroom forest)	
+	-Make normal forest trees of disparate heights as well
+2. Cat Otter who plays a violin scratch when you press X and holds a bow until you release
+3. Colors hidden around various levels. Switch between them!! (palette swap???)
 	
 ====================================================================================================
 WORLD AREAS::

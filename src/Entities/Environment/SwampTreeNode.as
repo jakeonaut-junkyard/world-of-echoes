@@ -12,16 +12,24 @@ package Entities.Environment
 	{
 		[Embed(source = "../../resources/images/swampTree_sheet.png")]
 		private var my_sprite_sheet:Class;
+		public var hasAHat:Boolean;
+		public var hasShoes:Boolean;
 		
 		public function SwampTreeNode(x:int, y:int, height:int)
 		{
 			super(x, y, 0, 0, 48, 0);
 			sprite_sheet = my_sprite_sheet;
 			
+			hasAHat = false;
+			hasShoes = false;
 			topDownSolid = true;
-			bb = height*16+48;
+			this.bb = height*16+48;
 			this.y-=(height*16+32);
-			currAniX = Math.floor(Math.random()*2);
+			
+			currAniX = 0;
+			var calcRandY:int = -GameWorld.baseY/GameWorld.C_HEIGHT;
+			if (calcRandY > 0 && Math.floor(Math.random()*4-calcRandY) <= 0)
+				currAniX = 1;
 			
 			frameWidth = 48;
 			frameHeight = height*16+48;

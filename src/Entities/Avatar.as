@@ -56,6 +56,7 @@ package Entities
 			Gravity();
 			UpdateMovement(entities, map);
 			
+			if (vel.y != 0) on_ground = false;
 			if (!on_ground){
 				if (float && !hit_head){
 					y-=(2*Global.CURR_PHYSICS_SPEED);

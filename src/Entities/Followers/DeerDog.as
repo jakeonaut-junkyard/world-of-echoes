@@ -46,6 +46,10 @@ package Entities.Followers
 			_voice.TranslateNoteArray(Game._SiONArray);
 			if (Global.CheckKeyPressed(Global.Z_KEY) && followingPlayer){
 				StopFollowingPlayer();
+			}if (Global.CheckKeyPressed(Global.ENTER) && followingPlayer){
+				_voice.SetVoice(9, 1);
+			}else if (Global.CheckKeyPressed(Global.SPACE) && followingPlayer){
+				_voice.SetRandomVoice();
 			}
 			
 			for (i = noteQueue.length-1; i >= 0; i--){
@@ -62,13 +66,17 @@ package Entities.Followers
 			for (i = 0; i < entities.length; i++){
 				if (entities[i] is Avatar){
 					baseY = entities[i].y;
-					if (followingPlayer) FollowPlayerRun(entities[i]);
+					if (followingPlayer){
+						if (entities[i].y < y-96) StopFollowingPlayer();
+						else FollowPlayerRun(entities[i]);
+					}
 					else WanderAndGetTagged(entities[i], entities);
 					break;
 				}
 			}
 			Gravity();
 			UpdateMovement(entities, map);
+			if (vel.y != 0) on_ground = false;
 			FollowPlayerJump();
 			
 			if (!on_ground && hit_head){

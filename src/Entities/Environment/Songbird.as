@@ -4,6 +4,7 @@ package Entities.Environment
 	import Entities.Parents.GameSprite;
 	import Entities.Parents.PlayerFollower;
 	import LoaderManagers.SoundManager;
+	import LoaderManagers.EnvironmentManager;
 	import flash.utils.*;
 	import flash.geom.Point;
 	import flash.geom.ColorTransform;
@@ -174,7 +175,8 @@ package Entities.Environment
 			var speed:Number = 3.0;
 			for (var i:int = 0; i < entities.length; i++){
 				if (entities[i] is Avatar || (entities[i] is PlayerFollower && entities[i].followingPlayer)){
-					if (CheckRectIntersect(entities[i], x-16, y-16, x+rb+16, y+bb+16) || GameWorld.environment.rain){
+					if (CheckRectIntersect(entities[i], x-16, y-16, x+rb+16, y+bb+16) || GameWorld.environment.rain||
+						EnvironmentManager.nightTimer < 0){
 						if (entities[i].x > x){
 							vel.x = -speed;
 							facing = Global.LEFT;

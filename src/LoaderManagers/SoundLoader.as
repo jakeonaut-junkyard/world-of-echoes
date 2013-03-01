@@ -2,10 +2,17 @@ package LoaderManagers
 {
 	public class SoundLoader 
 	{
+		[Embed(source = '../resources/sounds/echoisland.mp3')]
+		public var Night_Song:Class;
+		
+		[Embed(source = '../resources/sounds/OOT_Sandstorm.mp3')]
+		public var Sandstorm_Sound:Class;
+		[Embed(source = '../resources/sounds/OOT_Night_Crow.mp3')]
+		public var Crow_Sound:Class;
 		[Embed(source = '../resources/sounds/LA_Seagull.mp3')]
-		public var seagull_sound:Class;
+		public var Seagull_Sound:Class;
 		[Embed(source = '../resources/sounds/insect.mp3')]
-		public var insect_sound:Class;
+		public var Insect_Sound:Class;
 		
 		[Embed(source = "../resources/sounds/LA_Shore_Long.mp3")]
 		private var Shore_Ambience:Class;
@@ -41,8 +48,12 @@ package LoaderManagers
 		
 		public function SoundLoader() 
 		{
-			SoundManager.getInstance().addSfx(new seagull_sound(), "SeagullSound");
-			SoundManager.getInstance().addSfx(new insect_sound(), "InsectSound");
+			SoundManager.getInstance().addMusic(new Night_Song(), "NightSong");
+			
+			SoundManager.getInstance().addSfx(new Sandstorm_Sound(), "SandstormSound");
+			SoundManager.getInstance().addSfx(new Crow_Sound(), "CrowSound");
+			SoundManager.getInstance().addSfx(new Seagull_Sound(), "SeagullSound");
+			SoundManager.getInstance().addSfx(new Insect_Sound(), "InsectSound");
 			
 			SoundManager.getInstance().addSfx(new Shore_Ambience(), "ShoreAmbience");
 			SoundManager.getInstance().addSfx(new Rain_Ambience(), "RainAmbience");

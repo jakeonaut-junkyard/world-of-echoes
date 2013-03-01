@@ -48,5 +48,20 @@ package Entities.Parents
 			}
 			return false;
 		}
+		
+		public function CheckRectIntersectAbstract(entities:Array, lb:int, 
+			tb:int, rb:int, bb:int, className:Class, sameX:Boolean):Boolean
+		{			
+			for (var i:int = 0; i < entities.length; i++){
+				var obj2:GameObject = entities[i];
+				if (!(obj2 is className)) continue;
+				if (lb <= (obj2.x + obj2.rb) && rb >= (obj2.x + obj2.lb) &&
+					tb <= (obj2.y + obj2.bb) && bb >= (obj2.y + obj2.tb))
+				{
+					if (sameX && obj2.x == x) return true;
+				}
+			}
+			return false;
+		}
 	}
 }
